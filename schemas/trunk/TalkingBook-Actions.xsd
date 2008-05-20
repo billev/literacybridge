@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+      elementFormDefault="qualified"
+      attributeFormDefault="unqualified"
+      xmlns="http://www.literacybridge.org/2008/book"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      >
+  
+   <xs:group name="actionElements">
+    <xs:choice>
+      <!-- Play and Position -->
+      <xs:element name="Play" type="simpleActionType"/>
+      <xs:element name="Pause" type="simpleActionType">
+        <xs:annotation>
+          <xs:documentation >
+            Stops all playing, buttons still respond for a device specified time.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element >
+      <xs:element name="Goto">
+        <xs:annotation>
+          <xs:documentation>
+            Moves to the specified location.
+            Goto also cancels bubbling, so parent handlers of this event will not execute.
+            However if PopStack does not evaluate to a location, the actions will continue to execute.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PopStack" minOccurs="0"  type="simpleActionType"/>
+            <xs:element name="Location" type="locationType" minOccurs="0"/>
+          </xs:sequence>
+          <xs:attribute name="Play" type="xs:boolean" default="1">
+            <xs:annotation>
+              <xs:documentation>
+                When true, the player will begin playing when it goes to the new location.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute >
+        </xs:complexType>
+      </xs:element>
+      <!-- Variable -->
+      <xs:element name="SetValue">
+        <xs:annotation>
+          <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
+            Sets the value of a variable.
+            One of the following system variables may also be used to control the player.
+            <dl>
+              <dt>#volume</dt>
+              <dd>The volume of the player from 0 to 100</dd>
+            </dl>
+            <dl>
+              <dt>#playSpeed</dt>
+              <dd>The speed of the player from 10 to 1000</dd>
+            </dl>
+            <dl>
+              <dt>#cancelBubble</dt>
+              <dd>Set to 1 to prevent parent containers from handling this event.</dd>
+            </dl>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:group ref="expressionElement"/>
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PushStack">
+        <xs:annotation>
+          <xs:documentation>
+            Pushes a location onto the stack.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Location" type="locationType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ClearStack"  type="simpleActionType"/>
+      <!-- Action Flow -->
+      <xs:element name="Call">
+        <xs:annotation>
+          <xs:documentation>
+            Calls a set of actions defined in a Definition element at the package level.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="Ref" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Choose" type="chooseType">
+        <xs:annotation>
+          <xs:documentation>
+            Conditionally executes actions
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Exit"  type="simpleActionType">
+        <xs:annotation>
+          <xs:documentation>
+            Stops execution of the current set of actions.
+            If CancelBubble has not been called, any matching event handlers in parent containers or Class definitions will still execute.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <!-- Device Interface -->
+      <xs:element name="SetLight">
+        <xs:complexType>
+          <xs:attribute name="Light" type="lightColorType" use="required"/>
+          <xs:attribute name="Mode" type="lightModeType" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Show">
+        <xs:annotation>
+          <xs:documentation>
+            Sends XHTML to the applicable viewer.
+            Todo:  Still need to figure out how to make this work if someone jumps into the middle of some existing content.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+          </xs:sequence>
+          <xs:attribute name="Append" type="xs:boolean" default="false"/>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:choice >
+  </xs:group>
+
+
+  <!--
+=========================================
+  Expression Elements
+=========================================
+-->
+
+  <xs:group name="expressionElement">
+    <xs:choice>
+      <xs:element name="Eq" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns 1 if the two child expressions are equal, otherwise returns 0
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Neq" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns 1 if the first expression is not equal to the second expression
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Lt" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns 1 if the first expression is less than the second expression
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Gt" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns 1 if the first expression is greater than the second expression
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Leq" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns 1 if the first expression is less than or equal to the second expression
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Geq" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns 1 if the first expression is greater than or equal to the second expression
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="And" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns the bitwise "AND" of the two child expressions
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Or" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns the bitwise "OR" of the two child expressions
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Xor" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns the bitwise exclusive-or of the two child expressions
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Add" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns the sum of the two child expressions
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Sub" type="binaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            Returns the difference of the two child expressions
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Not" type="unaryExpression">
+        <xs:annotation>
+          <xs:documentation>
+            If the child expression is 0, this returns 1, otherwise it returns 0.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Literal" type="xs:integer">
+        <xs:annotation>
+          <xs:documentation>
+            Returns a literal integer value
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GetValue">
+        <xs:annotation>
+          <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
+            Returns the value of the variable identified by the Name attribute.
+            One of the following system variables may also be used to retrieve information about the player.
+            <dl>
+              <dt>#volume</dt>
+              <dd>The volume of the player from 0 to 100</dd>
+            </dl>
+            <dl>
+              <dt>#playSpeed</dt>
+              <dd>The speed of the player from 10 to 1000</dd>
+            </dl>
+            <dl>
+              <dt>#isPlaying</dt>
+              <dd>Returns 1 if the player is playing, otherwise 0</dd>
+            </dl>
+            <dl>
+              <dt>#button[button name]Pressed</dt>
+              <dd>1 if the button is currently pressed, otherwise 0</dd>
+            </dl>
+            <dl>
+              <dt>#cancelBubble</dt>
+              <dd>1 if parent containers' event handlers will not execute after this handler's actions complete</dd>
+            </dl>
+            <dl>
+              <dt>#offset</dt>
+              <dd>The current player position in milliseconds from the beginning of the context container.</dd>
+            </dl>
+            <dl>
+              <dt>#timer</dt>
+              <dd>The number of milliseconds since the last time the device started up.</dd>
+            </dl>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="Name" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+<!--
+=========================================
+  Supporting Complex Types
+=========================================
+-->
+
+
+  <xs:complexType name="locationType">
+    <xs:attribute name="Path" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          A path to the a container.
+          These paths are in the form /topContainer/middleContainer/lowContianer .
+          "/" refers to the beginning of the current package.
+          Relative paths are permitted.
+          In some cases other packages may be references using the syntax "packageName:/topContainer/middleContainer",
+          however, this is likely to be only permitted to the "global" package that contains system audio.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Class" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          If a target of "Next", "Previous", "Beginning", or "End" is chosen
+          the target will be relative to the parent container with the same
+          Class value.  If this attribute is not present, the closest parent
+          with a Class value will be used.
+
+          Also this container will inherit any event handlers defined at the
+          package level for this class.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Target" type="targetType" default="Current"/>
+    <xs:attribute name="Offset" type="xs:int" default="0">
+      <xs:annotation>
+        <xs:documentation>
+          The offset in milliseconds from the location described by the other attributes.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="chooseType">
+    <xs:sequence>
+      <xs:element name="When" minOccurs="1" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            The first child element must be an expression element.
+            If it returns a value other than 0, the following child action element(s) will be executed
+            and any subsequent sibling When or Otherwise elements will be skipped.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="expressionElement" minOccurs="1" maxOccurs ="1"/>
+            <xs:group ref="actionElements" minOccurs="0" maxOccurs ="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Otherwise" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            If none of the previous When elements where executed, the child action(s) inside of this element will execute.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="actionElements" minOccurs="0" maxOccurs ="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+
+
+  <xs:complexType name="binaryExpression">
+    <xs:sequence>
+      <xs:group ref="expressionElement" minOccurs="2" maxOccurs="2"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="unaryExpression">
+    <xs:sequence>
+      <xs:group ref="expressionElement"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="simpleActionType"/>
+
+
+  <!--
+=========================================
+  Supporting Simple Types
+=========================================
+-->
+
+
+  <xs:simpleType name="targetType">
+    <xs:annotation>
+      <xs:documentation>
+        The relative locations "Beginning", "End", "Previous", and "Next" are relative
+        to the first parent container.
+        "End" and and "Next" will go to the same location in the audio content,
+        however "End" will also trigger the applicable container's OnFinish actions.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Current"/>
+      <xs:enumeration value="Beginning"/>
+      <xs:enumeration value="End"/>
+      <xs:enumeration value="Previous"/>
+      <xs:enumeration value="Next"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="lightColorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Red"/>
+      <xs:enumeration value="Green"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="lightModeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Off"/>
+      <xs:enumeration value="On"/>      
+      <xs:enumeration value="SlowBlink"/>
+      <xs:enumeration value="FastBlink"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
