@@ -1,0 +1,43 @@
+﻿<flash_project name="DemoPlayer" version="1">
+    <project_folder name="Classes" expanded="false">
+        <project_file path="./classes/TargetType.as" filetype="as" />
+        <project_file path="./classes/ActionGoto.as" filetype="as" />
+        <project_file path="./classes/ActionPause.as" filetype="as" />
+        <project_file path="./classes/ActionPlay.as" filetype="as" />
+        <project_file path="./classes/ActionPushStack.as" filetype="as" />
+        <project_file path="./classes/ActionSet.as" filetype="as" />
+        <project_file path="./classes/ActionSetFlag.as" filetype="as" />
+        <project_file path="./classes/ActionSetLight.as" filetype="as" />
+        <project_file path="./classes/ActionSetVolume.as" filetype="as" />
+        <project_file path="./classes/ActionShow.as" filetype="as" />
+        <project_file path="./classes/Block.as" filetype="as" />
+        <project_file path="./classes/ButtonActionType.as" filetype="as" />
+        <project_file path="./classes/ButtonEventArgs.as" filetype="as" />
+        <project_file path="./classes/ButtonEventHandler.as" filetype="as" />
+        <project_file path="./classes/ButtonType.as" filetype="as" />
+        <project_file path="./classes/Container.as" filetype="as" />
+        <project_file path="./classes/ContainerMap.as" filetype="as" />
+        <project_file path="./classes/ContainerNavigator.as" filetype="as" />
+        <project_file path="./classes/CounterComparisonType.as" filetype="as" />
+        <project_file path="./classes/CounterTest.as" filetype="as" />
+        <project_file path="./classes/Device.as" filetype="as" />
+        <project_file path="./classes/EventArgs.as" filetype="as" />
+        <project_file path="./classes/EventHandler.as" filetype="as" />
+        <project_file path="./classes/File.as" filetype="as" />
+        <project_file path="./classes/FlagTest.as" filetype="as" />
+        <project_file path="./classes/Folder.as" filetype="as" />
+        <project_file path="./classes/IAction.as" filetype="as" />
+        <project_file path="./classes/IActionSetTest.as" filetype="as" />
+        <project_file path="./classes/ICondition.as" filetype="as" />
+        <project_file path="./classes/IXmlSerializable.as" filetype="as" />
+        <project_file path="./classes/LightColorType.as" filetype="as" />
+        <project_file path="./classes/LightModeType.as" filetype="as" />
+        <project_file path="./classes/Location.as" filetype="as" />
+        <project_file path="./classes/OnTimer.as" filetype="as" />
+        <project_file path="./classes/Package.as" filetype="as" />
+        <project_file path="./classes/PlayerContext.as" filetype="as" />
+        <project_file path="./classes/Position.as" filetype="as" />
+    </project_folder>
+    <project_file path="./DebugPlayer.fla" filetype="fla" profile="" />
+    <project_file path="./DemoPlayer.fla" filetype="fla" profile="" />
+</flash_project>
