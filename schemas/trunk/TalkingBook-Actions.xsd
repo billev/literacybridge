@@ -286,6 +286,13 @@
           Relative paths are permitted.
           In some cases other packages may be references using the syntax "packageName:/topContainer/middleContainer",
           however, this is likely to be only permitted to the "global" package that contains system audio.
+Location references are resolved in the following order:
+(1) Path, if present, moves the context to the beginning of the container matching that path
+(2) Class, if present, moves the context to the beginning of the parent container with a matching Class attribute 
+(3) Target, if present, moves the context to a relative position based on the boundaries of the current container 
+
+Offset is not supported with other attributes. If offset crosses container boundaries, any OnLeave, OnFinish, OnStart, or OnEnter 
+event handlers will be evaluated.  A Pause or Goto action in these event handlers will stop the movement.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
