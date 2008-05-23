@@ -160,8 +160,19 @@ if required by the target player.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="Padding-Beginning" type="xs:integer" default="0"/>
-    <xs:attribute name="Padding-End" type="xs:integer" default="0"/>
+    <xs:attribute name="Padding-Beginning" type="xs:integer" default="0">
+      <xs:annotation>
+        <xs:documentation>
+          The number of milliseconds to pause before playing content.  OnStart and OnEnter handlers will execute prior to the pause.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Padding-End" type="xs:integer" default="0">
+      <xs:annotation>
+        <xs:documentation>
+          The number of milliseconds to pause after playing the content in the container.  OnFinish and OnLeave handlers will execute prior to the pause.
+        </xs:documentation>
+      </xs:annotation>
   </xs:attributeGroup>
 
 
