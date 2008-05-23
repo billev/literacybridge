@@ -3,10 +3,11 @@
       elementFormDefault="qualified"
       attributeFormDefault="unqualified"
       xmlns="http://www.literacybridge.org/2008/book"
+      xmlns:tb="http://www.literacybridge.org/2008/book"
       xmlns:xs="http://www.w3.org/2001/XMLSchema"
       >
   
-   <xs:group name="actionElements">
+   <xs:group name="actionElement">
     <xs:choice>
       <!-- Play and Position -->
       <xs:element name="Play" type="simpleActionType"/>
@@ -27,7 +28,15 @@
         </xs:annotation>
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="PopStack" minOccurs="0"  type="simpleActionType"/>
+            <xs:element name="PopStack" minOccurs="0"  type="simpleActionType">
+              <xs:annotation>
+                <xs:documentation>
+                  Send the player context to a location popped from the call stack.
+                  If the stack is empty, the following Location element will be used.
+                  If there is no following Location tag, the action set will continue to execute.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
             <xs:element name="Location" type="locationType" minOccurs="0"/>
           </xs:sequence>
           <xs:attribute name="Play" type="xs:boolean" default="1">
@@ -39,6 +48,29 @@
           </xs:attribute >
         </xs:complexType>
       </xs:element>
+      
+      <!-- Recording -->
+      <xs:element name="Record">
+        <xs:annotation>
+          <xs:documentation>
+            Starts recording content in the user package on the device.
+            The newly recorded content will be tagged with the child meta tags.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Meta" type="metaType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Delete" type="simpleActionType">
+        <xs:annotation>
+          <xs:documentation>
+            Deletes the current user-recorded file.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
       <!-- Variable -->
       <xs:element name="SetValue">
         <xs:annotation>
@@ -76,7 +108,13 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="ClearStack"  type="simpleActionType"/>
+      <xs:element name="ClearStack"  type="simpleActionType">
+        <xs:annotation>
+          <xs:documentation>
+            Clears the location stack
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <!-- Action Flow -->
       <xs:element name="Call">
         <xs:annotation>
@@ -121,7 +159,6 @@
           <xs:sequence>
             <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
           </xs:sequence>
-          <xs:attribute name="Append" type="xs:boolean" default="false"/>
         </xs:complexType>
       </xs:element>
 
@@ -279,20 +316,22 @@
   <xs:complexType name="locationType">
     <xs:attribute name="Path" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>
+        <xs:documentation  xmlns="http://www.w3.org/1999/xhtml">
           A path to the a container.
           These paths are in the form /topContainer/middleContainer/lowContianer .
           "/" refers to the beginning of the current package.
           Relative paths are permitted.
           In some cases other packages may be references using the syntax "packageName:/topContainer/middleContainer",
           however, this is likely to be only permitted to the "global" package that contains system audio.
-Location references are resolved in the following order:
-(1) Path, if present, moves the context to the beginning of the container matching that path
-(2) Class, if present, moves the context to the beginning of the parent container with a matching Class attribute 
-(3) Target, if present, moves the context to a relative position based on the boundaries of the current container 
-
-Offset is not supported with other attributes. If offset crosses container boundaries, any OnLeave, OnFinish, OnStart, or OnEnter 
-event handlers will be evaluated.  A Pause or Goto action in these event handlers will stop the movement.
+          
+          Location references are resolved in the following order:
+          <ol>
+            <li>Path, if present, moves the context to the beginning of the container matching that path</li>
+            <li>Class, if present, moves the context to the beginning of the parent container with a matching Class attribute</li>
+            <li>Target, if present, moves the context to a relative position based on the boundaries of the current container</li>
+          </ol>
+          Offset is not supported with other attributes. If offset crosses container boundaries, any OnLeave, OnFinish, OnStart, or OnEnter 
+          event handlers will be evaluated.  A Pause or Goto action in these event handlers will stop the movement.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -303,9 +342,6 @@ event handlers will be evaluated.  A Pause or Goto action in these event handler
           the target will be relative to the parent container with the same
           Class value.  If this attribute is not present, the closest parent
           with a Class value will be used.
-
-          Also this container will inherit any event handlers defined at the
-          package level for this class.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -313,7 +349,8 @@ event handlers will be evaluated.  A Pause or Goto action in these event handler
     <xs:attribute name="Offset" type="xs:int" default="0">
       <xs:annotation>
         <xs:documentation>
-          The offset in milliseconds from the location described by the other attributes.
+          The offset in milliseconds from the current location.
+          This attribute may not be used with the other location attributes.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -332,7 +369,7 @@ event handlers will be evaluated.  A Pause or Goto action in these event handler
         <xs:complexType>
           <xs:sequence>
             <xs:group ref="expressionElement" minOccurs="1" maxOccurs ="1"/>
-            <xs:group ref="actionElements" minOccurs="0" maxOccurs ="unbounded"/>
+            <xs:group ref="actionElement" minOccurs="0" maxOccurs ="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -344,7 +381,7 @@ event handlers will be evaluated.  A Pause or Goto action in these event handler
         </xs:annotation>
         <xs:complexType>
           <xs:sequence>
-            <xs:group ref="actionElements" minOccurs="0" maxOccurs ="unbounded"/>
+            <xs:group ref="actionElement" minOccurs="0" maxOccurs ="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -374,7 +411,6 @@ event handlers will be evaluated.  A Pause or Goto action in these event handler
 =========================================
 -->
 
-
   <xs:simpleType name="targetType">
     <xs:annotation>
       <xs:documentation>
@@ -387,11 +423,25 @@ event handlers will be evaluated.  A Pause or Goto action in these event handler
     <xs:restriction base="xs:string">
       <xs:enumeration value="Current"/>
       <xs:enumeration value="Beginning"/>
-      <xs:enumeration value="End"/>
+      <xs:enumeration value="End">
+        <xs:annotation>
+          <xs:documentation>
+            Execute the OnLeave and OnFinish event handlers of the current container, and begin playing the following container.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration >
       <xs:enumeration value="Previous"/>
-      <xs:enumeration value="Next"/>
+      <xs:enumeration value="Next">
+        <xs:annotation>
+          <xs:documentation>
+            Execute the OnLeave handlers of the current container, and begin playing the following container.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration >
     </xs:restriction>
   </xs:simpleType>
+  
+  
 
   <xs:simpleType name="lightColorType">
     <xs:restriction base="xs:string">

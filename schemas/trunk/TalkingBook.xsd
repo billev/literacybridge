@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema
-        version="0.2.0" 
+        version="0.2.0"
         targetNamespace="http://www.literacybridge.org/2008/book"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified"
@@ -11,8 +11,6 @@
   <!--
 ================================
 Talking Book Meta Data Schema
-
-Last Updated:  Eric Gropp, 19 May 2008
 
 This is intended as to provide a low-level
 description of the content and interactivity
@@ -52,7 +50,7 @@ if required by the target player.
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="Meta" type="metaType" minOccurs="0" maxOccurs ="unbounded"/>        
+        <xs:element name="Meta" type="metaType" minOccurs="0" maxOccurs ="unbounded"/>
         <xs:element name="Definitions" type="definitionsType" minOccurs ="0"/>
         <xs:group ref="eventHandlerElements"/>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -155,24 +153,35 @@ if required by the target player.
     <xs:attribute name="Name" type="xs:string" use="optional"/>
     <xs:attribute name="Class" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>
-          If present, this attribute id used to identify breaks for use by the "Goto" action.
+        <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
+          Classes are used to
+          <ul>
+            <li>this attribute id used to identify breaks for use by the "Goto" action, such as "Chapter", or "Section";</li>
+            <li>Inherit common event handlers from package level class definitions;</li>
+            <li>Identify blocks that perform system specific purposes.</li>
+          </ul>
+          A class can have any name, the following names have reserved behaviors:
+          <dl>
+            <dt>#title</dt>
+            <dd>The short title audio track for the parent container.</dd>
+          </dl>
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="Padding-Beginning" type="xs:integer" default="0">
+    <xs:attribute name="Padding-Start" type="xs:integer" default="0">
       <xs:annotation>
         <xs:documentation>
           The number of milliseconds to pause before playing content.  OnStart and OnEnter handlers will execute prior to the pause.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="Padding-End" type="xs:integer" default="0">
+    <xs:attribute name="Padding-Finish" type="xs:integer" default="0">
       <xs:annotation>
         <xs:documentation>
           The number of milliseconds to pause after playing the content in the container.  OnFinish and OnLeave handlers will execute prior to the pause.
         </xs:documentation>
       </xs:annotation>
+    </xs:attribute>
   </xs:attributeGroup>
 
 
@@ -206,6 +215,8 @@ if required by the target player.
       <xs:element name="OnFinish" type="contentEventHandlerType" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
+            During normal playback, this event is triggered immediately before the next container begins,
+            and the OnStart event handler of the following container is triggered.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
@@ -214,7 +225,7 @@ if required by the target player.
 
 
 
-<!--
+  <!--
 =========================================
   Supprting Event, Definition, and Meta Types
 =========================================
@@ -222,14 +233,14 @@ if required by the target player.
 
   <xs:complexType name="contentEventHandlerType">
     <xs:sequence>
-      <xs:group ref="actionElements" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="actionElement" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence >
   </xs:complexType>
 
 
   <xs:complexType name="buttonEventHandlerType">
     <xs:sequence>
-      <xs:group ref="actionElements" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="actionElement" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="Button" use="required" type="buttonType"/>
     <xs:attribute name="Action" default="Release" type="buttonActionType"/>
@@ -242,13 +253,13 @@ if required by the target player.
     </xs:attribute>
   </xs:complexType>
 
-  
+
   <xs:complexType name="metaType">
-      <xs:attribute name="Name" type="xs:string"  use="required"/>
-      <xs:attribute name="Content" type="xs:string" use="required"/>
+    <xs:attribute name="Name" type="xs:string"  use="required"/>
+    <xs:attribute name="Content" type="xs:string" use="required"/>
   </xs:complexType>
-  
-  
+
+
   <xs:complexType name="definitionsType">
     <xs:sequence>
       <xs:element name="Class" minOccurs ="0" maxOccurs ="unbounded">
@@ -270,7 +281,7 @@ if required by the target player.
           </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-          <xs:group ref="actionElements" minOccurs ="0" maxOccurs ="unbounded"/>
+          <xs:group ref="actionElement" minOccurs ="0" maxOccurs ="unbounded"/>
           <xs:attribute name="Name"/>
         </xs:complexType>
       </xs:element>
