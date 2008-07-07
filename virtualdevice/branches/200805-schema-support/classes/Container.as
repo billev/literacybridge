@@ -1,4 +1,4 @@
-class Container implements IXmlSerializable {
+﻿class Container implements IXmlSerializable {
     
     var id:String;
     var name:String;
@@ -6,6 +6,8 @@ class Container implements IXmlSerializable {
     var parent:Container;
 	var onStart:EventHandler;
 	var onFinish:EventHandler;
+	var onEnter:EventHandler;
+	var onLeave:EventHandler;
 	var buttonHandlers:Array;
     var childContainers:Array;
 	var previousSibling:Container;
@@ -139,6 +141,8 @@ class Container implements IXmlSerializable {
 		id = atts["ID"];
 		className = atts["Class"];
 		
+		
+		
 		// -- Parse children
 		var childNodes = node.childNodes;
 		var childCount = childNodes.length;
@@ -168,6 +172,16 @@ class Container implements IXmlSerializable {
 				this.onFinish = new EventHandler();
 				this.onFinish.parent = this;
 				this.onFinish.readXml(cNode);
+				}
+			if (nName == "OnEnter") {
+				this.onEnter = new EventHandler();
+				this.onEnter.parent = this;
+				this.onEnter.readXml(cNode);
+				}
+			if (nName == "OnLeave") {
+				this.onLeave = new EventHandler();
+				this.onLeave.parent = this;
+				this.onLeave.readXml(cNode);
 				}
 			if (nName == "OnButton") {
 				var newButton = new ButtonEventHandler();

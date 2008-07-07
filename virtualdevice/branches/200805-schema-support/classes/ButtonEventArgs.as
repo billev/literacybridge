@@ -1,12 +1,13 @@
-class ButtonEventArgs extends EventArgs {
+﻿class ButtonEventArgs extends EventArgs {
 
-    var button;
-    var action;
+    var button:Number;
+    var action:Number;
 	
-	function ButtonEventArgs(btn,act) {
+	function ButtonEventArgs(btn:Number,act:Number) {
 	
 		this.button = btn;
 		this.action = act;
+		
 		}
 
 

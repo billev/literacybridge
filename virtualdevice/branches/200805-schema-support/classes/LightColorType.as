@@ -1,6 +1,6 @@
-class LightColorType {
+﻿class LightColorType {
 
-	static var Red = 1;
-	static var Green = 2;
+	static var Red:Number = 1;
+	static var Green:Number = 2;
 
 	}

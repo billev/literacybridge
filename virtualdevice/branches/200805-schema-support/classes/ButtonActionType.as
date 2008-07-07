@@ -1,7 +1,7 @@
-class ButtonActionType {
+﻿class ButtonActionType {
 
-	static var Release = 1;
-	static var Press = 2;
-	static var Hold = 3;
+	static var Release:Number = 1;
+	static var Press:Number = 2;
+	static var Hold:Number = 3;
 
 	}

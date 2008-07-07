@@ -1,4 +1,4 @@
-class Device extends Container {
+﻿class Device extends Container {
 
 	var flags:Object;
 	var containers:Object;
@@ -11,5 +11,11 @@ class Device extends Container {
 	function get scopeName():String {
 		return "#device";
 		}	
+		
+	function addPackage(string url) {
+		
+		var newPackage:Package = new Package();
+		
+		}
 		
 	}

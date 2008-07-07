@@ -3,8 +3,7 @@
 	var playStack:Array;
 	var currentSound:Sound;
 	var isPlaying:Boolean;
-	var flagSettings:Object;
-	var counterSettings:Object;
+	var variables:Object;
 	var baseVolume:Number;
 	var map:ContainerMap;
 	
@@ -17,8 +16,7 @@
 
 	
 		playStack = new Array();
-		flagSettings = new Object();
-		counterSettings = new Object();
+		variables = new Object();
 		this.map = new ContainerMap();
 		currentSound = null;
 		this.baseVolume = 100;
@@ -30,44 +28,52 @@
 		
 
 		
-	function getCounter(counterName:String):Number {
+
+	function getVariable(name:String):Number {
 	
 		//-- Handle predefined Flags
-		if (counterName == "#offset") {
+		if (name == "#isPlaying") {
+			if (this.isPlaying)
+				return 1;
+			else
+				return 0;
+		}
+		
+		if (name == "#offset") {
 			if (currentSound == null)
 				return 0;
 			else
 				return currentSound.position;
-			}
+		}
+		
+		if (name == "#volume") {
+			return this.volume;
+			
+		}
+		
 				
 	
 		//-- Return code flag		
-		var counterVal = this.counterSettings[currentContainer.scopeName + "." + counterName];
-		if (counterVal == null)
+		var outVal:Number = this.variables[currentContainer.scopeName + "." + name];
+		if (outVal == null)
 			return 0;
 		else
-			return counterVal;
-		}
-
-
-	function getFlag(flagName:String):Boolean {
-	
-		//-- Handle predefined Flags
-		if (flagName == "#isPlaying")
-			return this.isPlaying;
-	
-		//-- Return code flag		
-		var flagVal = this.flagSettings[currentContainer.scopeName + "." + flagName];
-		if (flagVal == null)
-			return false;
-		else
-			return flagVal;
+			return outVal;
 		}
 		
 		
-	function setFlag(flagName:String, val:Boolean) {
+	function setVariable(varName:String, val:Number) {
 		
-		this.flagSettings[currentContainer.scopeName + "." + flagName] = val;
+		switch (varName) {
+			
+			case "#volume" :
+				this.volume = val;
+				break;
+				
+			default:
+				this.variables[currentContainer.scopeName + "." + varName] = val;
+				
+			}
 		
 		}
 
@@ -103,7 +109,6 @@
 		_device = dev;
 		this.map.loadMap(_device);
 		this.position = _device.startPosition;
-		_root.addLog("Root Position " + position.toString());
 		}
 
 	

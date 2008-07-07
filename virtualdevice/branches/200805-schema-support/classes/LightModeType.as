@@ -1,8 +1,8 @@
-class LightModeType {
+﻿class LightModeType {
 
-	static var Off = 0;
-	static var On = 1;
-	static var SlowBlink = 3;
-	static var FastBlink = 4;
+	static var Off:Number = 0;
+	static var On:Number = 1;
+	static var SlowBlink:Number = 3;
+	static var FastBlink:Number = 4;
 
 	}

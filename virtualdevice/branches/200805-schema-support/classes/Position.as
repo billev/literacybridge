@@ -1,4 +1,4 @@
-
+﻿
 class Position {
 
 	var url:String;
