@@ -3,8 +3,9 @@
     var actions:Array;
 	var name:String;
 	
-	function NamedActionSet() : base() {
+	function NamedActionSet() {
 	
+		super();
 		this.name = null;
 		
 		}
@@ -14,7 +15,7 @@
 	
 		
 		// -- Parse children
-		this.name = node.attributes["name"];
+		this.name = node.attributes.Name;
 		super.readXml(node);
 
 		}

@@ -1,6 +1,6 @@
 ﻿<flash_project name="DemoPlayer" version="1">
     <project_folder name="Classes" expanded="true">
-        <project_folder name="Actions" expanded="true">
+        <project_folder name="Actions" expanded="false">
             <project_file path="./classes/ActionPause.as" filetype="as" />
             <project_file path="./classes/ActionPlay.as" filetype="as" />
             <project_file path="./classes/ActionPushStack.as" filetype="as" />
@@ -15,7 +15,7 @@
             <project_file path="./classes/NamedActionSet.as" filetype="as" />
             <project_file path="./classes/ConditionalActionSet.as" filetype="as" />
         </project_folder>
-        <project_folder name="Expressions" expanded="true">
+        <project_folder name="Expressions" expanded="false">
             <project_file path="./classes/BinaryExpression.as" filetype="as" />
             <project_file path="./classes/IExpression.as" filetype="as" />
             <project_file path="./classes/Literal.as" filetype="as" />
@@ -50,6 +50,7 @@
         <project_file path="./classes/PlayerContext.as" filetype="as" />
         <project_file path="./classes/Position.as" filetype="as" />
         <project_file path="./classes/XmlParser.as" filetype="as" />
+        <project_file path="./classes/PlaylistLoader.as" filetype="as" />
     </project_folder>
     <project_file path="./DebugPlayer.fla" filetype="fla" profile="" />
     <project_file path="./DemoPlayer.fla" filetype="fla" profile="" />

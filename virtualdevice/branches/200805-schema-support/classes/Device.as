@@ -12,10 +12,5 @@
 		return "#device";
 		}	
 		
-	function addPackage(string url) {
-		
-		var newPackage:Package = new Package();
-		
-		}
 		
 	}

@@ -120,7 +120,6 @@
 		
 	function findChild(pos:Position) : Container {
 	
-		//_root.addLog("FindChild: " + this.name);
 		
 		for (var i=0;i<childContainers.length;i++) {
 			var foundChild:Container = childContainers[i].findChild(pos);
@@ -140,6 +139,9 @@
 		name = atts["Name"];
 		id = atts["ID"];
 		className = atts["Class"];
+		
+		trace ("Reading Container");
+		
 		
 		
 		

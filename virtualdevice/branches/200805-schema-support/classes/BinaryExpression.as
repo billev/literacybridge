@@ -22,6 +22,8 @@
 		this.leftExpression = IExpression(XmlParser.readNode(node.childNodes[0]));
 		this.rightExpression = IExpression(XmlParser.readNode(node.childNodes[1]));
 		
+		trace("Read Binary Expression " + node.nodeName + " " + this.expressionOperation);
+		
 		}
 	
 	public function evaluate(context:PlayerContext):Number {

@@ -91,12 +91,15 @@
 				break;
 				
 			//-- Action Supporting Elements
-			case "Otherwise":
 			case "ActionSet":
+				item = new NamedActionSet();
+				break;
+			case "Otherwise":
 				item = new ActionSet();
 				break;
 			case "When":
 				item = new ConditionalActionSet();
+				break;
 				
 
 			// -- Expressions

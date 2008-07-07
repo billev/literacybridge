@@ -1,4 +1,6 @@
-﻿class PlayerContext {
+﻿import mx.utils.Delegate;
+
+class PlayerContext {
 
 	var playStack:Array;
 	var currentSound:Sound;
@@ -6,11 +8,11 @@
 	var variables:Object;
 	var baseVolume:Number;
 	var map:ContainerMap;
-	
+	private var _xml:XML; 
+	private var _pendingPlaylistUrl:String;
 	
 	private	var _device:Device;
 	private var _currentPos:Position;
-
 	
 	function PlayerContext() {
 
@@ -22,6 +24,7 @@
 		this.baseVolume = 100;
 		_device = null;
 		_currentPos = null;
+		_pendingPlaylistUrl = null;
 		isPlaying=false;
 
 		}
@@ -62,6 +65,39 @@
 		}
 		
 		
+	function loadDevice(deviceUrl:String,playlistUrl:String) {
+		this._pendingPlaylistUrl = playlistUrl;
+		_xml = new XML(); 
+		_xml.ignoreWhite = true; 
+		_xml.onLoad = Delegate.create(this, onDeviceXmlLoad); 
+		_xml.load(deviceUrl); 		
+		
+
+					
+	}
+	
+	
+	function onDeviceXmlLoad(success:Boolean):Void {
+		
+		var _device:Device = new Device();		
+		for (var i=0;i<_xml.childNodes.length;i++)
+			if (_xml.childNodes[i].localName=='Device')
+				_device.readXml(_xml.childNodes[i]);
+
+		this.device = _device;
+		
+		if (this._pendingPlaylistUrl != null)
+			loadPlaylist(_pendingPlaylistUrl);
+	}
+	
+	
+	function loadPlaylist(url:String) {
+		trace("Loading Playlist " + url);
+		var pl:PlaylistLoader = new PlaylistLoader(_device);
+		pl.loadPlaylist(url);
+		
+	}
+	
 	function setVariable(varName:String, val:Number) {
 		
 		switch (varName) {
