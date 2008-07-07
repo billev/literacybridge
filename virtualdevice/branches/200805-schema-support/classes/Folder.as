@@ -1,0 +1,4 @@
+class Folder extends Container {
+
+
+	}
