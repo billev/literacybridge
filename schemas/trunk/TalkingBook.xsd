@@ -35,6 +35,7 @@ if required by the target player.
 -->
 
   <xs:include schemaLocation ="TalkingBook-Actions.xsd"/>
+  <xs:include schemaLocation ="TalkingBook-Playlist.xsd"/>
 
   <!--
 ================================
