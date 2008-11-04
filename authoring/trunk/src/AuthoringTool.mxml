@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:views="org.literacybridge.authoring.views.*"
+	layout="absolute"
+	creationComplete="onCreationComplete();"
+	initialize="onInit()"
+	showStatusBar="true">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.resources.ResourceManager;
+			
+			private function onInit() : void {
+			}
+		
+			private function onCreationComplete() : void {
+				
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Metadata>
+        [ResourceBundle("resources")]
+    </mx:Metadata>
+
+	
+	<mx:VBox width="100%" height="100%">
+		<views:ControlBar width="100%"/>
+	</mx:VBox>
+
+
+</mx:WindowedApplication>

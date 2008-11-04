@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="400" height="300"
+	close="PopUpManager.removePopUp(this)"
+	showCloseButton="true">
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.resources.ResourceManager;
+			
+			[Bindable]
+			private var locales : Array = ResourceManager.getInstance().getLocales();
+			
+			private function initializeLanguageBox():void {
+            	languageBox.selectedIndex = locales.indexOf(resourceManager.localeChain[0]);
+        	}
+			
+			private function onSelectLanguage() : void {
+				ResourceManager.getInstance().localeChain = [languageBox.selectedItem];				
+			}
+		]]>
+	</mx:Script>
+	<mx:Form>
+		<mx:FormHeading label="{resourceManager.getString('resources', 'SETTINGS_SCREEN_HEADING')}" />
+		<mx:FormItem label="{resourceManager.getString('resources', 'SETTINGS_SCREEN_LANGUAGE')}">
+		
+			<mx:ComboBox id="languageBox"
+				dataProvider="{locales}"
+				initialize="initializeLanguageBox()"
+                change="onSelectLanguage()"/>
+		</mx:FormItem>
+		
+	</mx:Form>
+</mx:TitleWindow>
