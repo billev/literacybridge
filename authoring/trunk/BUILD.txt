@@ -1,0 +1,17 @@
+1. Download and install Java 1.5 JRE or above, Apache Ant 1.7 or above,
+   and Adobe Flex SDK 3 or above.
+
+2. Edit build.properties and set flex.home to the Flex SDK's home directory.
+   Note that also on Windows you have to use forward slashes and should avoid
+	 a path with whitespaces, e. g. flex.home=C:/PROGRA~1/Adobe/flex_sdk_3
+
+3. Go to the main directory of the authoring tool, e. g. authoring/trunk and 
+   if you want to run the trunk version and run 'ant compile'.
+	 
+4. If you get an error like this: 
+        Error: unable to open 'locale/de'
+				
+   then you need to use the copylocale tool that is located in the flex bin 
+	 directory. Go to the flex home dir and run: 'bin/copylocale en_US de'
+
+5. Run 'ant launch'; the AuthoringTool should start now.
