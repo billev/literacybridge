@@ -32,7 +32,7 @@
     <condition property="amxmlc.exec" value="${flex.home}/bin/amxmlc">
       <os family="mac" />
     </condition>
-    <condition property="adl.exec" value="${flex.home}/bin/adl.bat">
+    <condition property="adl.exec" value="${flex.home}/bin/adl.exe">
       <os family="windows" />
     </condition>
     <condition property="adl.exec" value="${flex.home}/bin/adl">
