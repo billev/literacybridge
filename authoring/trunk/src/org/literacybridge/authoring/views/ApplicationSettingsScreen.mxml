@@ -4,6 +4,7 @@
 	showCloseButton="true">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.config.Settings;
 			import mx.managers.PopUpManager;
 			import mx.resources.ResourceManager;
 			
@@ -11,11 +12,12 @@
 			private var locales : Array = ResourceManager.getInstance().getLocales();
 			
 			private function initializeLanguageBox():void {
-            	languageBox.selectedIndex = locales.indexOf(resourceManager.localeChain[0]);
+            	languageBox.selectedIndex = locales.indexOf(Settings.getInstance().getLocale());
         	}
 			
 			private function onSelectLanguage() : void {
-				ResourceManager.getInstance().localeChain = [languageBox.selectedItem];				
+				ResourceManager.getInstance().localeChain = [languageBox.selectedItem];
+				Settings.getInstance().setLocale(String(languageBox.selectedItem));
 			}
 		]]>
 	</mx:Script>

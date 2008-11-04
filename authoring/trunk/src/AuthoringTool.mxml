@@ -2,19 +2,31 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:views="org.literacybridge.authoring.views.*"
 	layout="absolute"
-	creationComplete="onCreationComplete();"
+	applicationComplete="onApplicationComplete()"
 	initialize="onInit()"
 	showStatusBar="true">
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.config.Settings;
 			import mx.resources.ResourceManager;
 			
 			private function onInit() : void {
 			}
 		
-			private function onCreationComplete() : void {
-				
+			private function onApplicationComplete() : void {
+				stage.nativeWindow.addEventListener(Event.CLOSING, windowClosingHandler);
+				loadAndApplySettings();
+			}
+			
+			private function windowClosingHandler(event:Event):void {
+				Settings.getInstance().saveSettings();
+			}
+			
+			private function loadAndApplySettings():void {
+				var settings:Settings = Settings.getInstance();
+				settings.loadSettings();
+				ResourceManager.getInstance().localeChain = [settings.getLocale()];
 			}
 		]]>
 	</mx:Script>
