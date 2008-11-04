@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     This is the ant build file of the authoring tool for the Literacy
+     Bridge project. (www.literacybridge.org)
+-->
+
+<project name="authoringtool" default="compile" basedir=".">
+  <property file="${basedir}/build.properties"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="src.dir"  value="src"/>
+  <property name="appname" value="AuthoringTool"/>
+
+  <available
+    property="flex.present"
+    file="${flex.home}/bin/amxmlc"
+  />
+
+  <target name="flex.check">
+    <fail unless="flex.present">
+      ##################################################################
+      Flex not found.
+      Please make sure flex.home in build.properties is set to your flex
+      home directory.
+      ##################################################################
+    </fail>
+  </target>
+
+  <target name="init" depends="flex.check">
+    <condition property="amxmlc.exec" value="${flex.home}/bin/amxmlc.bat">
+      <os family="windows" />
+    </condition>
+    <condition property="amxmlc.exec" value="${flex.home}/bin/amxmlc">
+      <os family="mac" />
+    </condition>
+    <condition property="adl.exec" value="${flex.home}/bin/adl.bat">
+      <os family="windows" />
+    </condition>
+    <condition property="adl.exec" value="${flex.home}/bin/adl">
+      <os family="mac" />
+    </condition>
+  </target>
+
+  <target name="compile" description="Create AIR" depends="init">
+    <sequential>
+      <mkdir dir="${dist.dir}"/>
+      <exec executable="${amxmlc.exec}" failonerror="true">
+        <arg line="-output='${dist.dir}/${appname}.swf'" />
+        <arg line="-accessible" />
+        <arg line="${src.dir}/${appname}.mxml" />
+        <arg line="-locale=${locale}"/>
+        <arg line="-source-path locale/{locale}"/>
+      </exec>
+      <copy file="${src.dir}/${appname}-app.xml" tofile="${dist.dir}/${appname}-app.xml"/>
+    </sequential>
+  </target> 
+
+  <target name="launch" depends="compile"
+    description="Launches application.">
+    <exec executable="${adl.exec}">
+      <arg line="${dist.dir}/${appname}-app.xml"/>
+    </exec>
+  </target>
+</project>
