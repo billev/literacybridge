@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.player.Player;
+		
+			internal var player:Player;
+			internal var isPlayerPlaying:Boolean = false;
+			
+		
+			private function play():void {
+
+				if (player != null)
+				{
+					if (isPlayerPlaying) {
+						player.pausePlayer();
+						isPlayerPlaying = false;
+					} else	{
+						player.startPlayer();	
+						isPlayerPlaying = true;
+					}
+	
+					// change button label
+					if (playBtn.label == resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL')) {
+						playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
+					} else {
+						playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL');
+					}	
+				}
+			}
+			
+			private function stop():void {
+				if (player != null)	{
+					player.stopPlayer();
+				}
+			}
+			
+			private function setFile():void {
+				var filePath:String = new String(soundFilePathComboBox.text);
+				player = new Player(filePath);	// F:\PROJECTS\Literacy\sources\PieceOfMe.mp3
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:HBox width="100%" height="100%">
+		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL')}" id="playBtn" click="play()" />
+		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />	
+	</mx:HBox>
+	<mx:HBox width="100%" height="100%">
+		<mx:TextInput width="100%" id="soundFilePathComboBox"/>
+		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_SET_BUTTON')}" id="setBtn"  click="setFile()" />
+	</mx:HBox>
+</mx:VBox>
