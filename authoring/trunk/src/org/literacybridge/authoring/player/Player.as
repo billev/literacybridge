@@ -1,63 +1,79 @@
 package org.literacybridge.authoring.player
 {
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.net.URLRequest;
 	
-	public class Player
+	public class Player extends EventDispatcher
 	{
+		public static const FILE_LOADED:String = "fileLoaded";
 		
 		private var sound:Sound;
 		private var channel:SoundChannel;
-		private var pausePos:int = 0;
+		private var pausePos:Number = 0;	// current position in the sound file (used for pausing)
 		
-		private var filePath:String; // "F:\\PROJECTS\\Literacy\\sources\\PieceOfMe.mp3"
-
-		
-		public function Player(newFilePath:String)
-		{
-			this.filePath = newFilePath;
-			loadSound();
+		private var filePath:String;	// path to current sound file
+	
+				
+		public function Player() {
+			super();
 		}
 
-		public function startPlayer():void
-		{
-			if (channel != null)
-			{
+		public function loadSound(filePath:String):void	{	
+			this.filePath = filePath;
+			sound = new Sound();
+			sound.addEventListener(Event.COMPLETE, onLoadingComplete);
+			sound.load(new URLRequest(filePath));
+		}
+
+
+		public function startPlayer():Number {
+			if (channel != null) {
 				channel.stop();	// we must stop old playing
 			}
-
-			channel = sound.play(pausePos);	// start from beginning	
+			channel = sound.play(pausePos*1000);
+			return getSoundLengthInSecs();	
 		}
 		
-		public function pausePlayer():void
-		{
+		public function pausePlayer():void {
 			pausePos = channel.position;
 			channel.stop();
 		}
 
-		public function stopPlayer():void
-		{
-			pausePos = 0;
+		public function stopPlayer():Boolean {
+			var isRunning:Boolean = false; 
+			if (channel != null) {
+			isRunning = (channel.position != 0);
+			pausePos = 0;	
 			channel.stop();
+			}
+			return isRunning;
 		}	
 
-		private function loadSound():void
-		{
-			
-			sound = new Sound();
-			
-			// add listener for - SOUND_COMPLETE
-			sound.addEventListener(Event.SOUND_COMPLETE, soundComplete);
-			
-			sound.load(new URLRequest(filePath));
-			pausePos = 0;
+		public function setPosition(newPos:Number):void {			
+			var wasRunning:Boolean = stopPlayer();
+			pausePos = newPos;
+			if (wasRunning) {	// restart player
+				startPlayer();
+			}
 		}
 		
-		private function soundComplete(event:Event):void
-		{
-			// ... do something useful
+		public function getSoundLengthInSecs():Number {
+			return sound.length / 1000;
 		}
+
+		public function getSoundLengthInMilliSecs():Number {
+			return sound.length;
+		}		
+		
+		public function isPlayerReady():Boolean {
+			return (sound != null);
+		}
+			        
+        private function onLoadingComplete(event:Event):void {
+        	dispatchEvent(new Event(Player.FILE_LOADED));
+        }
 	}
 }

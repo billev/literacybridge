@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()">
 	<mx:Script>
 		<![CDATA[
 			import org.literacybridge.authoring.player.Player;
@@ -7,6 +7,8 @@
 			internal var player:Player;
 			internal var isPlayerPlaying:Boolean = false;
 			
+			internal var file:File;
+			internal var filePath:String;
 		
 			private function play():void {
 
@@ -34,10 +36,71 @@
 					player.stopPlayer();
 				}
 			}
+					
+			/*
+			 * File Browser 
+			 */
+			private function openFileBrowser():void {
+	            file = new File();  
+				var mp3Filter:FileFilter = new FileFilter("MP3", "*.mp3")		
+				file.addEventListener(Event.SELECT, onFileSelect);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForOpen(dialogTitle, ([mp3Filter]));	
+				} catch (err:Error)	{
+					trace("Something went wrong browsing for a file");
+					// do s.th. useful
+				}
+			}
+
+			private function onFileSelect(event:Event):void {
+	         	var openedFile:File = event.target as File;
+	         	filePath = openedFile.url;
+	         	soundFilePathComboBox.text = filePath;
+	         	file.removeEventListener(Event.COMPLETE, onFileSelect);
+	         	// init player with new file
+	         	player = new Player();
+	         	player.addEventListener(Player.FILE_LOADED, fileLoadingComplete);
+	         	player.loadSound(filePath);
+
+	        }
+	        
+	        private function fileLoadingComplete(event:Event):void {
+	        	// get the current slider position and set it into the player
+	        	initPositionSlider();
+	        	// enable controls
+	         	enabelControls(true);
+	        	player.removeEventListener(Player.FILE_LOADED, fileLoadingComplete);
+	        }
+	        
+	        private function initPositionSlider():void {
+	        	if (player != null) {
+	        		var soundLength:Number = player.getSoundLengthInSecs();
+	        		playerPositionSliderID.value = 0;
+	        		playerPositionSliderID.maximum = soundLength.valueOf();	
+	        	}
+	        }
 			
-			private function setFile():void {
-				var filePath:String = new String(soundFilePathComboBox.text);
-				player = new Player(filePath);	// F:\PROJECTS\Literacy\sources\PieceOfMe.mp3
+			// user changed slider position
+			private function getCurrentSoundPos():void {
+				var curSliderPos:Number = playerPositionSliderID.value;
+				player.setPosition(curSliderPos);
+			}
+			
+			private function initControl():void {
+				playerPositionSliderID.value = 0;
+				enabelControls(false);
+				soundFilePathComboBox.enabled = false;	// always insensitive
+			}
+			
+			private function enabelControls(enable:Boolean):void {
+				playBtn.enabled = enable;
+				stopBtn.enabled = enable;
+				if (player != null) {
+					playerPositionSliderID.enabled = player.isPlayerReady();
+				} else {
+					playerPositionSliderID.enabled = false;
+				}
 			}
 			
 		]]>
@@ -48,7 +111,11 @@
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />	
 	</mx:HBox>
 	<mx:HBox width="100%" height="100%">
+		<mx:Label text="Position:"/>
+		<mx:HSlider width="100%" minimum="0" maximum="100" value="100" change="getCurrentSoundPos()" id="playerPositionSliderID"/>
+	</mx:HBox>	
+	<mx:HBox width="100%" height="100%">
 		<mx:TextInput width="100%" id="soundFilePathComboBox"/>
-		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_SET_BUTTON')}" id="setBtn"  click="setFile()" />
+		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_OPEN_BUTTON')}" id="setBtn"  click="openFileBrowser()" />
 	</mx:HBox>
 </mx:VBox>
