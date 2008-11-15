@@ -8,14 +8,23 @@ package org.literacybridge.authoring.player
 	
 	public class Player extends EventDispatcher
 	{
+		// event
 		public static const FILE_LOADED:String = "fileLoaded";
 		
+		// internal state
+		public static const PLAYER_RUNNING:String = "Running";
+		public static const PLAYER_PAUSING:String = "Pausing";
+		public static const PLAYER_STOPPED:String = "Stopped";
+		private var state:String = PLAYER_STOPPED;	// init state
+		
+		
+		private var filePath:String;	// path to current sound file
+
 		private var sound:Sound;
 		private var channel:SoundChannel;
 		private var pausePos:Number = 0;	// current position in the sound file (used for pausing)
 		
-		private var filePath:String;	// path to current sound file
-	
+		
 				
 		public function Player() {
 			super();
@@ -29,33 +38,33 @@ package org.literacybridge.authoring.player
 		}
 
 
-		public function startPlayer():Number {
+		public function startPlayer():void {
 			if (channel != null) {
 				channel.stop();	// we must stop old playing
 			}
-			channel = sound.play(pausePos*1000);
-			return getSoundLengthInSecs();	
+			channel = sound.play(pausePos);
+			state = PLAYER_RUNNING;
 		}
 		
 		public function pausePlayer():void {
 			pausePos = channel.position;
 			channel.stop();
+			state = PLAYER_PAUSING;
 		}
 
-		public function stopPlayer():Boolean {
-			var isRunning:Boolean = false; 
+		public function stopPlayer():void {
 			if (channel != null) {
-			isRunning = (channel.position != 0);
-			pausePos = 0;	
-			channel.stop();
+				pausePos = 0;	
+				channel.stop();
 			}
-			return isRunning;
+			state = PLAYER_STOPPED;
 		}	
 
-		public function setPosition(newPos:Number):void {			
-			var wasRunning:Boolean = stopPlayer();
-			pausePos = newPos;
-			if (wasRunning) {	// restart player
+		public function setPositionInSecs(newPos:Number):void {	
+			var oldState:String = state;		
+			stopPlayer();
+			pausePos = newPos*1000; // we need milli secs
+			if (oldState == PLAYER_RUNNING) {
 				startPlayer();
 			}
 		}
@@ -70,6 +79,10 @@ package org.literacybridge.authoring.player
 		
 		public function isPlayerReady():Boolean {
 			return (sound != null);
+		}
+			     
+		public function getCurrentState():String {
+			return state;
 		}
 			        
         private function onLoadingComplete(event:Event):void {

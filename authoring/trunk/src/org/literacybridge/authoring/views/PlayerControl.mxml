@@ -5,7 +5,6 @@
 			import org.literacybridge.authoring.player.Player;
 		
 			internal var player:Player;
-			internal var isPlayerPlaying:Boolean = false;
 			
 			internal var file:File;
 			internal var filePath:String;
@@ -14,27 +13,30 @@
 
 				if (player != null)
 				{
-					if (isPlayerPlaying) {
+					if (player.getCurrentState() == Player.PLAYER_RUNNING) {
 						player.pausePlayer();
-						isPlayerPlaying = false;
 					} else	{
 						player.startPlayer();	
-						isPlayerPlaying = true;
 					}
-	
-					// change button label
-					if (playBtn.label == resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL')) {
-						playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
-					} else {
-						playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL');
-					}	
+					switchPlayPauseButtonLabel();
 				}
 			}
 			
 			private function stop():void {
 				if (player != null)	{
 					player.stopPlayer();
+					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
+					playerPositionSliderID.value = 0;	
 				}
+			}
+			
+			private function switchPlayPauseButtonLabel():void {
+				// change button label
+				if (playBtn.label == resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL')) {
+					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
+				} else {
+					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL');
+				}	
 			}
 					
 			/*
@@ -84,7 +86,7 @@
 			// user changed slider position
 			private function getCurrentSoundPos():void {
 				var curSliderPos:Number = playerPositionSliderID.value;
-				player.setPosition(curSliderPos);
+				player.setPositionInSecs(curSliderPos);
 			}
 			
 			private function initControl():void {
