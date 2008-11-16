@@ -2,14 +2,17 @@ package org.literacybridge.authoring.player
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.net.URLRequest;
+	import flash.utils.Timer;
 	
 	public class Player extends EventDispatcher
 	{
 		// event
 		public static const FILE_LOADED:String = "fileLoaded";
+		public static const FILE_COMPLETE:String = "fileComplete";
 		
 		// internal state
 		public static const PLAYER_RUNNING:String = "Running";
@@ -24,7 +27,9 @@ package org.literacybridge.authoring.player
 		private var channel:SoundChannel;
 		private var pausePos:Number = 0;	// current position in the sound file (used for pausing)
 		
-		
+		private var posTimer:Timer;
+		private var posTimerDelay:Number = 500;
+		private var _currentChannelPosition:Number = 0;	// tmp variable to get the current pos
 				
 		public function Player() {
 			super();
@@ -35,6 +40,9 @@ package org.literacybridge.authoring.player
 			sound = new Sound();
 			sound.addEventListener(Event.COMPLETE, onLoadingComplete);
 			sound.load(new URLRequest(filePath));
+			// timer
+			posTimer = new Timer(posTimerDelay);
+			posTimer.addEventListener(TimerEvent.TIMER, onPositionTimer);
 		}
 
 
@@ -43,19 +51,27 @@ package org.literacybridge.authoring.player
 				channel.stop();	// we must stop old playing
 			}
 			channel = sound.play(pausePos);
+			channel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
+			posTimer.start();
 			state = PLAYER_RUNNING;
 		}
 		
 		public function pausePlayer():void {
-			pausePos = channel.position;
-			channel.stop();
-			state = PLAYER_PAUSING;
+			if (channel != null) {
+				pausePos = channel.position;
+				channel.stop();
+				state = PLAYER_PAUSING;
+				// stop timer and set current pos 
+				posTimer.reset();
+				currentChannelPosition = pausePos;	// fire update
+			}
 		}
 
 		public function stopPlayer():void {
 			if (channel != null) {
 				pausePos = 0;	
 				channel.stop();
+				posTimer.stop();
 			}
 			state = PLAYER_STOPPED;
 		}	
@@ -84,9 +100,30 @@ package org.literacybridge.authoring.player
 		public function getCurrentState():String {
 			return state;
 		}
+		
+		public function set currentChannelPosition( newValue:Number ):void {
+			_currentChannelPosition = newValue;
+		}
+		
+		[Bindable]
+		public function get currentChannelPosition():Number {
+			return _currentChannelPosition;
+		}
+		
+		private function onPositionTimer(e:TimerEvent):void {
+			if (channel != null) {
+				this.currentChannelPosition = channel.position;		
+			} 
+		}
 			        
         private function onLoadingComplete(event:Event):void {
         	dispatchEvent(new Event(Player.FILE_LOADED));
+        }
+        
+        private function onSoundComplete(event:Event):void {
+        	state = PLAYER_STOPPED;
+        	pausePos = 0;
+        	dispatchEvent(new Event(Player.FILE_COMPLETE));
         }
 	}
 }

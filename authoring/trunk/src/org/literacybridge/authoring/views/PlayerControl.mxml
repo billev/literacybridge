@@ -2,9 +2,15 @@
 <mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()">
 	<mx:Script>
 		<![CDATA[
+			import mx.events.SliderEvent;
+			import mx.states.State;
+			import mx.events.StateChangeEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
 			import org.literacybridge.authoring.player.Player;
 		
 			internal var player:Player;
+			internal var _posWatcher:ChangeWatcher;
 			
 			internal var file:File;
 			internal var filePath:String;
@@ -38,6 +44,12 @@
 					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL');
 				}	
 			}
+			
+			private function resetPlayer():void {
+				detachPosWatching();
+				initPositionSlider();
+				playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
+			}
 					
 			/*
 			 * File Browser 
@@ -63,6 +75,7 @@
 	         	// init player with new file
 	         	player = new Player();
 	         	player.addEventListener(Player.FILE_LOADED, fileLoadingComplete);
+	         	player.addEventListener(Player.FILE_COMPLETE, filePlayingComplete);
 	         	player.loadSound(filePath);
 
 	        }
@@ -75,11 +88,24 @@
 	        	player.removeEventListener(Player.FILE_LOADED, fileLoadingComplete);
 	        }
 	        
+	      	private function filePlayingComplete(event:Event):void {
+	      		resetPlayer();
+	      	}
+	        
 	        private function initPositionSlider():void {
 	        	if (player != null) {
 	        		var soundLength:Number = player.getSoundLengthInSecs();
 	        		playerPositionSliderID.value = 0;
-	        		playerPositionSliderID.maximum = soundLength.valueOf();	
+	        		playerPositionSliderID.maximum = soundLength.valueOf();
+	        		_posWatcher = BindingUtils.bindSetter(channelPositionChanged, player, "currentChannelPosition");
+	        	}
+	        }
+	        
+	        // update controls depending on channel position
+	        private function channelPositionChanged(arg:*):void {
+	        	if (player != null && player.getCurrentState() == Player.PLAYER_RUNNING) {
+		        	var curPos:Number = player.currentChannelPosition/1000; 
+		        	playerPositionSliderID.value = curPos;
 	        	}
 	        }
 			
@@ -89,10 +115,32 @@
 				player.setPositionInSecs(curSliderPos);
 			}
 			
+			private function detachPosWatching():void {
+				if (_posWatcher != null && _posWatcher.isWatching()) {
+					_posWatcher.unwatch();	// detach
+				}
+			}
+			
+			private function reattachPosWatching():void {
+				if (_posWatcher != null && !_posWatcher.isWatching()) {
+					_posWatcher.reset(player);
+				}
+			}
+			
+			private function onSliderThumbPressed(event:Event):void {
+				detachPosWatching();
+			}
+			
+			private function onSliderThumbReleased(event:Event):void {
+				reattachPosWatching();	
+			}
+			
 			private function initControl():void {
 				playerPositionSliderID.value = 0;
 				enabelControls(false);
 				soundFilePathComboBox.enabled = false;	// always insensitive
+				playerPositionSliderID.addEventListener(SliderEvent.THUMB_PRESS, onSliderThumbPressed); 
+				playerPositionSliderID.addEventListener(SliderEvent.THUMB_RELEASE, onSliderThumbReleased);
 			}
 			
 			private function enabelControls(enable:Boolean):void {
@@ -114,7 +162,13 @@
 	</mx:HBox>
 	<mx:HBox width="100%" height="100%">
 		<mx:Label text="Position:"/>
-		<mx:HSlider width="100%" minimum="0" maximum="100" value="100" change="getCurrentSoundPos()" id="playerPositionSliderID"/>
+		<!-- <mx:HSlider width="100%" minimum="0" maximum="100" value="100" change="getCurrentSoundPos()" id="playerPositionSliderID"/> -->
+		<mx:HSlider width="100%" 
+					minimum="0" 
+					maximum="100" 
+					value="0" 
+					change="getCurrentSoundPos()" 
+					id="playerPositionSliderID"/>
 	</mx:HBox>	
 	<mx:HBox width="100%" height="100%">
 		<mx:TextInput width="100%" id="soundFilePathComboBox"/>
