@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()">
+<mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*">
 	<mx:Script>
 		<![CDATA[
+			import mx.formatters.Formatter;
+			import mx.formatters.NumberBase;
 			import mx.events.SliderEvent;
 			import mx.states.State;
 			import mx.events.StateChangeEvent;
@@ -49,6 +51,7 @@
 				detachPosWatching();
 				initPositionSlider();
 				playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
+				soundPositionCtrlID.setPositionInMilliSecs(0);
 			}
 					
 			/*
@@ -104,8 +107,9 @@
 	        // update controls depending on channel position
 	        private function channelPositionChanged(arg:*):void {
 	        	if (player != null && player.getCurrentState() == Player.PLAYER_RUNNING) {
-		        	var curPos:Number = player.currentChannelPosition/1000; 
+		        	var curPos:Number = player.currentChannelPosition/1000;
 		        	playerPositionSliderID.value = curPos;
+		        	soundPositionCtrlID.setPositionInMilliSecs(player.currentChannelPosition);
 	        	}
 	        }
 			
@@ -153,16 +157,21 @@
 				}
 			}
 			
+//			private function setPositionInMilliSecs(value:Number=-1):void {
+//				soundPositionCtrlID.setPositionInMilliSecs(value);	// 212.1926530612245
+//			}
+			
 		]]>
 	</mx:Script>
 
 	<mx:HBox width="100%" height="100%">
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL')}" id="playBtn" click="play()" />
-		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />	
+		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />
+		<views:SoundPositionControl id="soundPositionCtrlID"/>	
+	<!--	<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_SET_POSITION')}" id="setPosBtn"  click="setPositionInMilliSecs()" /> -->
 	</mx:HBox>
 	<mx:HBox width="100%" height="100%">
 		<mx:Label text="Position:"/>
-		<!-- <mx:HSlider width="100%" minimum="0" maximum="100" value="100" change="getCurrentSoundPos()" id="playerPositionSliderID"/> -->
 		<mx:HSlider width="100%" 
 					minimum="0" 
 					maximum="100" 

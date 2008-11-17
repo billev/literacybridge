@@ -28,7 +28,7 @@ package org.literacybridge.authoring.player
 		private var pausePos:Number = 0;	// current position in the sound file (used for pausing)
 		
 		private var posTimer:Timer;
-		private var posTimerDelay:Number = 500;
+		private var posTimerDelay:Number = 50;
 		private var _currentChannelPosition:Number = 0;	// tmp variable to get the current pos
 				
 		public function Player() {
