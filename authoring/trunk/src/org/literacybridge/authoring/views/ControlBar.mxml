@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.StringUtil;
+			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
 			import flash.net.FileReference;
-		
+			import mx.resources.ResourceManager;
+			
 			private var win:ApplicationSettingsScreen;
 			private var file:File;
 			
@@ -20,10 +23,37 @@
 			private function showSettingsScreen() : void {
 				win = ApplicationSettingsScreen(PopUpManager.createPopUp(this, ApplicationSettingsScreen, true));
 			}
+			
+			private function onMenuItemClick(event:MenuEvent):void {
+				switch (event.label) {
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_PREFERENCES") :
+						showSettingsScreen();
+						break;
+				}
+			}
+
 		]]>
 	</mx:Script>
 
-	<mx:Button label="{resourceManager.getString('resources', 'CONTROLBAR_OPEN_BUTTON')}" click="onOpen(event)" />
-	<mx:Spacer width="100%" />
-	<mx:Button label="{resourceManager.getString('resources', 'CONTROLBAR_SETTINGS_BUTTON')}" click="showSettingsScreen()"/>
-</mx:HBox>
+	<mx:MenuBar id="menuBar" width="100%" 
+		labelField="@label" itemClick="onMenuItemClick(event)">
+		<mx:XMLList>
+		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_FILE')}">
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_OPEN')}"/>
+				<menuitem type="separator"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SAVE')}"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SAVE_AS')}"/>
+				<menuitem type="separator"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_QUIT')}"/>
+			</menuitem>
+		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_WINDOW')}">
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_PREFERENCES')}"/>
+			</menuitem>
+		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_HELP')}">
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_ABOUT')}"/>
+			</menuitem>
+		</mx:XMLList>
+	</mx:MenuBar>
+
+
+</mx:Canvas>
