@@ -10,7 +10,9 @@ package org.literacybridge.authoring.schema {
 		    var data : XML = XML(stream.readUTFBytes(stream.bytesAvailable));
 		    stream.close();
 		    
-		    return parseData(data);
+		    var content:ContentPackage = parseData(data);
+		    content.packageFile = file;
+		    return content;
 		}
 		
 		private function parseData(data:XML):ContentPackage {
@@ -44,8 +46,12 @@ package org.literacybridge.authoring.schema {
 		private function parseSingleBlock(block:XML):ContentBlock {
 			var b : ContentBlock = new ContentBlock();
 			b.label = block.@name;
-			b.start = Number(block.@start);
-			b.end = Number(block.@end);		
+			if (block.@start != undefined) {
+				b.start = Number(block.@start);
+			}
+			if (block.@end != undefined) {
+				b.end = Number(block.@end);
+			}		
 			return b;	
 		}
 

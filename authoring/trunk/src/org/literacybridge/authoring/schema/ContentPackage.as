@@ -1,10 +1,12 @@
 package org.literacybridge.authoring.schema {
-	import mx.collections.ArrayCollection;
+	import flash.filesystem.File;
 	
 	[Bindable]
 	public class ContentPackage extends ContentContainer {
-		public function addFile(file:ContentFile):void {
-			children.addItem(file);
+		public var packageFile:File;
+		
+		public function addFile(audioFile:ContentFile):void {
+			children.addItem(audioFile);
 		}
 	}
 }

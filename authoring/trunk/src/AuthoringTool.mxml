@@ -10,6 +10,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentPackage;
+			import org.literacybridge.authoring.schema.ContentXMLWriter;
 			import org.literacybridge.authoring.schema.ContentXMLParser;
 			import mx.managers.PopUpManager;
 			import org.literacybridge.authoring.views.ApplicationSettingsScreen;
@@ -55,9 +57,17 @@
 						showSettingsScreen();
 						break;
 					case ExtendedMenuEvent.MENU_OPEN :
-						openFileBrowser();
+						openFileBrowserOpen();
 						break;
-
+					case ExtendedMenuEvent.MENU_SAVE :
+						save();
+						break;
+					case ExtendedMenuEvent.MENU_SAVE_AS :
+						openFileBrowserSaveAs();
+						break;
+					case ExtendedMenuEvent.MENU_QUIT :
+						onQuit();
+						break;
 				}
 			}
 
@@ -67,10 +77,37 @@
 
 			private var file:File;
 
-			private function openFileBrowser():void {
+			private function save():void {
+				var writer:ContentXMLWriter = new ContentXMLWriter();
+				writer.write(outline.contents.getItemAt(0) as ContentPackage);
+			}
+
+			private function openFileBrowserSaveAs():void {
+	            file = new File();  		
+				file.addEventListener(Event.SELECT, onFileSelectSaveAs);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForSave(dialogTitle);	
+				} catch (err:Error)	{
+					trace("Something went wrong browsing for a file");
+					// do s.th. useful
+				}
+			}
+
+			private function onFileSelectSaveAs(event:Event):void {
+	         	var openedFile:File = event.target as File;
+	         	file.removeEventListener(Event.COMPLETE, onFileSelectSaveAs);
+				var writer:ContentXMLWriter = new ContentXMLWriter();
+				var content:ContentPackage = outline.contents.getItemAt(0) as ContentPackage;
+				content.packageFile=openedFile;
+				writer.write(content);
+	        }
+
+
+			private function openFileBrowserOpen():void {
 	            file = new File();  
 				var xmlFilter:FileFilter = new FileFilter("XML", "*.xml")		
-				file.addEventListener(Event.SELECT, onFileSelect);
+				file.addEventListener(Event.SELECT, onFileSelectOpen);
 				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
 				try {
 					file.browseForOpen(dialogTitle, ([xmlFilter]));	
@@ -80,11 +117,15 @@
 				}
 			}
 
-			private function onFileSelect(event:Event):void {
+			private function onFileSelectOpen(event:Event):void {
 	         	var openedFile:File = event.target as File;
-	         	file.removeEventListener(Event.COMPLETE, onFileSelect);
+	         	file.removeEventListener(Event.COMPLETE, onFileSelectOpen);
 				var parser:ContentXMLParser = new ContentXMLParser();
 				outline.contents.addItem(parser.parse(openedFile));
+	        }
+	        
+	        private function onQuit():void {
+	        	close();
 	        }
 
 			

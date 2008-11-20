@@ -4,6 +4,8 @@ package org.literacybridge.authoring.config {
 	
 	import mx.resources.ResourceManager;
 	
+	import org.literacybridge.authoring.util.XMLUtils;
+	
 	final public class Settings extends EventDispatcher {
 		private static var instance : Settings = new Settings();
 		
@@ -51,7 +53,7 @@ package org.literacybridge.authoring.config {
 		}
 		
 		public function saveSettings():void {
-			writeXMLData(createXMLData());
+			XMLUtils.writeXMLData(createXMLData(), settingsFile);
 		}
 		
 		private function createXMLData():XML {
@@ -60,17 +62,5 @@ package org.literacybridge.authoring.config {
 			settings.locale = locale;
 			return settings;
 		}
-		
-		private function writeXMLData(settings : XML):void {
-			var outputString:String = '<?xml version="1.0" encoding="utf-8"?>\n';
-			outputString += settings.toXMLString();
-			outputString = outputString.replace(/\n/g, File.lineEnding);
-			stream = new FileStream();
-			stream.open(settingsFile, FileMode.WRITE);
-			stream.writeUTFBytes(outputString);
-			stream.close();
-		}
-
- 
 	}
 }

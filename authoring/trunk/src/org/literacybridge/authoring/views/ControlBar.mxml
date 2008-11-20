@@ -29,6 +29,19 @@
 					case resourceManager.getString("resources", "CONTROLBAR_MENU_OPEN") :
 						dispatch(event, ExtendedMenuEvent.MENU_OPEN);
 						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_SAVE") :
+						dispatch(event, ExtendedMenuEvent.MENU_SAVE);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_SAVE_AS") :
+						dispatch(event, ExtendedMenuEvent.MENU_SAVE_AS);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_ABOUT") :
+						dispatch(event, ExtendedMenuEvent.MENU_ABOUT);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_QUIT") :
+						dispatch(event, ExtendedMenuEvent.MENU_QUIT);
+						break;
+
 
 				}
 			}

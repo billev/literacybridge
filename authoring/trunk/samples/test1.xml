@@ -15,6 +15,6 @@
 
   <File name="definitions.mp3">
     <Block name="def_LB" start="0" end="3000"/>
-    <block name="def_xzy" start="3000" end="7000"/>
+    <Block name="def_xzy" start="3000" end="7000"/>
   </File>
 </Package>
