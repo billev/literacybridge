@@ -4,16 +4,34 @@
 	layout="absolute"
 	applicationComplete="onApplicationComplete()"
 	initialize="onInit()"
-	showStatusBar="true">
+	showStatusBar="true"
+	width="800"
+	height="600">
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentXMLParser;
+			import mx.managers.PopUpManager;
+			import org.literacybridge.authoring.views.ApplicationSettingsScreen;
+			import org.literacybridge.authoring.events.ExtendedMenuEvent;
+			import mx.controls.Tree;
+			import mx.events.ListEvent;
+			import mx.events.TreeEvent;
+			import mx.events.CollectionEvent;
 			import org.literacybridge.authoring.config.Settings;
 			import mx.resources.ResourceManager;
 			
-
+			private var win:ApplicationSettingsScreen;
 		
 			private function onInit() : void {
+				outline.outlineTree.addEventListener(ListEvent.ITEM_CLICK, updateProperties);
+			}
+			
+			private function updateProperties(event:Event) : void {
+				var tree:Tree;
+				tree = Tree(event.target);
+			
+				properties.update(tree.selectedItem);
 			}
 		
 			private function onApplicationComplete() : void {
@@ -31,6 +49,45 @@
 				ResourceManager.getInstance().localeChain = [settings.getLocale()];
 			}
 			
+			private function onMainMenuEvent(event:ExtendedMenuEvent):void {
+				switch (event.id) {
+					case ExtendedMenuEvent.MENU_PREFERENCES :
+						showSettingsScreen();
+						break;
+					case ExtendedMenuEvent.MENU_OPEN :
+						openFileBrowser();
+						break;
+
+				}
+			}
+
+			private function showSettingsScreen() : void {
+				win = ApplicationSettingsScreen(PopUpManager.createPopUp(this, ApplicationSettingsScreen, true));
+			}
+
+			private var file:File;
+
+			private function openFileBrowser():void {
+	            file = new File();  
+				var xmlFilter:FileFilter = new FileFilter("XML", "*.xml")		
+				file.addEventListener(Event.SELECT, onFileSelect);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForOpen(dialogTitle, ([xmlFilter]));	
+				} catch (err:Error)	{
+					trace("Something went wrong browsing for a file");
+					// do s.th. useful
+				}
+			}
+
+			private function onFileSelect(event:Event):void {
+	         	var openedFile:File = event.target as File;
+	         	file.removeEventListener(Event.COMPLETE, onFileSelect);
+				var parser:ContentXMLParser = new ContentXMLParser();
+				outline.contents.addItem(parser.parse(openedFile));
+	        }
+
+			
 		]]>
 	</mx:Script>
 
@@ -39,11 +96,19 @@
     </mx:Metadata>
 
 	<mx:VBox width="100%" height="100%">
-		<mx:VBox width="100%" height="100%">
-			<views:ControlBar width="100%"/>
-		</mx:VBox>
+		<views:ControlBar width="100%"
+			mainMenuEvent="onMainMenuEvent(event)"/>
+
 		<mx:HBox width="100%" height="100%">
-			<views:PlayerControl width="100%"/>
+			<mx:VBox width="30%" height="100%">
+				<views:OutlineView id="outline" width="100%"/>
+				<views:PropertiesView id="properties"/>
+			</mx:VBox>
+			<mx:VBox height="100%">
+				<views:PlayerControl />
+				<views:PlayerControl />
+				<views:PlayerControl />
+			</mx:VBox>
 		</mx:HBox>		
 	</mx:VBox>
 </mx:WindowedApplication>

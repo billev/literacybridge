@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Metadata>
+		[Event(name="mainMenuEvent", type="org.literacybridge.authoring.events.ExtendedMenuEvent")] 
+	</mx:Metadata>
+
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.ExtendedMenuEvent;
 			import mx.utils.StringUtil;
 			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
 			import flash.net.FileReference;
 			import mx.resources.ResourceManager;
 			
-			private var win:ApplicationSettingsScreen;
 			private var file:File;
 			
 			private function onOpen(event:Event) :void {
@@ -16,20 +20,22 @@
 				var xmlFilter:FileFilter = new FileFilter("XML", "*.xml");
 				fileRef.browse([xmlFilter]);	
 			}
-
-
-			
-			
-			private function showSettingsScreen() : void {
-				win = ApplicationSettingsScreen(PopUpManager.createPopUp(this, ApplicationSettingsScreen, true));
-			}
 			
 			private function onMenuItemClick(event:MenuEvent):void {
 				switch (event.label) {
 					case resourceManager.getString("resources", "CONTROLBAR_MENU_PREFERENCES") :
-						showSettingsScreen();
+						dispatch(event, ExtendedMenuEvent.MENU_PREFERENCES);
 						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_OPEN") :
+						dispatch(event, ExtendedMenuEvent.MENU_OPEN);
+						break;
+
 				}
+			}
+			
+			private function dispatch(event:MenuEvent, id:int):void {
+				dispatchEvent(new ExtendedMenuEvent(id, "mainMenuEvent", event.bubbles, event.cancelable, event.menuBar,
+									event.menu, event.item, event.itemRenderer, event.label, event.index));
 			}
 
 		]]>
