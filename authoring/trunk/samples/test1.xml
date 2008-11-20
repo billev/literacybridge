@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package name="Example">
+  <File name="chapter1.mp3">
+    <Block name="page1">
+      <Block name="line1" start="0" end="10000"/>
+      <Block name="line2" start="10000" end="23000"/>
+    </Block>
+    <Block name="page2">
+      <Block name="line1" start="0" end="8000"/>
+      <Block name="line2" start="8000" end="11000"/>
+    </Block>
+    
+  </File>
+
+  <File name="definitions.mp3">
+    <Block name="def_LB" start="0" end="3000"/>
+    <block name="def_xzy" start="3000" end="7000"/>
+  </File>
+</Package>
