@@ -2,6 +2,8 @@
 <mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.player.PlayerStates;
+			import org.literacybridge.authoring.player.PlayerController;
 			import mx.formatters.Formatter;
 			import mx.formatters.NumberBase;
 			import mx.events.SliderEvent;
@@ -11,155 +13,187 @@
 			import mx.binding.utils.ChangeWatcher;
 			import org.literacybridge.authoring.player.Player;
 		
-			internal var player:Player;
-			internal var _posWatcher:ChangeWatcher;
+			internal var playerController:PlayerController = null;
+			internal var player:Player = null;
+			
+			internal var _positionWatcher:ChangeWatcher     = null;
+			internal var _playerStateWatcher:ChangeWatcher 	= null;
 			
 			internal var file:File;
 			internal var filePath:String;
-		
-			private function play():void {
 
-				if (player != null)
-				{
-					if (player.getCurrentState() == Player.PLAYER_RUNNING) {
-						player.pausePlayer();
-					} else	{
-						player.startPlayer();	
-					}
-					switchPlayPauseButtonLabel();
-				}
-			}
-			
-			private function stop():void {
-				if (player != null)	{
-					player.stopPlayer();
-					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
-					playerPositionSliderID.value = 0;	
-				}
-			}
-			
-			private function switchPlayPauseButtonLabel():void {
-				// change button label
-				if (playBtn.label == resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL')) {
-					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
-				} else {
-					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL');
-				}	
-			}
-			
-			private function resetPlayer():void {
-				detachPosWatching();
-				initPositionSlider();
-				playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
-				soundPositionCtrlID.setPositionInMilliSecs(0);
-			}
-					
+
 			/*
 			 * File Browser 
 			 */
-			private function openFileBrowser():void {
+			private function openFileBrowser():void 
+			{
 	            file = new File();  
 				var mp3Filter:FileFilter = new FileFilter("MP3", "*.mp3")		
 				file.addEventListener(Event.SELECT, onFileSelect);
 				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
-				try {
+				try 
+				{
 					file.browseForOpen(dialogTitle, ([mp3Filter]));	
-				} catch (err:Error)	{
+				} 
+				catch (err:Error)	
+				{
 					trace("Something went wrong browsing for a file");
-					// do s.th. useful
 				}
 			}
 
-			private function onFileSelect(event:Event):void {
+			private function onFileSelect(event:Event):void 
+			{
 	         	var openedFile:File = event.target as File;
 	         	filePath = openedFile.url;
 	         	soundFilePathComboBox.text = filePath;
 	         	file.removeEventListener(Event.COMPLETE, onFileSelect);
-	         	// init player with new file
-	         	player = new Player();
-	         	player.addEventListener(Player.FILE_LOADED, fileLoadingComplete);
-	         	player.addEventListener(Player.FILE_COMPLETE, filePlayingComplete);
-	         	player.loadSound(filePath);
 
+	         	player = new Player();
+	         	player.init(filePath);	         	
+	         	playerController = new PlayerController(player);	         	
+	         	player.addEventListener(Player.PLAYER_INITIALIZED, fileLoadingComplete);
+	         	player.addEventListener(Player.PLAYER_FINISHED, onPlayerFinished);
 	        }
 	        
-	        private function fileLoadingComplete(event:Event):void {
-	        	// get the current slider position and set it into the player
+	        private function fileLoadingComplete(event:Event):void 
+	        {
 	        	initPositionSlider();
-	        	// enable controls
 	         	enabelControls(true);
-	        	player.removeEventListener(Player.FILE_LOADED, fileLoadingComplete);
+				if (player != null && playerController)
+				{
+					_playerStateWatcher = BindingUtils.bindSetter(playerStateChanged, player, "state");
+	        		_positionWatcher = BindingUtils.bindSetter(channelPositionChanged, playerController, "currentPlayerPosition");
+				}
+	        	player.removeEventListener(Player.PLAYER_INITIALIZED, fileLoadingComplete);
 	        }
-	        
-	      	private function filePlayingComplete(event:Event):void {
-	      		resetPlayer();
-	      	}
-	        
-	        private function initPositionSlider():void {
-	        	if (player != null) {
-	        		var soundLength:Number = player.getSoundLengthInSecs();
-	        		playerPositionSliderID.value = 0;
-	        		playerPositionSliderID.maximum = soundLength.valueOf();
-	        		_posWatcher = BindingUtils.bindSetter(channelPositionChanged, player, "currentChannelPosition");
-	        	}
-	        }
-	        
-	        // update controls depending on channel position
-	        private function channelPositionChanged(arg:*):void {
-	        	if (player != null && player.getCurrentState() == Player.PLAYER_RUNNING) {
-		        	var curPos:Number = player.currentChannelPosition/1000;
-		        	playerPositionSliderID.value = curPos;
-		        	soundPositionCtrlID.setPositionInMilliSecs(player.currentChannelPosition);
-	        	}
-	        }
-			
-			// user changed slider position
-			private function getCurrentSoundPos():void {
-				var curSliderPos:Number = playerPositionSliderID.value;
-				player.setPositionInSecs(curSliderPos);
+	     		
+	     	private function onPlayerFinished(event:Event):void
+			{
+				resetPlayerControl();
 			}
-			
-			private function detachPosWatching():void {
-				if (_posWatcher != null && _posWatcher.isWatching()) {
-					_posWatcher.unwatch();	// detach
+	     			
+			private function play():void 
+			{
+				if (playerController != null)
+				{
+					if (player.state == PlayerStates.PLAYER_RUNNING) 
+					{
+						playerController.pausePlayer();
+					}
+					else
+					{
+						playerController.startPlayer();	
+					}
 				}
 			}
 			
-			private function reattachPosWatching():void {
-				if (_posWatcher != null && !_posWatcher.isWatching()) {
-					_posWatcher.reset(player);
+			private function stop():void 
+			{
+				if (playerController != null)	
+				{
+					playerController.stopPlayer();
+					playerPositionSliderID.value = 0;
 				}
 			}
 			
-			private function onSliderThumbPressed(event:Event):void {
-				detachPosWatching();
+			private function resetPlayerControl():void 
+			{
+				playerPositionSliderID.value = 0;
+				soundPositionCtrlID.setPositionInMilliSecs(0);
 			}
-			
-			private function onSliderThumbReleased(event:Event):void {
-				reattachPosWatching();	
+				
+	      	private function playerStateChanged(arg:*):void
+	      	 {
+	      	 	if (player == null) return;
+				if (player.state == PlayerStates.PLAYER_RUNNING)
+				{
+					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PAUSE_LABEL');
+				}
+				else if (player.state == PlayerStates.PLAYER_PAUSING
+						|| player.state == PlayerStates.PLAYER_STOPPED)
+				{
+					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');		
+				}
 			}
+	       
+	        private function channelPositionChanged(arg:*):void 
+	        {
+	        	if (playerController != null && player != null && player.state == PlayerStates.PLAYER_RUNNING) 
+	        	{
+		        	var currentChannelPosition:Number = player.currentPosition;	        	
+		        	playerPositionSliderID.value = currentChannelPosition / 1000;
+		        	soundPositionCtrlID.setPositionInMilliSecs(currentChannelPosition);
+	        	}
+	        }
 			
-			private function initControl():void {
+			private function initControl():void 
+			{
 				playerPositionSliderID.value = 0;
 				enabelControls(false);
 				soundFilePathComboBox.enabled = false;	// always insensitive
 				playerPositionSliderID.addEventListener(SliderEvent.THUMB_PRESS, onSliderThumbPressed); 
 				playerPositionSliderID.addEventListener(SliderEvent.THUMB_RELEASE, onSliderThumbReleased);
 			}
-			
-			private function enabelControls(enable:Boolean):void {
+	
+			private function enabelControls(enable:Boolean):void 
+			{
 				playBtn.enabled = enable;
 				stopBtn.enabled = enable;
-				if (player != null) {
-					playerPositionSliderID.enabled = player.isPlayerReady();
-				} else {
+				if (playerController != null) 
+				{
+					playerPositionSliderID.enabled = playerController.isInitialized();
+				}
+				else 
+				{
 					playerPositionSliderID.enabled = false;
 				}
 			}
 			
-//			private function setPositionInMilliSecs(value:Number=-1):void {
-//				soundPositionCtrlID.setPositionInMilliSecs(value);	// 212.1926530612245
-//			}
+	
+			/*
+			 * Position Slider ...
+			 */ 
+			private function initPositionSlider():void 
+	        {
+	        	if (player != null && player.isInitialized()) 
+	        	{
+	        		var soundLength:Number = player.soundLength/1000;
+	        		playerPositionSliderID.value = 0;
+	        		playerPositionSliderID.maximum = soundLength.valueOf();
+	        	}
+	        }
+			private function getCurrentSoundPos():void 
+			{
+				playerController.startPlayer(playerPositionSliderID.value*1000);
+			}		
+			private function onSliderThumbPressed(event:Event):void 
+			{
+				detachPosWatching();
+			}		
+			private function onSliderThumbReleased(event:Event):void 
+			{
+				reattachPosWatching();	
+			}
+			private function reattachPosWatching():void
+			{
+				if (_positionWatcher != null && !_positionWatcher.isWatching())
+				{
+					_positionWatcher.reset(playerController);
+				}
+			}			
+			private function detachPosWatching():void
+			{
+				if (_positionWatcher != null && _positionWatcher.isWatching())	
+				{
+					_positionWatcher.unwatch();
+				}
+			}	
+				
+			private function setPositionInMilliSecs(value:Number=-1):void 
+			{
+				soundPositionCtrlID.setPositionInMilliSecs(value);	
+			}
 			
 		]]>
 	</mx:Script>
@@ -168,16 +202,15 @@
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL')}" id="playBtn" click="play()" />
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />
 		<views:SoundPositionControl id="soundPositionCtrlID"/>	
-	<!--	<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_SET_POSITION')}" id="setPosBtn"  click="setPositionInMilliSecs()" /> -->
 	</mx:HBox>
 	<mx:HBox width="100%" height="100%">
 		<mx:Label text="Position:"/>
-		<mx:HSlider width="100%" 
+			<mx:HSlider width="100%" 
 					minimum="0" 
 					maximum="100" 
 					value="0" 
 					change="getCurrentSoundPos()" 
-					id="playerPositionSliderID"/>
+					id="playerPositionSliderID"/> 
 	</mx:HBox>	
 	<mx:HBox width="100%" height="100%">
 		<mx:TextInput width="100%" id="soundFilePathComboBox"/>

@@ -2,128 +2,135 @@ package org.literacybridge.authoring.player
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.net.URLRequest;
-	import flash.utils.Timer;
 	
-	public class Player extends EventDispatcher
+	public class Player extends EventDispatcher implements IPlayer
 	{
 		// event
-		public static const FILE_LOADED:String = "fileLoaded";
-		public static const FILE_COMPLETE:String = "fileComplete";
+		public static const PLAYER_INITIALIZED:String 	= "playerInitialized";
+		public static const PLAYER_FINISHED:String 		= "playerFinished";
 		
 		// internal state
-		public static const PLAYER_RUNNING:String = "Running";
-		public static const PLAYER_PAUSING:String = "Pausing";
-		public static const PLAYER_STOPPED:String = "Stopped";
-		private var state:String = PLAYER_STOPPED;	// init state
-		
-		
-		private var filePath:String;	// path to current sound file
+		private var _state:String 					= PlayerStates.PLAYER_STOPPED;
+		// path to current sound file
+		private var filePath:String = "";
 
-		private var sound:Sound;
-		private var channel:SoundChannel;
-		private var pausePos:Number = 0;	// current position in the sound file (used for pausing)
+		// Sound
+		private var sound:Sound 		 	= null;
+		private var channel:SoundChannel 	= null;
+		private var position:Number	= 0;
 		
-		private var posTimer:Timer;
-		private var posTimerDelay:Number = 50;
-		private var _currentChannelPosition:Number = 0;	// tmp variable to get the current pos
-				
-		public function Player() {
+		// Constructor		
+		public function Player() 
+		{
 			super();
 		}
 
-		public function loadSound(filePath:String):void	{	
+		/*
+		 * Methods 
+		 */
+		
+		public function init(filePath:String):void	
+		{	
 			this.filePath = filePath;
+			position = 0;
+			channel = null;
 			sound = new Sound();
 			sound.addEventListener(Event.COMPLETE, onLoadingComplete);
 			sound.load(new URLRequest(filePath));
-			// timer
-			posTimer = new Timer(posTimerDelay);
-			posTimer.addEventListener(TimerEvent.TIMER, onPositionTimer);
 		}
 
-
-		public function startPlayer():void {
-			if (channel != null) {
-				channel.stop();	// we must stop old playing
+		public function start():void 
+		{
+			if (channel != null) // JTDB
+			{
+				channel.stop();
 			}
-			channel = sound.play(pausePos);
+			channel = sound.play(position);
 			channel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
-			posTimer.start();
-			state = PLAYER_RUNNING;
+			state = PlayerStates.PLAYER_RUNNING;
 		}
 		
-		public function pausePlayer():void {
-			if (channel != null) {
-				pausePos = channel.position;
+		public function pause():void 
+		{
+			if (channel != null) 
+			{
+				position = channel.position;
 				channel.stop();
-				state = PLAYER_PAUSING;
-				// stop timer and set current pos 
-				posTimer.reset();
-				currentChannelPosition = pausePos;	// fire update
+				state = PlayerStates.PLAYER_PAUSING; 
 			}
 		}
 
-		public function stopPlayer():void {
-			if (channel != null) {
-				pausePos = 0;	
+		public function stop():void 
+		{
+			if (channel != null) 
+			{
+				position = 0;	
 				channel.stop();
-				posTimer.stop();
 			}
-			state = PLAYER_STOPPED;
+			state = PlayerStates.PLAYER_STOPPED;
 		}	
 
-		public function setPositionInSecs(newPos:Number):void {	
-			var oldState:String = state;		
-			stopPlayer();
-			pausePos = newPos*1000; // we need milli secs
-			if (oldState == PLAYER_RUNNING) {
-				startPlayer();
+		public function playFromPosition(newPosition:Number):Boolean
+		{	
+			var oldState:String = _state;		
+			stop();
+			position = newPosition;
+			if (oldState == PlayerStates.PLAYER_RUNNING) 
+			{	
+				start();
+				return true;
 			}
+			return false; 
 		}
 		
-		public function getSoundLengthInSecs():Number {
-			return sound.length / 1000;
-		}
-
-		public function getSoundLengthInMilliSecs():Number {
-			return sound.length;
+		public function get soundLength():Number 
+		{
+			if (isInitialized()) return sound.length;
+			else return 0;
 		}		
 		
-		public function isPlayerReady():Boolean {
+		public function isInitialized():Boolean
+		 {
 			return (sound != null);
 		}
-			     
-		public function getCurrentState():String {
-			return state;
-		}
-		
-		public function set currentChannelPosition( newValue:Number ):void {
-			_currentChannelPosition = newValue;
-		}
-		
+			
 		[Bindable]
-		public function get currentChannelPosition():Number {
-			return _currentChannelPosition;
+		public function get state():String 
+		{
+			return _state;
+		}
+		private function set state(newState:String):void
+		{
+			_state = newState;
 		}
 		
-		private function onPositionTimer(e:TimerEvent):void {
-			if (channel != null) {
-				this.currentChannelPosition = channel.position;		
-			} 
+		public function get currentPosition():Number
+		{
+			if (channel != null)
+			{
+				return channel.position;
+			}
+			return 0;
 		}
-			        
-        private function onLoadingComplete(event:Event):void {
-        	dispatchEvent(new Event(Player.FILE_LOADED));
+		
+
+		/*
+		 * Events
+		 */
+		
+        private function onLoadingComplete(event:Event):void 
+        {
+        	dispatchEvent(new Event(Player.PLAYER_INITIALIZED));
         }
         
-        private function onSoundComplete(event:Event):void {
-        	state = PLAYER_STOPPED;
-        	pausePos = 0;
-        	dispatchEvent(new Event(Player.FILE_COMPLETE));
+        private function onSoundComplete(event:Event):void 
+        {
+        	state = PlayerStates.PLAYER_STOPPED;
+        	position = 0;
+        	dispatchEvent(new Event(Player.PLAYER_FINISHED));
         }
 	}
 }
