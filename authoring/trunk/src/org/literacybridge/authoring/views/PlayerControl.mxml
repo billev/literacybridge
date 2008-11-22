@@ -93,7 +93,6 @@
 				if (playerController != null)	
 				{
 					playerController.stopPlayer();
-					playerPositionSliderID.value = 0;
 				}
 			}
 			
@@ -113,7 +112,11 @@
 				else if (player.state == PlayerStates.PLAYER_PAUSING
 						|| player.state == PlayerStates.PLAYER_STOPPED)
 				{
-					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');		
+					playBtn.label = resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL');
+					if (player.state == PlayerStates.PLAYER_STOPPED)
+					{
+						resetPlayerControl();
+					}		
 				}
 			}
 	       

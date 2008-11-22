@@ -14,6 +14,8 @@ package org.literacybridge.authoring.player
 		
 		// internal state
 		private var _state:String 					= PlayerStates.PLAYER_STOPPED;
+		// if true, do not notify listeners of state changes
+		private var internalStateChanging:Boolean	= false;			
 		// path to current sound file
 		private var filePath:String = "";
 
@@ -35,6 +37,7 @@ package org.literacybridge.authoring.player
 		public function init(filePath:String):void	
 		{	
 			this.filePath = filePath;
+			internalStateChanging = false;
 			position = 0;
 			channel = null;
 			sound = new Sound();
@@ -50,7 +53,7 @@ package org.literacybridge.authoring.player
 			}
 			channel = sound.play(position);
 			channel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
-			state = PlayerStates.PLAYER_RUNNING;
+			setNewState(PlayerStates.PLAYER_RUNNING);
 		}
 		
 		public function pause():void 
@@ -59,7 +62,7 @@ package org.literacybridge.authoring.player
 			{
 				position = channel.position;
 				channel.stop();
-				state = PlayerStates.PLAYER_PAUSING; 
+				setNewState(PlayerStates.PLAYER_PAUSING); 
 			}
 		}
 
@@ -70,20 +73,23 @@ package org.literacybridge.authoring.player
 				position = 0;	
 				channel.stop();
 			}
-			state = PlayerStates.PLAYER_STOPPED;
+			setNewState(PlayerStates.PLAYER_STOPPED);
 		}	
 
 		public function playFromPosition(newPosition:Number):Boolean
 		{	
+			var ret:Boolean = false;
+			internalStateChanging = true;	// do not fire state has changed
 			var oldState:String = _state;		
 			stop();
 			position = newPosition;
 			if (oldState == PlayerStates.PLAYER_RUNNING) 
 			{	
 				start();
-				return true;
+				ret = true;
 			}
-			return false; 
+			internalStateChanging = false;
+			return ret; 
 		}
 		
 		public function get soundLength():Number 
@@ -116,6 +122,18 @@ package org.literacybridge.authoring.player
 			return 0;
 		}
 		
+
+		private function setNewState(newState:String):void
+		{
+			if (internalStateChanging)
+			{
+				_state = newState; // internal only
+			} 
+			else 
+			{
+				state = newState; // inform others
+			}
+		}
 
 		/*
 		 * Events
