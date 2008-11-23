@@ -147,8 +147,8 @@
 			</mx:VBox>
 			<mx:VBox height="100%">
 				<views:PlayerControl />
-				<views:PlayerControl />
-				<views:PlayerControl />
+				<views:BlockPlayerControl />
+
 			</mx:VBox>
 		</mx:HBox>		
 	</mx:VBox>

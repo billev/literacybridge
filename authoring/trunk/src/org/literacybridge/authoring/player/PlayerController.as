@@ -10,16 +10,12 @@ package org.literacybridge.authoring.player
 	public class PlayerController extends EventDispatcher
 	{	
 		// player to control
-		private var player:IPlayer 		= null;
-		private var _playerState:String  = "";
+		protected var player:IPlayer 		= null;
 		
 		// Current position timer
 		private var positionTimer:Timer				= null;
 		private var positionTimerDelay:Number 		= 50;
 		private var _currentChannelPosition:Number 	= 0;
-		
-		// player state
-		private var playerStateWatcher:ChangeWatcher = null;
 		
 		public function PlayerController(player:IPlayer)
 		{			
@@ -33,7 +29,7 @@ package org.literacybridge.authoring.player
 			return (player != null && player.isInitialized());
 		}
 		
-		public function startPlayer(startPosition:Number=0, endPosition:Number=-1):void
+		public function startPlayer(startPosition:Number=0):void
 		{
 			if (player.isInitialized())
 			{
@@ -88,11 +84,11 @@ package org.literacybridge.authoring.player
 		 */
 
 		// internal only !!
-		private function set currentPlayerPosition(newPosition:Number):void
+		protected function set currentPlayerPosition(newPosition:Number):void
 		{
 			_currentChannelPosition = newPosition;
 		}
-		private function getPlayerPositionByTimer(e:TimerEvent):void
+		protected  function getPlayerPositionByTimer(e:TimerEvent):void
 		{
 			currentPlayerPosition = player.currentPosition;
 		}
