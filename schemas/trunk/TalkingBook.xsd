@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema
-        version="0.2.0"
+        version="0.3.0"
         targetNamespace="http://www.literacybridge.org/2008/book"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified"
@@ -16,22 +16,18 @@ This is intended as to provide a low-level
 description of the content and interactivity
 for a talking book. 
 
-The main structural elements are Device, Package
-Folder, File, and Block.
+The main structural elements are:
+Package, File, and Block.  
+A Group container will also eventually be implemented.
 
 Each of these elements acts as a container for:
  - A segment of audio content
- - Actions that occur at the beginning and end 
-   of the segment of audio content
+ - Actions that occur at the start and end of the segment of audio content
+ - Actions that occur at entry and exit (which includes jumps into and out of the middle of a block)
  - Button event handlers
  - Child container elements.
  
-It is intended that the resolution of the 
-containers can be changed without altering the content.
-For example a File element with child Block elements
-can be converted to a Folder element with many File elements
-if required by the target player.
-
+ Features that may not be implemented by the next milestone are commented out.
 -->
 
   <xs:include schemaLocation ="TalkingBook-Actions.xsd"/>
@@ -53,7 +49,7 @@ if required by the target player.
       <xs:sequence>
         <xs:group ref="eventHandlerElements"/>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="Group"/>
+          <!-- <xs:element ref="Group"/>  -->
           <xs:element ref="File"/>
         </xs:choice>
       </xs:sequence>
@@ -61,14 +57,12 @@ if required by the target player.
     </xs:complexType>
   </xs:element >
 
+<!--  
+  Group containers are intended to have common actions span multiple File containers, 
+  just as blocks can span multiple other blocks.  As of 23 November, the device does not implement
+  Group containers.  This may or may not be implemented in time for the Jan 2009 pilot.
+ 
   <xs:element name="Group">
-    <xs:annotation>
-      <xs:documentation>
-        NOTE: As of 23 November 2008, the device code does not implement Group containers.
-        The plan is to eventually implement it before the January 2009 pilot.
-        A collection of audio files or other folders.
-      </xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="eventHandlerElements"/>
@@ -77,7 +71,7 @@ if required by the target player.
       <xs:attributeGroup ref="containerAttributes"/>
     </xs:complexType>
   </xs:element>
-
+-->
   <xs:element name="File">
     <xs:annotation>
       <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -89,7 +83,9 @@ if required by the target player.
         <!-- <xs:group ref="eventHandlerElements"/> -->
         <!-- As of 23 November 2008, the device code does not implement File actions.  
               For an entire File to capture event/action pairs, a file-wide block should be created.
-              Once this is implemented, minOccurs on Block will be changed to 0. -->
+              Once this is implemented, minOccurs on Block will be changed to 0. 
+              File actions may or may not be implemented in time for the Jan 2009 pilot.
+        -->
         <xs:element ref="Block" minOccurs ="1" maxOccurs ="unbounded">
           <xs:annotation>
             <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -119,7 +115,8 @@ if required by the target player.
       <xs:attributeGroup ref="containerAttributes"/>
       <xs:attribute name="Start" type="xs:unsignedInt" default="0"/>
       <xs:attribute name="End" type="xs:unsignedInt" use="optional"/>
-      <xs:attribute name="Class" type="xs:string"/>
+      <xs:attribute name="Class" type="xs:string" use="optional" default="#all">
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -138,7 +135,7 @@ if required by the target player.
 
   <xs:group name="eventHandlerElements">
     <xs:sequence>
-      <xs:element name="OnEnter" type="actionsEnterExitType" minOccurs="0">
+      <xs:element name="OnEnter" type="actionsEnterExitType" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             This event fires whenever a container is entered.
@@ -146,7 +143,7 @@ if required by the target player.
           </xs:documentation>
         </xs:annotation>
       </xs:element >
-      <xs:element name="OnExit" type="actionsEnterExitType" minOccurs="0">
+      <xs:element name="OnExit" type="actionsEnterExitType" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             This event fires whenever the player position leaves this container.
@@ -154,14 +151,14 @@ if required by the target player.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="OnStart" type="actionsStartStopType" minOccurs="0">
+      <xs:element name="OnStart" type="actionsStartStopType" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             This event fires whenever the 0 offset in a container is played.
           </xs:documentation>
         </xs:annotation>
       </xs:element >
-      <xs:element name="OnEnd" type="actionsStartStopType" minOccurs="0">
+      <xs:element name="OnEnd" type="actionsStartStopType" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             During normal playback, this event is triggered immediately after the end point of the container and before 
@@ -191,20 +188,56 @@ if required by the target player.
 
   <xs:complexType name="actionsStartStopType">
     <xs:sequence>
-      <xs:element ref="Return" minOccurs="0" maxOccurs="1"/>
       <xs:choice minOccurs="1" maxOccurs="1">
-        <xs:element ref="Continue"/>
-        <xs:element ref="Stop"/>
-        <xs:element ref="Pause"/>
-        <xs:element ref="Goto"/>
+        <xs:element ref="NoOp">
+          <xs:annotation>
+            <xs:documentation>
+              Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="Stop">
+          <xs:annotation>
+            <xs:documentation>
+              Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="Pause">
+          <xs:annotation>
+            <xs:documentation>
+              Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="Goto">
+          <xs:annotation>
+            <xs:documentation>
+              Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:choice>    
+      <xs:element ref="Return" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
-    <xs:attribute name="InsertSoundBlock" type="xs:string" use="optional"/>
+    <xs:attribute name="InsertSoundBlock" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   
   <xs:complexType name="buttonEventHandlerType">
     <xs:choice minOccurs="1" maxOccurs="1">
-      <xs:element ref="Continue"/>  
+      <xs:element ref="NoOp"/>  
       <xs:element ref="Pause"/>  
       <xs:element ref="Stop"/>  
       <xs:element ref="Goto"/>  
@@ -219,6 +252,13 @@ if required by the target player.
     </xs:choice>
     <xs:attribute name="Button" use="required" type="buttonType"/>
     <xs:attribute name="Action" default="Click" type="buttonActionType"/>
+    <xs:attribute name="InsertSoundBlock" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
 
@@ -251,15 +291,43 @@ if required by the target player.
 
   <xs:simpleType name="buttonType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="PlayPause"/>
-      <xs:enumeration value="Plus"/>
-      <xs:enumeration value="Minus"/>
+      <xs:enumeration value="PlayPause">
+        <xs:annotation>
+          <xs:documentation>
+            This event should probably be configured to be hidden from standard use of the authoring application.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Plus">
+        <xs:annotation>
+          <xs:documentation>
+            This event should probably be configured to be hidden from standard use of the authoring application.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Minus">
+        <xs:annotation>
+          <xs:documentation>
+            This event should probably be configured to be hidden from standard use of the authoring application.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
       <xs:enumeration value="Left"/>
       <xs:enumeration value="Right"/>
       <xs:enumeration value="Up"/>
       <xs:enumeration value="Down"/>
       <xs:enumeration value="Select"/>
-      <xs:enumeration value="Home"/>
+      <xs:enumeration value="Home">
+        <xs:annotation>
+          <xs:documentation>
+            This event should probably be configured to be hidden from standard use of the authoring application.
+            We will soon want to introduce help content that is package-specific.  Since the Home button will be used for
+            both "help options" and "home positioning", we will need to come up with a way user content can insert its
+            own help info while not completely overriding the system package's feature that allows the user to ultimately
+            get back to the main menu.  None of this functionality is required for the January 2009 pilot.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
       <xs:enumeration value="Star"/>
     </xs:restriction>
   </xs:simpleType>

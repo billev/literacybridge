@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+  <xs:element name="NoOp" type="simpleActionType">
+    <xs:annotation>
+      <xs:documentation >
+        NoOp means no action at all.
+        This is the implicit default action for a Block's Start and End events.
+        It might also be used explicitly when a Start or End event should trigger a return if there is a stack, but
+        otherwise the device should continue playing into the next Block.  
+        It could also be used when an InsertSound is desired but no other action is needed.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  
   <xs:element name="PlayPause" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
         If stopped, plays audio at beginning of latest block to start.  
         If paused, plays audio at paused point.  
         If playing, pauses audio at current point.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:element>
-  
-  <xs:element name="Continue" type="simpleActionType">
-    <xs:annotation>
-      <xs:documentation >
-        This is the default action for blocks.  
       </xs:documentation>
     </xs:annotation>
   </xs:element>
@@ -109,6 +113,7 @@
   <xs:simpleType name="containerType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Block"/>
+      <!--<xs:enumeration value="Group"/>-->
       <xs:enumeration value="File"/>
       <xs:enumeration value="Package"/>
     </xs:restriction>
