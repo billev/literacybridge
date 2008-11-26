@@ -43,17 +43,25 @@ Each of these elements acts as a container for:
       <xs:documentation>
         A collection of content to be loaded into a talking book device.
         All container and variable names are local to the package in which they appear.
+        The Name attribute is not required for Packages, but if it exists, 
+          it must be the same as the filename of the control track (without the file extension).
+          These names should also match the name of the directory that directly contains the control track file.
+        The Precision attribute is used to allow the device to store start and stop times in an unsigned 2-byte word, 
+        with each value representing an additional step of the milliseconds in the value of the Precision attribute.
+        For example: @Precision==128 means the device will stop/start/accept context within +/- 64 milliseconds of the declared times.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="eventHandlerElements"/>
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
           <!-- <xs:element ref="Group"/>  -->
           <xs:element ref="File"/>
         </xs:choice>
       </xs:sequence>
-      <xs:attributeGroup ref="containerAttributes"/>
+      <xs:attribute name="Name" type="xs:string" use="optional"/>
+      <xs:attribute name="Version" type="xs:string" use="optional"/>
+      <xs:attribute name="Precision" use="optional" default="128"/>
     </xs:complexType>
   </xs:element >
 
@@ -75,7 +83,8 @@ Each of these elements acts as a container for:
   <xs:element name="File">
     <xs:annotation>
       <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
-        A single audio file
+        A single audio file.
+        The Name attribute is required for Files; it *must* be the same as the audio filename (without the file extension).
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -96,7 +105,7 @@ Each of these elements acts as a container for:
           </xs:annotation>          
         </xs:element>
       </xs:sequence>
-      <xs:attributeGroup ref="containerAttributes"/>
+      <xs:attribute name="Name" type="xs:string" use="required"/> 
     </xs:complexType>
   </xs:element>
 
@@ -106,17 +115,19 @@ Each of these elements acts as a container for:
         A block of content within an audio file.
         Start and End times are time in milliseconds from from the end of the previous block.
         If Start or End is ommitted, the block will start or end on the file boundary.
+        The Name attribute is not needed if no action points to it.
+        See complexType:nextPreviousBlockType for matching Class attribute used in NextBlock and PreviousBlock actions.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="eventHandlerElements"/>
       </xs:sequence>
-      <xs:attributeGroup ref="containerAttributes"/>
+      <xs:attribute name="Name" type="xs:string" use="optional"/> 
       <xs:attribute name="Start" type="xs:unsignedInt" default="0"/>
       <xs:attribute name="End" type="xs:unsignedInt" use="optional"/>
-      <xs:attribute name="Class" type="xs:string" use="optional" default="#all">
-      </xs:attribute>
+      <xs:attribute name="Class" type="xs:string" use="optional"/>
+      <xs:attribute name="Hyperlinked" type="xs:boolean" use="optional" default="1"/>
     </xs:complexType>
   </xs:element>
 
@@ -126,12 +137,6 @@ Each of these elements acts as a container for:
   Common Attribute and Element Groups
 =========================================
 -->
-
-  <xs:attributeGroup name="containerAttributes">
-    <xs:attribute name="Name" type="xs:string" use="optional"/>
-  </xs:attributeGroup>
-
-
 
   <xs:group name="eventHandlerElements">
     <xs:sequence>
@@ -151,14 +156,14 @@ Each of these elements acts as a container for:
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="OnStart" type="actionsStartStopType" minOccurs="0" maxOccurs="1">
+      <xs:element name="OnStart" type="actionsStartEndType" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             This event fires whenever the 0 offset in a container is played.
           </xs:documentation>
         </xs:annotation>
       </xs:element >
-      <xs:element name="OnEnd" type="actionsStartStopType" minOccurs="0" maxOccurs="1">
+      <xs:element name="OnEnd" type="actionsStartEndType" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             During normal playback, this event is triggered immediately after the end point of the container and before 
@@ -166,7 +171,22 @@ Each of these elements acts as a container for:
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="OnButton" type="buttonEventHandlerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="OnButtonClick" type="buttonEventHandlerType">
+          <xs:annotation>
+            <xs:documentation>
+              Fires when a button is pressed and held for less than 0.5 seconds.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="OnButtonHold" type="buttonEventHandlerType">
+          <xs:annotation>
+            <xs:documentation>
+              Fires when a button is pressed and held for 0.5 seconds or more.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
     </xs:sequence>
   </xs:group>
 
@@ -180,13 +200,27 @@ Each of these elements acts as a container for:
 
   <xs:complexType name="actionsEnterExitType">
     <xs:sequence>
-      <xs:element ref="SetLight" minOccurs="0" maxOccurs="1"/>        
+      <xs:element ref="SetLight" minOccurs="0" maxOccurs="2">
+        <xs:annotation>
+          <xs:documentation>
+            Two SetLight elements are allowed so that Red and Green can have opposite settings for the same enter/exit event.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>        
       <xs:element ref="SetVolume" minOccurs="0" maxOccurs="1"/>        
-      <xs:element ref="SetSpeed" minOccurs="0" maxOccurs="1"/>        
-      </xs:sequence >
+      <xs:element ref="SetSpeed" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="SetUSBMode" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            If SetUSBMode's Active attribute is TRUE, a SetLight actions will be ignored.  
+            If SetUSBMode's Active attribute is FALSE, the SetLight actions.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence >
   </xs:complexType>
 
-  <xs:complexType name="actionsStartStopType">
+  <xs:complexType name="actionsStartEndType">
     <xs:sequence>
       <xs:choice minOccurs="1" maxOccurs="1">
         <xs:element ref="NoOp">
@@ -217,6 +251,7 @@ Each of these elements acts as a container for:
             </xs:documentation>
           </xs:annotation>
         </xs:element>
+        <!--<xs:element ref="LoadPackage"/>-->
       </xs:choice>    
       <xs:element ref="Return" minOccurs="0" maxOccurs="1">
         <xs:annotation>
@@ -236,22 +271,27 @@ Each of these elements acts as a container for:
   </xs:complexType>
   
   <xs:complexType name="buttonEventHandlerType">
-    <xs:choice minOccurs="1" maxOccurs="1">
-      <xs:element ref="NoOp"/>  
-      <xs:element ref="Pause"/>  
-      <xs:element ref="Stop"/>  
-      <xs:element ref="Goto"/>  
-      <xs:element ref="CallBlock"/>  
-      <xs:element ref="Return"/>  
-      <xs:element ref="NextBlock"/>
-      <xs:element ref="PreviousBlock"/>
-      <xs:element ref="RelativeTimeJump"/>
-      <xs:element ref="SetVolume"/>  
-      <xs:element ref="SetSpeed"/>  
-      <xs:element ref="SetLight"/> 
-    </xs:choice>
-    <xs:attribute name="Button" use="required" type="buttonType"/>
-    <xs:attribute name="Action" default="Click" type="buttonActionType"/>
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element ref="NoOp"/>
+        <xs:element ref="Pause"/>  
+        <xs:element ref="Stop"/>  
+        <xs:element ref="Goto"/>
+        <xs:element ref="Return"/>  
+        <xs:element ref="LoadPackage"/>
+        <xs:element ref="PlayPause"/>  
+        <xs:element ref="CallBlock"/>  
+        <xs:element ref="NextBlock"/>
+        <xs:element ref="PreviousBlock"/>
+        <xs:element ref="RelativeTimeJump"/>
+        <xs:element ref="SetVolume"/>  
+        <xs:element ref="SetLight"/> 
+        <xs:element ref="SetUSBMode"/>
+      </xs:choice>
+      <xs:element ref="Return" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="Button1" use="required" type="buttonType"/>
+    <xs:attribute name="Button2" use="optional" type="buttonType"/>
     <xs:attribute name="InsertSoundBlock" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>
@@ -259,7 +299,8 @@ Each of these elements acts as a container for:
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-  </xs:complexType>
+    <xs:attribute name="SetSpeed" type="relativeSpeedVolumeType" use="optional"/>
+ </xs:complexType>
 
 
   <!--
@@ -267,28 +308,6 @@ Each of these elements acts as a container for:
   Supporting Simple Types
 =========================================
 -->
-
-
-  <xs:simpleType name="buttonActionType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Click">
-      <xs:annotation>
-        <xs:documentation>
-          Fires when a button is pressed and released in less than 0.5 seconds.
-        </xs:documentation>
-      </xs:annotation>
-      </xs:enumeration>
-      <xs:enumeration value="Hold">
-        <xs:annotation>
-          <xs:documentation>
-            Fires when a button is pressed and held for more than 0.5 seconds.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:enumeration >
-    </xs:restriction>
-  </xs:simpleType>
-
-
   <xs:simpleType name="buttonType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="PlayPause">

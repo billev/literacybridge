@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
+  
+  <!--TODO: use KEY and KEYREF to ensure ContainerName and Class references match up.-->
+  
   <xs:element name="NoOp" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
@@ -9,16 +11,6 @@
         It might also be used explicitly when a Start or End event should trigger a return if there is a stack, but
         otherwise the device should continue playing into the next Block.  
         It could also be used when an InsertSound is desired but no other action is needed.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:element>
-  
-  <xs:element name="PlayPause" type="simpleActionType">
-    <xs:annotation>
-      <xs:documentation >
-        If stopped, plays audio at beginning of latest block to start.  
-        If paused, plays audio at paused point.  
-        If playing, pauses audio at current point.
       </xs:documentation>
     </xs:annotation>
   </xs:element>
@@ -52,18 +44,43 @@
     <xs:annotation>
       <xs:documentation>
         Moves to the named container (block, file, or package).
+        The ContainerName attribute must match the Name attribute of a Block or File in this package.
+        To load a new package, see element LoadPackage.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="ContainerName" type="xs:string" use="required"/>
-      <xs:attribute name="ContainerType" type="containerType" use="required"/>
     </xs:complexType>
+  </xs:element>
+
+  <xs:element name="LoadPackage">
+    <xs:annotation>
+      <xs:documentation>
+        This ends the current package and causes the device to load and transfer control to a new package.
+        The Name attribute should match a directory name and a control track's filename (without extension) 
+        at the top level of that directory.
+        If the device cannot find such a package, it is ignored and treated as a No-Op.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="Name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PlayPause" type="simpleActionType">
+    <xs:annotation>
+      <xs:documentation >
+        If stopped, plays audio at beginning of latest block to start.  
+        If paused, plays audio at paused point.  
+        If playing, pauses audio at current point.
+      </xs:documentation>
+    </xs:annotation>
   </xs:element>
   
   <xs:element name="CallBlock">
     <xs:complexType>
       <xs:attribute name="BlockName" type="xs:string" use="required"/>
-      <xs:attribute name="ReturnRewindTime" type="xs:unsignedShort" default="0" use="optional"/>
+      <xs:attribute name="ReturnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>
     </xs:complexType>
   </xs:element>
 
@@ -88,6 +105,19 @@
   <xs:element name="SetVolume" type="adjustSpeedVolumeType"/>
 
   <xs:element name="SetSpeed" type="adjustSpeedVolumeType"/>
+  
+  <xs:element name="SetUSBMode">
+    <xs:annotation>
+      <xs:documentation>
+        This should only be allowed in the system package.  If found in user packages, it will be ignored.
+        HostOrDevice attribute is fixed at 'device' until 'host' mode is impleneted (which will happen before Jan 2009 pilot).
+      </xs:documentation>
+    </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="HostOrDevice" type="hostOrDeviceType" fixed="device" use="required"/>
+        <xs:attribute name="Active" type="xs:boolean" use="required"/>
+      </xs:complexType>
+  </xs:element>
 
 <!--
 =========================================
@@ -101,24 +131,32 @@
   </xs:complexType>
   
   <xs:complexType name="adjustSpeedVolumeType">
-      <xs:attribute name="relative" type="xs:boolean" use="required"/>
-      <xs:attribute name="value" type="xs:byte" use="required"/>
+      <xs:attribute name="relative" type="relativeSpeedVolumeType" use="required"/>
+      <!-- <xs:attribute name="absolute" type="xs:byte" use="optional"/> -->
+      <!-- Absolute value may or may not be implemented before pilot. --> 
   </xs:complexType>
   
   <!--
 =========================================
   Supporting Simple Types
 =========================================
--->
-  <xs:simpleType name="containerType">
+  -->
+  
+  <xs:simpleType name="relativeSpeedVolumeType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Block"/>
-      <!--<xs:enumeration value="Group"/>-->
-      <xs:enumeration value="File"/>
-      <xs:enumeration value="Package"/>
+      <xs:enumeration value="up"/>
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="normal"/>
     </xs:restriction>
   </xs:simpleType>
-
+  
+  <xs:simpleType name="hostOrDeviceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="host"/>
+      <xs:enumeration value="device"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:simpleType name="lightColorType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Red"/>
