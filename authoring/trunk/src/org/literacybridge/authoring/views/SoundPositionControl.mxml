@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
-		width="272"  
-		height="26" 
-		paddingTop="2" 
-		paddingLeft="5" 
-		paddingRight="5"
 		creationComplete="initControl()">
 	<mx:Script>
 		<![CDATA[

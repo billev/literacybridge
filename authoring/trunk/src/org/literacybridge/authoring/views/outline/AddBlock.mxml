@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	      borderStyle="solid" borderColor="#646464" borderThickness="1"
+	      showCloseButton="true"
+	      title="Add Block" fontSize="12"
+	      close="close()">
+	
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentBlock;
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import org.literacybridge.authoring.schema.SubBlockAppendable;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] public var parentContainer:SubBlockAppendable;
+			
+			private function close():void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function addBlock():void {
+				var b:ContentBlock = new ContentBlock();
+				b.label = blockName.text;
+				parentContainer.appendSubBlock(b);
+				close();
+			}
+		]]>
+	</mx:Script>
+	      
+	<mx:VBox fontSize="10">
+		<mx:Form>
+			<mx:FormItem label="Parent:">
+				<mx:Label text="{(parentContainer as ContentContainer).label}"/>
+			</mx:FormItem>
+			<mx:FormItem label="Block Name:">
+				<mx:TextInput id="blockName"/>
+			</mx:FormItem>
+		</mx:Form>
+		<mx:HBox width="100%">		
+			<mx:Button label="Add" click="addBlock()"/>
+			<mx:Button label="Cancel" click="close()"/>
+		</mx:HBox>
+	</mx:VBox>
+</mx:TitleWindow>

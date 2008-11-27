@@ -1,12 +1,12 @@
 package org.literacybridge.authoring.config {
-	import flash.events.EventDispatcher;
 	import flash.filesystem.*;
 	
 	import mx.resources.ResourceManager;
 	
 	import org.literacybridge.authoring.util.XMLUtils;
 	
-	final public class Settings extends EventDispatcher {
+	[Bindable]
+	final public class Settings {
 		private static var instance : Settings = new Settings();
 		
 		public static function getInstance():Settings {
@@ -21,16 +21,10 @@ package org.literacybridge.authoring.config {
 		private var settingsFile:File;   
 		private var stream:FileStream;
 		
-		private var locale:String;
-		
-		public function setLocale(locale:String) : void {
-			this.locale = locale;
-		}
-		
-		public function getLocale() : String {
-			return this.locale;
-		}
-		
+		public var locale:String;
+		public var showWizard:Boolean;
+		public var lastOpenFile:File;
+				
 		public function loadSettings():void {
 			stream = new FileStream();
 			if (settingsFile.exists) {
@@ -50,6 +44,15 @@ package org.literacybridge.authoring.config {
 		
 		private function processXML(settings : XML):void {
 			locale = settings.locale;
+			if (settings.showWelcomeWizard == "true") {
+				showWizard = true;
+			} else {
+				showWizard = false;
+			}
+			var path:String = settings.lastOpenFile;
+			if (path!=null && path.length>0) {
+				lastOpenFile = new File(settings.lastOpenFile);
+			}
 		}
 		
 		public function saveSettings():void {
@@ -60,6 +63,10 @@ package org.literacybridge.authoring.config {
 			var settings : XML = new XML();
 			settings = <settings/>;
 			settings.locale = locale;
+			settings.showWelcomeWizard = showWizard;
+			if (lastOpenFile != null) {
+				settings.lastOpenFile = lastOpenFile.nativePath;
+			}
 			return settings;
 		}
 	}

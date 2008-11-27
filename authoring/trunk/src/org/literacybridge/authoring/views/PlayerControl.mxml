@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox paddingLeft="10" paddingRight="10" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*">
+<mx:Panel width="100%" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*" backgroundAlpha="0.5" borderStyle="solid" borderThickness="1" borderColor="#646464">
 	<mx:Script>
 		<![CDATA[
 			import org.literacybridge.authoring.player.PlayerStates;
@@ -219,4 +219,4 @@
 		<mx:TextInput width="100%" id="soundFilePathComboBox"/>
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_OPEN_BUTTON')}" id="setBtn"  click="openFileBrowser()" />
 	</mx:HBox>
-</mx:VBox>
+</mx:Panel>

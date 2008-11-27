@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentFile;
+			
+			[Bindable] public var contentFile:ContentFile;		
+			
+			private function onChange():void {
+				contentFile.label = fileName.text;
+			}
+				
+		]]>
+	</mx:Script>
+
+		<mx:Form backgroundAlpha="1.0" width="100%" fontSize="10">
+		<mx:FormItem label="Name:">
+			<mx:TextInput id="fileName" editable="true" text="{contentFile.label}" change="onChange()"/>
+		</mx:FormItem>
+	</mx:Form>
+</mx:HBox>

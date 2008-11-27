@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:views="org.literacybridge.authoring.views.*"
+	xmlns:ac="org.literacybridge.authoring.views.actions.*"
+	xmlns:props="org.literacybridge.authoring.views.properties.*"
+	xmlns:ol="org.literacybridge.authoring.views.outline.*"
 	layout="absolute"
 	applicationComplete="onApplicationComplete()"
 	initialize="onInit()"
 	showStatusBar="true"
-	width="800"
-	height="600">
+	borderColor="#C8C8C8" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#D2D2D2, #E6E6E6]">
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.views.wizards.Wizard;
+			import org.literacybridge.authoring.views.wizards.WelcomeWizard;
 			import org.literacybridge.authoring.schema.ContentPackage;
 			import org.literacybridge.authoring.schema.ContentXMLWriter;
 			import org.literacybridge.authoring.schema.ContentXMLParser;
@@ -24,9 +28,10 @@
 			import mx.resources.ResourceManager;
 			
 			private var win:ApplicationSettingsScreen;
+			private var welcome:Wizard;
 		
 			private function onInit() : void {
-				outline.outlineTree.addEventListener(ListEvent.ITEM_CLICK, updateProperties);
+				outline.outlineTree.addEventListener(ListEvent.CHANGE, updateProperties);
 			}
 			
 			private function updateProperties(event:Event) : void {
@@ -39,6 +44,17 @@
 			private function onApplicationComplete() : void {
 				stage.nativeWindow.addEventListener(Event.CLOSING, windowClosingHandler);
 				loadAndApplySettings();
+				if (Settings.getInstance().showWizard) {
+					welcome = Wizard(PopUpManager.createPopUp(this, Wizard, true));
+					welcome.x=50;
+					welcome.y=50;
+				} else {
+					var openedFile:File = Settings.getInstance().lastOpenFile;
+					if (openedFile != null && openedFile.exists) {
+						var parser:ContentXMLParser = new ContentXMLParser();
+						outline.contents.addItem(parser.parse(openedFile));
+					}
+				}
 			}
 			
 			private function windowClosingHandler(event:Event):void {
@@ -48,7 +64,7 @@
 			private function loadAndApplySettings():void {
 				var settings:Settings = Settings.getInstance();
 				settings.loadSettings();
-				ResourceManager.getInstance().localeChain = [settings.getLocale()];
+				ResourceManager.getInstance().localeChain = [settings.locale];
 			}
 			
 			private function onMainMenuEvent(event:ExtendedMenuEvent):void {
@@ -120,6 +136,7 @@
 			private function onFileSelectOpen(event:Event):void {
 	         	var openedFile:File = event.target as File;
 	         	file.removeEventListener(Event.COMPLETE, onFileSelectOpen);
+	         	Settings.getInstance().lastOpenFile=openedFile;
 				var parser:ContentXMLParser = new ContentXMLParser();
 				outline.contents.addItem(parser.parse(openedFile));
 	        }
@@ -140,16 +157,27 @@
 		<views:ControlBar width="100%"
 			mainMenuEvent="onMainMenuEvent(event)"/>
 
-		<mx:HBox width="100%" height="100%">
-			<mx:VBox width="30%" height="100%">
-				<views:OutlineView id="outline" width="100%"/>
-				<views:PropertiesView id="properties"/>
-			</mx:VBox>
-			<mx:VBox height="100%">
-				<views:PlayerControl />
-				<views:BlockPlayerControl />
+		<mx:Canvas width="100%" height="100%">
+			<mx:HDividedBox width="100%" height="100%"
+				left="10" top="5" right="10" bottom="10">
+				<ol:OutlineView id="outline" width="30%"/>
 
-			</mx:VBox>
-		</mx:HBox>		
+				<mx:VDividedBox width="100%" height="100%">
+					<mx:VBox height="100%" width="100%">
+						<views:PlayerControl/>
+						<mx:Spacer/>
+						<views:PlayerControl/>
+
+						<!--<views:BlockPlayerControl />-->
+		
+					</mx:VBox>
+		
+					<mx:HDividedBox width="100%" height="100%">
+						<props:PropertiesView id="properties" width="40%"/>
+						<ac:ActionsView id="actions" width="60%"/>
+					</mx:HDividedBox>
+				</mx:VDividedBox>
+			</mx:HDividedBox>
+		</mx:Canvas>		
 	</mx:VBox>
 </mx:WindowedApplication>

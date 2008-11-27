@@ -12,7 +12,9 @@ package org.literacybridge.authoring.schema {
 		private function createXMLData(content:ContentPackage):XML {
 			var data : XML = new XML();
 			data = <Package/>;
-			data.@name=content.label;
+			data.@Name=content.label;
+			data.@Precision = content.precision;
+			data.@Version = content.version;
 			appendFiles(data, content.children);
 		    return data;
 		}
@@ -22,7 +24,7 @@ package org.literacybridge.authoring.schema {
 				var file:ContentFile = files.getItemAt(i) as ContentFile;
 				var fileData:XML = new XML();
 				fileData = <File/>;
-				fileData.@name=file.label;
+				fileData.@Name=file.label;
 				appendBlocks(fileData, file.children);
 				data.appendChild(fileData);
 			}
@@ -33,13 +35,14 @@ package org.literacybridge.authoring.schema {
 				var block:ContentBlock = blocks.getItemAt(i) as ContentBlock;
 				var blockData:XML = new XML();
 				blockData = <Block/>;
-				blockData.@name=block.label;
+				blockData.@Name=block.label;
 				if (block.start >= 0) {
-					blockData.@start=block.start;
+					blockData.@Start=block.start;
 				}
 				if (block.end >=0) {
-					blockData.@end=block.end;
+					blockData.@End=block.end;
 				}
+				blockData.@Class=block.className;
 				appendBlocks(blockData, block.children);
 				data.appendChild(blockData);
 			}

@@ -16,42 +16,44 @@ package org.literacybridge.authoring.schema {
 		}
 		
 		private function parseData(data:XML):ContentPackage {
-			var p:ContentPackage = new ContentPackage();
-			p.label = data.@name;
+			var p:ContentPackage = parseSinglePackage(data);
 			for each (var file:XML in data.File) {
 				var f : ContentFile = new ContentFile();
-				f.label = file.@name;
+				f.label = file.@Name;
 				p.addFile(f);
-				parseFile(f, file);
+				addSubBlocksRecursively(f, file);
 			}
 			return p;
 		}
 
-		private function parseFile(contentFile:ContentFile, file:XML):void {
-			for each (var block:XML in file.Block) {
-				var b : ContentBlock = parseSingleBlock(block);
-				contentFile.addBlock(b);
-				parseBlock(b, block);
-			}
+		private function parseSinglePackage(data:XML):ContentPackage {
+			var p:ContentPackage = new ContentPackage();
+			p.label = data.@Name;
+			p.precision = data.@Precision;
+			p.version = data.@Version;
+			return p;			
 		}
-
-		private function parseBlock(contentBlock:ContentBlock, block:XML):void {
-			for each (var subBlock:XML in block.Block) {
+		
+		private function addSubBlocksRecursively(container:SubBlockAppendable, data:XML):void {
+			for each (var subBlock:XML in data.Block) {
 				var b : ContentBlock = parseSingleBlock(subBlock);
-				contentBlock.addSubBlock(b);
-				parseBlock(b, subBlock);
-			}
+				container.appendSubBlock(b);
+				addSubBlocksRecursively(b, subBlock);
+			}			
 		}
 
 		private function parseSingleBlock(block:XML):ContentBlock {
 			var b : ContentBlock = new ContentBlock();
-			b.label = block.@name;
-			if (block.@start != undefined) {
-				b.start = Number(block.@start);
+			b.label = block.@Name;
+			if (block.@Start != undefined) {
+				b.start = Number(block.@Start);
 			}
-			if (block.@end != undefined) {
-				b.end = Number(block.@end);
+			if (block.@End != undefined) {
+				b.end = Number(block.@End);
 			}		
+			if (block.@Class != undefined) {
+				b.className = block.@Class;
+			}
 			return b;	
 		}
 

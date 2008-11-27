@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="400" height="300"
 	close="PopUpManager.removePopUp(this)"
-	showCloseButton="true">
+	showCloseButton="true"
+	initialize="init()">
 	<mx:Script>
 		<![CDATA[
 			import org.literacybridge.authoring.config.Settings;
@@ -11,25 +12,30 @@
 			[Bindable]
 			private var locales : Array = ResourceManager.getInstance().getLocales();
 			
-			private function initializeLanguageBox():void {
-            	languageBox.selectedIndex = locales.indexOf(Settings.getInstance().getLocale());
+			private function init():void {
+            	languageBox.selectedIndex = locales.indexOf(Settings.getInstance().locale);
+            	showWizardBox.selected = Settings.getInstance().showWizard;
         	}
 			
-			private function onSelectLanguage() : void {
+			private function onChange() : void {
 				ResourceManager.getInstance().localeChain = [languageBox.selectedItem];
-				Settings.getInstance().setLocale(String(languageBox.selectedItem));
+				Settings.getInstance().locale=String(languageBox.selectedItem);
+				Settings.getInstance().showWizard=showWizardBox.selected;
 			}
 		]]>
 	</mx:Script>
 	<mx:Form>
 		<mx:FormHeading label="{resourceManager.getString('resources', 'SETTINGS_SCREEN_HEADING')}" />
 		<mx:FormItem label="{resourceManager.getString('resources', 'SETTINGS_SCREEN_LANGUAGE')}">
-		
 			<mx:ComboBox id="languageBox"
 				dataProvider="{locales}"
-				initialize="initializeLanguageBox()"
-                change="onSelectLanguage()"/>
+                change="onChange()"/>
 		</mx:FormItem>
+
+		<mx:FormItem label="Show welcome wizard">		
+			<mx:CheckBox id="showWizardBox" change="onChange()"/>
+		</mx:FormItem>
+
 		
 	</mx:Form>
 </mx:TitleWindow>

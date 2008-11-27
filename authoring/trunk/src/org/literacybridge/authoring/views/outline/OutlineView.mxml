@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%" title="Outline" backgroundAlpha="0.5" borderStyle="solid" borderThickness="1" borderColor="#646464" fontSize="12">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.treeClasses.TreeItemRenderer;
+			import mx.core.UITextField;
+			import mx.containers.TitleWindow;
+			
+			import org.literacybridge.authoring.schema.SubBlockAppendable;
+			import mx.managers.PopUpManager;
+			import org.literacybridge.authoring.schema.ContentXMLParser;
+			import org.literacybridge.authoring.schema.ContentBlock;
+			import org.literacybridge.authoring.schema.ContentFile;
+			import mx.collections.ArrayCollection;
+			import org.literacybridge.authoring.schema.ContentPackage;
+			
+			[Bindable]
+			public var contents:ArrayCollection = new ArrayCollection();
+			
+			private function onRightClick(event:MouseEvent):void {
+				trace(event.target);
+				var item:Object = event.target;
+				// this is a hack - once we have our own TreeItemRenderers for the outline tree,
+				// we can attach use it for dispatching the right-click event
+				if (!item.hasOwnProperty("owner")) return;
+				item = item.owner;
+				if (!item.hasOwnProperty("data")) return;
+				item = item.data;
+				
+				if (item != null) {
+					if (item is SubBlockAppendable) {
+						var addBlock:AddBlock = AddBlock(PopUpManager.createPopUp(this, AddBlock, true));
+						addBlock.parentContainer = item as SubBlockAppendable;
+						addBlock.x = event.stageX;
+						addBlock.y = event.stageY;
+					} else if (item is ContentPackage) {
+						var addFile:AddFile = AddFile(PopUpManager.createPopUp(this, AddFile, true));
+						addFile.parentContainer = item as ContentPackage;
+						addFile.x = event.stageX;
+						addFile.y = event.stageY;
+					}
+				}					
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:Tree id="outlineTree" dataProvider="{contents}" width="100%" alpha="1.0" height="100%"
+			rightClick="onRightClick(event)"/>
+	</mx:VBox>
+</mx:Panel>
