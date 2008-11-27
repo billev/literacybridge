@@ -22,9 +22,11 @@
 
 		<mx:Canvas width="100%" height="20%" backgroundColor="#ABD373">
 			<mx:HBox width="100%" borderStyle="none" borderColor="#C8C8C8" x="20">
-				<mx:Canvas width="35%" height="100%">			
-					<mx:Image autoLoad="true" source="assets/LB-logo.jpg" horizontalCenter="0" verticalCenter="5" scaleContent="true"
-						/>
+				<mx:Canvas width="35%" height="100%">
+				    <!-- I don't know why, but if there is no slash in front of the path, then amxmlc throws
+				         errors when executed from the ant build script. -->			
+					<mx:Image autoLoad="true" source="@Embed(source='/../assets/LB-logo.jpg')" horizontalCenter="0" verticalCenter="5" scaleContent="true"
+						/> 
 				</mx:Canvas>
 				<mx:Spacer width="100" height="100%"/>
 				<mx:Canvas height="100%">	
