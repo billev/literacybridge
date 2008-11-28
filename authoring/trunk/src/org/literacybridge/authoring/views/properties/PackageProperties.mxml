@@ -19,10 +19,10 @@
 		<mx:FormItem label="Name:">
 			<mx:TextInput id="packageName" editable="true" text="{contentPackage.label}" change="onChange()"/>
 		</mx:FormItem>
-		<mx:FormItem label="Start:">
+		<mx:FormItem label="Version:">
 			<mx:TextInput id="packageVersion" editable="true" text="{contentPackage.version}"/>
 		</mx:FormItem>
-		<mx:FormItem label="End:">
+		<mx:FormItem label="Precision:">
 			<mx:TextInput id="packagePrecision" editable="true" text="{contentPackage.precision}"/>
 		</mx:FormItem>
 	</mx:Form>

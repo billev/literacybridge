@@ -4,6 +4,7 @@ package org.literacybridge.authoring.schema {
 	[Bindable]
 	public class ContentContainer {
 		public var label:String;
-		public var children:ArrayCollection = new ArrayCollection();		
+		public var children:ArrayCollection = new ArrayCollection();
+		public var eventHandlers:ArrayCollection = new ArrayCollection();		
 	}
 }

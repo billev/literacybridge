@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:views="org.literacybridge.authoring.views.*"
-	xmlns:ac="org.literacybridge.authoring.views.actions.*"
+	xmlns:ev="org.literacybridge.authoring.views.events.*"
 	xmlns:props="org.literacybridge.authoring.views.properties.*"
 	xmlns:ol="org.literacybridge.authoring.views.outline.*"
 	layout="absolute"
@@ -39,6 +39,7 @@
 				tree = Tree(event.target);
 			
 				properties.update(tree.selectedItem);
+				actions.update(tree.selectedItem);
 			}
 		
 			private function onApplicationComplete() : void {
@@ -174,7 +175,7 @@
 		
 					<mx:HDividedBox width="100%" height="100%">
 						<props:PropertiesView id="properties" width="40%"/>
-						<ac:ActionsView id="actions" width="60%"/>
+						<ev:EventView id="actions" width="60%"/>
 					</mx:HDividedBox>
 				</mx:VDividedBox>
 			</mx:HDividedBox>

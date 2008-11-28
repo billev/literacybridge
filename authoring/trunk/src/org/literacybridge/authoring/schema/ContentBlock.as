@@ -6,6 +6,7 @@ package org.literacybridge.authoring.schema {
 		public var start:int = -1;
 		public var end:int = -1;
 		public var className:String = "#all";
+		public var hyperlinked:Boolean;
 		
 		public function appendSubBlock(subBlock:ContentBlock):void {
 			children.addItem(subBlock);

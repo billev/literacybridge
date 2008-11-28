@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalAlign="middle"
+	horizontalGap="0">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.HTML;	
+			
+			[Bindable] public var text:String = "Turn <b><font color=\"#FF0000\">red</font></b> light <b>on</b>.";
+			
+			private function onMouseOver():void {
+				setStyle("backgroundColor", btn.getStyle("rollOverColor"));
+			}
+			
+			private function onMouseOut():void {
+				setStyle("backgroundColor", "#ffffff");
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:Text width="100%">
+		<mx:htmlText>{text}</mx:htmlText>
+	</mx:Text>
+	
+	<mx:LinkButton label="X" id="btn" mouseOver="onMouseOver()" mouseOut="onMouseOut()"/>
+</mx:HBox>

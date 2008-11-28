@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+		xmlns:ev="org.literacybridge.authoring.views.events.*"
+		xmlns:util="org.literacybridge.authoring.util.*"
+		width="100%" height="100%" title="Events" backgroundAlpha="0.5" 
+		borderStyle="solid" borderThickness="1" borderColor="#646464" fontSize="12" layout="vertical"
+		initialize="init()" themeColor="#009DFF">
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.actions.Action;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			import org.literacybridge.authoring.schema.ContentEventHandler;
+			import org.literacybridge.authoring.schema.EventHandler;
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import mx.managers.PopUpManager;
+			import mx.collections.ArrayCollection;
+			[Bindable] private var eventList:ArrayCollection = new ArrayCollection();
+			[Bindable] private var actionList:ArrayCollection = new ArrayCollection();
+		
+			private function init():void {
+			}
+
+			public function update(data:Object):void {
+				eventList = (data as ContentContainer).eventHandlers;
+			}
+			
+			private function onAddEvent(event:Event):void {
+				var addEvent:AddEventDialog = AddEventDialog(PopUpManager.createPopUp(this, AddEventDialog, true));
+				addEvent.x = 200;
+				addEvent.y = 100;
+
+			}
+			
+			private function onAddAction(event:Event):void {
+				var addAction:AddActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
+				addAction.x = mouseX;
+				addAction.y = mouseY;
+			}
+			
+			private function getDisplayText(item:Object, column:DataGridColumn):String {
+				if (item is ContentEventHandler) {
+					return getDisplayTextFromContentEventHandler(item as ContentEventHandler);
+				} else {
+					return getDisplayTextFromButtonEventHandler(item as ButtonEventHandler);
+				}
+			}
+			
+			private function getDisplayTextFromContentEventHandler(handler:ContentEventHandler):String {
+				if (handler.event == ContentEventHandler.Start) {
+					return "Start";
+				}
+				if (handler.event == ContentEventHandler.End) {
+					return "End";
+				}
+				if (handler.event == ContentEventHandler.Enter) {
+					return "Enter";
+				}
+				if (handler.event == ContentEventHandler.Exit) {
+					return "Exit";
+				}
+
+				// TODO: throw exception
+				return "Noop";
+			}
+			
+			private function getDisplayTextFromButtonEventHandler(handler:ButtonEventHandler):String {
+				var s:String;
+
+				// button types			
+				if (handler.button1 == ButtonEventHandler.UpButton) {
+					s = "Up";
+				}
+				if (handler.button1 == ButtonEventHandler.DownButton) {
+					s = "Down";
+				}
+				if (handler.button1 == ButtonEventHandler.LeftButton) {
+					s = "Left";
+				}
+				if (handler.button1 == ButtonEventHandler.RightButton) {
+					s = "Right";
+				}
+				if (handler.button1 == ButtonEventHandler.PlusButton) {
+					s = "Plus";
+				}
+				if (handler.button1 == ButtonEventHandler.MinusButton) {
+					s = "Minus";
+				}
+				if (handler.button1 == ButtonEventHandler.StarButton) {
+					s = "Star";
+				}
+				if (handler.button1 == ButtonEventHandler.SelectButton) {
+					s = "Select";
+				}
+				if (handler.button1 == ButtonEventHandler.HomeButton) {
+					s = "Home";
+				}
+				if (handler.button1 == ButtonEventHandler.PlayPauseButton) {
+					s = "Play/Pause";
+				}
+
+
+				// button actions
+				if (handler.buttonAction == ButtonEventHandler.ACTION_CLICK) {
+					s += " Click";
+				} 
+
+				if (handler.buttonAction == ButtonEventHandler.ACTION_HOLD) {
+					s += " Hold";
+				} 
+
+				return s;
+			}
+			
+			private function onSelectEvent(event:Event):void {
+				actionList = (eventGrid.selectedItem as EventHandler).actions;
+			}
+
+			private function getActionDisplayText():String {
+				return ActionDisplayTextGenerator.getDisplayTextAsHtml(actionRepeater.currentItem as Action);
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox width="100%" height="100%" borderStyle="solid" borderColor="#646464" horizontalGap="0">
+				<mx:DataGrid id="eventGrid"
+					horizontalGridLines="false" rowHeight="25" fontSize="12" dataProvider="{eventList}" 
+					width="120" showHeaders="false" height="100%" 
+					borderStyle="none" backgroundAlpha="1.0" alternatingItemColors="[#FFFFFF, #FFFFFF]"
+					selectionColor="#97cffa" change="onSelectEvent(event)">
+		            <mx:columns>
+		                <mx:DataGridColumn paddingLeft="5" paddingRight="0"
+		                	labelFunction="getDisplayText"/>
+		            </mx:columns>            
+			    </mx:DataGrid>				
+			<mx:VBox width="100%" height="100%" backgroundColor="#97CFFA">
+				<mx:Spacer width="100%" height="50"/>
+				<util:ButtonPanel title="Actions" width="100%" height="100%"
+					buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
+					<mx:Repeater id="actionRepeater" dataProvider="{actionList}">
+					    <ev:ActionElement width="100%" text="{getActionDisplayText()}"/> 
+  					</mx:Repeater>
+
+				</util:ButtonPanel>
+							
+			</mx:VBox>
+		</mx:HBox>
+		<mx:HBox>
+			<mx:Button label="Add Button Event" id="addEventButton" click="onAddEvent(event)"/>
+			<mx:Button label="Remove Button Event" id="removeEventButton"/>
+		</mx:HBox>
+	</mx:VBox>
+</mx:Panel>
