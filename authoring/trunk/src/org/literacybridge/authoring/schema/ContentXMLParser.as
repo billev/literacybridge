@@ -3,7 +3,6 @@ package org.literacybridge.authoring.schema {
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	
-	import org.literacybridge.authoring.schema.actions.Action;
 	import org.literacybridge.authoring.schema.actions.AdjustSpeedVolumeAction;
 	import org.literacybridge.authoring.schema.actions.CallBlockAction;
 	import org.literacybridge.authoring.schema.actions.GotoAction;
@@ -28,7 +27,7 @@ package org.literacybridge.authoring.schema {
 		
 		private function parseData(data:XML):ContentPackage {
 			var p:ContentPackage = parseSinglePackage(data);
-			for each (var file:XML in data.File) {
+			for each (var file:XML in data.elements(SchemaConstants.File)) {
 				var f:ContentFile = parseSingleFile(file);				
 				p.addFile(f);
 				addSubBlocksRecursively(f, file);
@@ -36,29 +35,82 @@ package org.literacybridge.authoring.schema {
 			return p;
 		}
 		
+		private function addSubBlocksRecursively(container:SubBlockAppendable, data:XML):void {
+			for each (var subBlock:XML in data.Block) {
+				var b : ContentBlock = parseSingleBlock(subBlock);
+				container.appendSubBlock(b);
+				addSubBlocksRecursively(b, subBlock);
+			}			
+		}
+
+		
+		/*
+		 *   Top-level Elements 
+		 */
+		
+		private function parseSinglePackage(data:XML):ContentPackage {
+			var p:ContentPackage = new ContentPackage();
+			p.label = data.attribute(SchemaConstants.Container_Att_Name);
+			p.precision = data.attribute(SchemaConstants.Package_Att_Precision);
+			p.version = data.attribute(SchemaConstants.Package_Att_Version);
+			parseEventHandlers(p, data);
+			return p;			
+		}
+
+		private function parseSingleFile(data:XML):ContentFile {
+			var f:ContentFile = new ContentFile();
+			f.label = data.attribute(SchemaConstants.Container_Att_Name);
+			parseEventHandlers(f, data);
+			return f;			
+		}
+
+		private function parseSingleBlock(block:XML):ContentBlock {
+			var b : ContentBlock = new ContentBlock();
+			b.label = block.attribute(SchemaConstants.Container_Att_Name);
+			if (block.attribute(SchemaConstants.Block_Att_Start) != undefined) {
+				b.start = Number(block.attribute(SchemaConstants.Block_Att_Start));
+			}
+			if (block.attribute(SchemaConstants.Block_Att_End) != undefined) {
+				b.end = Number(block.attribute(SchemaConstants.Block_Att_End));
+			}		
+			if (block.attribute(SchemaConstants.Block_Att_Class) != undefined) {
+				b.className = block.attribute(SchemaConstants.Block_Att_Class);
+			}
+			if (block.attribute(SchemaConstants.Block_Att_Hyperlinked) != undefined) {
+				if (block.attribute(SchemaConstants.Block_Att_Hyperlinked) == "true") {
+					b.hyperlinked = true;
+				} else {
+					b.hyperlinked = false;
+				}
+			}
+			parseEventHandlers(b, block);
+			return b;	
+		}
+
+		
 		private function parseEventHandlers(container:ContentContainer, data:XML):void {
 			var event:XML;
 			
 			// Content Events
-			for each (event in data.OnEnter) {
+			for each (event in data.elements(SchemaConstants.OnEnter)) {
 				parseContentEvent(container, event, ContentEventHandler.Enter);
 			}
-			for each (event in data.OnExit) {
+			for each (event in data.elements(SchemaConstants.OnExit)) {
 				parseContentEvent(container, event, ContentEventHandler.Exit);
 			}
-			for each (event in data.OnStart) {
+			for each (event in data.elements(SchemaConstants.OnStart)) {
 				parseContentEvent(container, event, ContentEventHandler.Start);
 			}
-			for each (event in data.OnEnd) {
+			for each (event in data.elements(SchemaConstants.OnEnd)) {
 				parseContentEvent(container, event, ContentEventHandler.End);
 			}
 
 			// Button events			
-			for each (event in data.OnButtonClick) {
-				parseButtonEvent(container, event, ButtonEventHandler.ACTION_CLICK);
+			for each (event in data.elements(SchemaConstants.OnButtonClick)) {
+				parseButtonEvent(container, event, ButtonEventHandler.ClickAction);
 			}
-			for each (event in data.OnButtonHold) {
-				parseButtonEvent(container, event, ButtonEventHandler.ACTION_HOLD);
+			for each (event in data.elements(SchemaConstants.OnButtonHold)) {
+				parseButtonEvent(container, event, ButtonEventHandler.HoldAction);
 			}			
 		}
 
@@ -71,19 +123,21 @@ package org.literacybridge.authoring.schema {
 		private function parseButtonEvent(container:ContentContainer, buttonEvent:XML, buttonAction:int) :void {
 			var b:ButtonEventHandler = new ButtonEventHandler();
 			b.buttonAction = buttonAction;
-			b.button1 = buttonEvent.@Button1;
-			b.button2 = buttonEvent.@Button2;
-			b.insertSoundBlock = buttonEvent.@InsertSoundBlock;
+			b.button1 = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button1);
+			b.button2 = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button2);
+			b.insertSoundBlock = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_InsertSoundBlock);
 			
-			if (buttonEvent.@SetSpeed != undefined) {
-				if (buttonEvent.@SetSpeed == "up") {
-					b.setSpeed = AdjustSpeedVolumeAction.Up;
-				}
-				if (buttonEvent.@SetSpeed == "down") {
-					b.setSpeed = AdjustSpeedVolumeAction.Down;
-				}
-				if (buttonEvent.@SetSpeed == "normal") {
-					b.setSpeed = AdjustSpeedVolumeAction.Normal;
+			if (buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_SetSpeed) != undefined) {
+				switch (buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_SetSpeed)) {
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up : 
+						b.setSpeed = AdjustSpeedVolumeAction.Up;
+						break;
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down : 
+						b.setSpeed = AdjustSpeedVolumeAction.Down;
+						break;
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal : 
+						b.setSpeed = AdjustSpeedVolumeAction.Normal;
+						break;						
 				}
 			}
 			parseActions(b, buttonEvent);
@@ -91,70 +145,74 @@ package org.literacybridge.authoring.schema {
 		}
 		
 		private function parseActions(handler:EventHandler, event:XML):void {
-			if (event.Stop != undefined) {
+			if (event.elements(SchemaConstants.ActionStop) != undefined) {
 				handler.actions.addItem(new SimpleAction(SimpleAction.Stop));				
 			} 
-			if (event.Pause != undefined) {
+			if (event.elements(SchemaConstants.ActionPause) != undefined) {
 				handler.actions.addItem(new SimpleAction(SimpleAction.Pause));				
 			} 
-			if (event.Return != undefined) {
+			if (event.elements(SchemaConstants.ActionReturn) != undefined) {
 				handler.actions.addItem(new SimpleAction(SimpleAction.Return));				
 			} 
-			if (event.PlayPause != undefined) {
+			if (event.elements(SchemaConstants.ActionPlayPause) != undefined) {
 				handler.actions.addItem(new SimpleAction(SimpleAction.PlayPause));				
 			} 
 			
 			// Goto action
-			if (event.Goto != undefined) {
+			if (event.elements(SchemaConstants.ActionGoto) != undefined) {
 				var goto:GotoAction = new GotoAction();
-				goto.containerName = event.Goto.@ContainerName;
+				goto.containerName = event.elements(SchemaConstants.ActionGoto).attribute(SchemaConstants.ActionGoto_Att_ContainerName);
 				handler.actions.addItem(goto);
 			}
 			
 			// LoadPackage action
-			if (event.LoadPackage != undefined) {
+			if (event.elements(SchemaConstants.ActionLoadPackage) != undefined) {
 				var loadPackage:LoadPackageAction = new LoadPackageAction();
-				loadPackage.name = event.LoadPackage.@Name;
+				loadPackage.name = event.elements(SchemaConstants.ActionLoadPackage).attribute(SchemaConstants.ActionLoadPackage_Att_Name);
 				handler.actions.addItem(loadPackage);
 			}
 			
 			// CallBlock action
-			if (event.CallBlock != undefined) {
+			if (event.elements(SchemaConstants.ActionCallBlock) != undefined) {
 				var callBlock:CallBlockAction = new CallBlockAction();
-				callBlock.blockName = event.CallBlock.@BlockName;
-				callBlock.returnRewindSeconds = Number(event.CallBlock.@ReturnRewindSeconds);
+				callBlock.blockName = 
+					event.elements(SchemaConstants.ActionCallBlock).attribute(SchemaConstants.ActionCallBlock_Att_BlockName);
+				callBlock.returnRewindSeconds = 
+					Number(event.elements(SchemaConstants.ActionCallBlock).attribute(SchemaConstants.ActionCallBlock_Att_ReturnRewindSeconds));
 				handler.actions.addItem(callBlock);
 			}
 			
 			// RelativeTimeJump action
-			if (event.RelativeTimeJump != undefined) {
+			if (event.elements(SchemaConstants.ActionRelativeTimeJump) != undefined) {
 				var relativeTimeJump:RelativeTimeJumpAction = new RelativeTimeJumpAction();
-				relativeTimeJump.relatveTime = Number(event.RelativeTimeJump.@RelativeTime);
+				relativeTimeJump.relatveTime = 
+					Number(event.elements(SchemaConstants.ActionRelativeTimeJump).attribute(SchemaConstants.ActionRelativeTimeJump_Att_RelativeTime));
 				handler.actions.addItem(relativeTimeJump);
 			}
 			
 			// NextPreviousBlock actions
-			if (event.NextBlock != undefined) {
+			if (event.elements(SchemaConstants.ActionNextBlock) != undefined) {
 				var nextBlock:NextPreviousBlockAction = new NextPreviousBlockAction(NextPreviousBlockAction.Next);
-				nextBlock.className = event.NextBlock.@ClassName;
+				nextBlock.className = 
+					event.elements(SchemaConstants.ActionNextBlock).attribute(SchemaConstants.ActionNextPreviousBlock_Att_Class);
 				handler.actions.addItem(nextBlock);
 			}
 			
-			if (event.PreviousBlock != undefined) {
+			if (event.elements(SchemaConstants.ActionPreviousBlock) != undefined) {
 				var previousBlock:NextPreviousBlockAction = new NextPreviousBlockAction(NextPreviousBlockAction.Previous);
-				previousBlock.className = event.PreviousBlock.@ClassName;
+				previousBlock.className = event.elements(SchemaConstants.ActionPreviousBlock).attribute(SchemaConstants.ActionNextPreviousBlock_Att_Class);
 				handler.actions.addItem(previousBlock);
 			}
 			
 			// SetLight action
-			for each (var s:XML in event.SetLight) {
+			for each (var s:XML in event.elements(SchemaConstants.ActionSetLight)) {
 				var setLight:SetLightAction = new SetLightAction();
-				if (s.@Light=="Red") {
+				if (s.attribute(SchemaConstants.ActionSetLight_Att_Light)==SchemaConstants.LightColorType_AttVal_Red) {
 					setLight.color=SetLightAction.Red;
 				} else {
 					setLight.color=SetLightAction.Green;
 				}
-				if (s.@Mode=="On") {
+				if (s.attribute(SchemaConstants.ActionSetLight_Att_Mode)==SchemaConstants.LightModeType_AttVal_On) {
 					setLight.mode = SetLightAction.On;
 				} else {
 					setLight.mode = SetLightAction.Off;
@@ -163,43 +221,49 @@ package org.literacybridge.authoring.schema {
 			}
 			
 			// AdjustSpeenVolume actions
-			if (event.SetVolume != undefined) {
+			if (event.elements(SchemaConstants.ActionSetVolume) != undefined) {
 				var setVolume:AdjustSpeedVolumeAction = new AdjustSpeedVolumeAction(AdjustSpeedVolumeAction.Volume);
-				if (event.SetVolume.@relative == "up") {
-					setVolume.relative = AdjustSpeedVolumeAction.Up;
+				switch (event.elements(SchemaConstants.ActionSetVolume).@relative) {
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up:
+						setVolume.relative = AdjustSpeedVolumeAction.Up;
+						break;
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down:
+						setVolume.relative = AdjustSpeedVolumeAction.Down;
+						break;
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal:
+						setVolume.relative = AdjustSpeedVolumeAction.Normal;
+						break;
 				}
-				if (event.SetVolume.@relative == "down") {
-					setVolume.relative = AdjustSpeedVolumeAction.Down;
-				}
-				if (event.SetVolume.@relative == "normal") {
-					setVolume.relative = AdjustSpeedVolumeAction.Normal;
-				}
+
 				handler.actions.addItem(setVolume);
 			}
 			
-			if (event.SetSpeed != undefined) {
+			if (event.elements(SchemaConstants.ActionSetSpeed) != undefined) {
 				var setSpeed:AdjustSpeedVolumeAction = new AdjustSpeedVolumeAction(AdjustSpeedVolumeAction.Speed);
-				if (event.SetSpeed.@relative == "up") {
-					setSpeed.relative = AdjustSpeedVolumeAction.Up;
-				}
-				if (event.SetSpeed.@relative == "down") {
-					setSpeed.relative = AdjustSpeedVolumeAction.Down;
-				}
-				if (event.SetSpeed.@relative == "normal") {
-					setSpeed.relative = AdjustSpeedVolumeAction.Normal;
+				switch (event.elements(SchemaConstants.ActionSetSpeed).attribute(SchemaConstants.AdjustSpeedVolumeType_Att_Relative)) {
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up:
+						setSpeed.relative = AdjustSpeedVolumeAction.Up;
+						break;
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down:
+						setSpeed.relative = AdjustSpeedVolumeAction.Down;
+						break;
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal:
+						setSpeed.relative = AdjustSpeedVolumeAction.Normal;
+						break;
 				}
 				handler.actions.addItem(setSpeed);
 			}
 			
 			// SetUSBMode action
-			if (event.SetUSBMode != undefined) {
+			if (event.elements(SchemaConstants.ActionSetUSBMode) != undefined) {
 				var setUSBMode:SetUSBModeAction = new SetUSBModeAction();
-				if (event.SetUSBMode.@Active=="true") {
+				if (event.elements(SchemaConstants.ActionSetUSBMode).attribute(SchemaConstants.ActionSetUSBMode_Att_Active)=="true") {
 					setUSBMode.active = true;
 				} else {
 					setUSBMode.active = false;
 				}
-				if (event.SetUSBMode.@HostOrDevice=="host") {
+				if (event.elements(SchemaConstants.ActionSetUSBMode).attribute(SchemaConstants.ActionSetUSBMode_Att_HostOrDevice)==
+							SchemaConstants.HostOrDeviceType_AttVal_Host) {
 					setUSBMode.mode = SetUSBModeAction.Host;
 				} else {
 					setUSBMode.mode = SetUSBModeAction.Device;
@@ -207,53 +271,7 @@ package org.literacybridge.authoring.schema {
 				handler.actions.addItem(setUSBMode);
 			}
 		}
-
-		private function parseSingleFile(data:XML):ContentFile {
-			var f:ContentFile = new ContentFile();
-			f.label = data.@Name;
-			parseEventHandlers(f, data);
-			return f;			
-		}
-
-		private function parseSinglePackage(data:XML):ContentPackage {
-			var p:ContentPackage = new ContentPackage();
-			p.label = data.@Name;
-			p.precision = data.@Precision;
-			p.version = data.@Version;
-			parseEventHandlers(p, data);
-			return p;			
-		}
 		
-		private function addSubBlocksRecursively(container:SubBlockAppendable, data:XML):void {
-			for each (var subBlock:XML in data.Block) {
-				var b : ContentBlock = parseSingleBlock(subBlock);
-				container.appendSubBlock(b);
-				addSubBlocksRecursively(b, subBlock);
-			}			
-		}
-
-		private function parseSingleBlock(block:XML):ContentBlock {
-			var b : ContentBlock = new ContentBlock();
-			b.label = block.@Name;
-			if (block.@Start != undefined) {
-				b.start = Number(block.@Start);
-			}
-			if (block.@End != undefined) {
-				b.end = Number(block.@End);
-			}		
-			if (block.@Class != undefined) {
-				b.className = block.@Class;
-			}
-			if (block.@Hyperlinked != undefined) {
-				if (block.@Hyperlinked=="true") {
-					b.hyperlinked = true;
-				} else {
-					b.hyperlinked = false;
-				}
-			}
-			parseEventHandlers(b, block);
-			return b;	
-		}
 
 	}
 }

@@ -1,8 +1,8 @@
 package org.literacybridge.authoring.schema {
 	[Bindable]
 	public class ButtonEventHandler extends EventHandler {
-		public static const ACTION_CLICK:int = 1;
-		public static const ACTION_HOLD:int = 2;
+		public static const ClickAction:int = 1;
+		public static const HoldAction:int = 2;
 		
 		public static const PlayPauseButton:String = "PlayPause";
 		public static const PlusButton:String = "Plus";
