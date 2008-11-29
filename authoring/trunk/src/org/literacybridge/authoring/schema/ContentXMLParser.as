@@ -67,6 +67,7 @@ package org.literacybridge.authoring.schema {
 		private function parseSingleBlock(block:XML):ContentBlock {
 			var b : ContentBlock = new ContentBlock();
 			b.label = block.attribute(SchemaConstants.Container_Att_Name);
+
 			if (block.attribute(SchemaConstants.Block_Att_Start) != undefined) {
 				b.start = Number(block.attribute(SchemaConstants.Block_Att_Start));
 			}
@@ -75,13 +76,6 @@ package org.literacybridge.authoring.schema {
 			}		
 			if (block.attribute(SchemaConstants.Block_Att_Class) != undefined) {
 				b.className = block.attribute(SchemaConstants.Block_Att_Class);
-			}
-			if (block.attribute(SchemaConstants.Block_Att_Hyperlinked) != undefined) {
-				if (block.attribute(SchemaConstants.Block_Att_Hyperlinked) == "true") {
-					b.hyperlinked = true;
-				} else {
-					b.hyperlinked = false;
-				}
 			}
 			parseEventHandlers(b, block);
 			return b;	
@@ -123,21 +117,24 @@ package org.literacybridge.authoring.schema {
 		private function parseButtonEvent(container:ContentContainer, buttonEvent:XML, buttonAction:int) :void {
 			var b:ButtonEventHandler = new ButtonEventHandler();
 			b.buttonAction = buttonAction;
-			b.button1 = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button1);
-			b.button2 = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button2);
+			b.button1 = determineButton(buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button1));
+			b.button2 = determineButton(buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button2));
 			b.insertSoundBlock = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_InsertSoundBlock);
 			
 			if (buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_SetSpeed) != undefined) {
 				switch (buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_SetSpeed)) {
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up : 
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up : {
 						b.setSpeed = AdjustSpeedVolumeAction.Up;
 						break;
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down : 
+					}
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down : { 
 						b.setSpeed = AdjustSpeedVolumeAction.Down;
 						break;
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal : 
+					}
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal : { 
 						b.setSpeed = AdjustSpeedVolumeAction.Normal;
 						break;						
+					}
 				}
 			}
 			parseActions(b, buttonEvent);
@@ -224,15 +221,18 @@ package org.literacybridge.authoring.schema {
 			if (event.elements(SchemaConstants.ActionSetVolume) != undefined) {
 				var setVolume:AdjustSpeedVolumeAction = new AdjustSpeedVolumeAction(AdjustSpeedVolumeAction.Volume);
 				switch (event.elements(SchemaConstants.ActionSetVolume).@relative) {
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up:
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up: {
 						setVolume.relative = AdjustSpeedVolumeAction.Up;
 						break;
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down:
+					}
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down: {
 						setVolume.relative = AdjustSpeedVolumeAction.Down;
 						break;
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal:
+					}
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal: {
 						setVolume.relative = AdjustSpeedVolumeAction.Normal;
 						break;
+					}
 				}
 
 				handler.actions.addItem(setVolume);
@@ -241,15 +241,18 @@ package org.literacybridge.authoring.schema {
 			if (event.elements(SchemaConstants.ActionSetSpeed) != undefined) {
 				var setSpeed:AdjustSpeedVolumeAction = new AdjustSpeedVolumeAction(AdjustSpeedVolumeAction.Speed);
 				switch (event.elements(SchemaConstants.ActionSetSpeed).attribute(SchemaConstants.AdjustSpeedVolumeType_Att_Relative)) {
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up:
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Up: {
 						setSpeed.relative = AdjustSpeedVolumeAction.Up;
 						break;
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down:
+					}
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Down: {
 						setSpeed.relative = AdjustSpeedVolumeAction.Down;
 						break;
-					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal:
+					}
+					case SchemaConstants.RelativeSpeedVolumeType_AttVal_Normal: {
 						setSpeed.relative = AdjustSpeedVolumeAction.Normal;
 						break;
+					}
 				}
 				handler.actions.addItem(setSpeed);
 			}
@@ -272,6 +275,21 @@ package org.literacybridge.authoring.schema {
 			}
 		}
 		
+		private static function determineButton(buttonName:String):int {
+			switch (buttonName) {
+				case SchemaConstants.UpButton : return ButtonEventHandler.UpButton;
+				case SchemaConstants.DownButton : return ButtonEventHandler.DownButton;
+				case SchemaConstants.LeftButton : return ButtonEventHandler.LeftButton;
+				case SchemaConstants.RightButton : return ButtonEventHandler.RightButton;
+				case SchemaConstants.SelectButton : return ButtonEventHandler.SelectButton;
+				case SchemaConstants.PlusButton : return ButtonEventHandler.PlusButton;
+				case SchemaConstants.MinusButton : return ButtonEventHandler.MinusButton;
+				case SchemaConstants.HomeButton : return ButtonEventHandler.HomeButton;
+				case SchemaConstants.StarButton : return ButtonEventHandler.StarButton;
+				case SchemaConstants.PlayPauseButton : return ButtonEventHandler.PlayPauseButton;
+				default : return 0; 
+			}
+		}
 
 	}
 }

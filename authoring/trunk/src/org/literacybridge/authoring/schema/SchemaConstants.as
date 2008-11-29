@@ -18,7 +18,6 @@ package org.literacybridge.authoring.schema {
 			public static const Block_Att_Start:String = "Start";
 			public static const Block_Att_End:String = "End";
 			public static const Block_Att_Class:String = "Class";
-			public static const Block_Att_Hyperlinked:String = "Hyperlinked";
 					
 		// eventHandlerElements
 		public static const OnEnter:String = "OnEnter";
@@ -34,7 +33,21 @@ package org.literacybridge.authoring.schema {
 			public static const ButtonEvent_Att_SetSpeed:String = "SetSpeed";
 
 		/*
-		 * Actions
+		 *   Buttons
+		 */
+		public static const PlayPauseButton:String = "PlayPause";
+		public static const PlusButton:String = "Plus";
+		public static const MinusButton:String = "Minus";
+		public static const LeftButton:String = "Left";
+		public static const RightButton:String = "Right";
+		public static const UpButton:String = "Up";
+		public static const DownButton:String = "Down";
+		public static const SelectButton:String = "Select";
+		public static const HomeButton:String = "Home";
+		public static const StarButton:String = "Star";
+
+		/*
+		 *  Actions
 		 */
 
 		// simple actions

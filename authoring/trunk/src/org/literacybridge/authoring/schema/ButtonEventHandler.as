@@ -4,22 +4,22 @@ package org.literacybridge.authoring.schema {
 		public static const ClickAction:int = 1;
 		public static const HoldAction:int = 2;
 		
-		public static const PlayPauseButton:String = "PlayPause";
-		public static const PlusButton:String = "Plus";
-		public static const MinusButton:String = "Minus";
-		public static const LeftButton:String = "Left";
-		public static const RightButton:String = "Right";
-		public static const UpButton:String = "Up";
-		public static const DownButton:String = "Down";
-		public static const SelectButton:String = "Select";
-		public static const HomeButton:String = "Home";
-		public static const StarButton:String = "Star";
+		public static const PlayPauseButton:int = 1;
+		public static const PlusButton:int = 2;
+		public static const MinusButton:int = 3;
+		public static const LeftButton:int = 4;
+		public static const RightButton:int = 5;
+		public static const UpButton:int = 6;
+		public static const DownButton:int = 7;
+		public static const SelectButton:int = 8;
+		public static const HomeButton:int = 9;
+		public static const StarButton:int = 10;
 
 		
 		public var buttonAction:int;
 		public var insertSoundBlock:String;
 		public var setSpeed:int;
-		public var button1:String;
-		public var button2:String;
+		public var button1:int;
+		public var button2:int;
 	}
 }
