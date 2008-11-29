@@ -100,11 +100,11 @@
 
 
 				// button actions
-				if (handler.buttonAction == ButtonEventHandler.ACTION_CLICK) {
+				if (handler.buttonAction == ButtonEventHandler.ClickAction) {
 					s += " Click";
 				} 
 
-				if (handler.buttonAction == ButtonEventHandler.ACTION_HOLD) {
+				if (handler.buttonAction == ButtonEventHandler.HoldAction) {
 					s += " Hold";
 				} 
 
