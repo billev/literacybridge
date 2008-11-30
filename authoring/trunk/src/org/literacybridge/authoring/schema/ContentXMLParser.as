@@ -28,7 +28,8 @@ package org.literacybridge.authoring.schema {
 		private function parseData(data:XML):ContentPackage {
 			var p:ContentPackage = parseSinglePackage(data);
 			for each (var file:XML in data.elements(SchemaConstants.File)) {
-				var f:ContentFile = parseSingleFile(file);				
+				var f:ContentFile = parseSingleFile(file);
+				f.parent = p;				
 				p.addFile(f);
 				addSubBlocksRecursively(f, file);
 			}
@@ -38,6 +39,7 @@ package org.literacybridge.authoring.schema {
 		private function addSubBlocksRecursively(container:SubBlockAppendable, data:XML):void {
 			for each (var subBlock:XML in data.Block) {
 				var b : ContentBlock = parseSingleBlock(subBlock);
+				b.parent = container as ContentContainer;
 				container.appendSubBlock(b);
 				addSubBlocksRecursively(b, subBlock);
 			}			

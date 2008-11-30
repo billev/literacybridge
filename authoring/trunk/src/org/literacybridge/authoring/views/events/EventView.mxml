@@ -4,9 +4,20 @@
 		xmlns:util="org.literacybridge.authoring.util.*"
 		width="100%" height="100%" title="Events" backgroundAlpha="0.5" 
 		borderStyle="solid" borderThickness="1" borderColor="#646464" fontSize="12" layout="vertical"
-		initialize="init()" themeColor="#009DFF">
+		themeColor="#009DFF">
+
+	<mx:Style>
+	    .alignLeftPopUpStyle {
+    	   textAlign: left;
+    	}
+	</mx:Style>
+
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Menu;
+			import mx.events.MenuEvent;
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayCollection;
 			import org.literacybridge.authoring.schema.actions.Action;
 			import org.literacybridge.authoring.schema.ButtonEventHandler;
 			import org.literacybridge.authoring.schema.ContentEventHandler;
@@ -14,21 +25,49 @@
 			import org.literacybridge.authoring.schema.ContentContainer;
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
-			[Bindable] private var eventList:ArrayCollection = new ArrayCollection();
+			
+			[Bindable] private var eventHandlers:ArrayCollection = new ArrayCollection();
 			[Bindable] private var actionList:ArrayCollection = new ArrayCollection();
+			[Bindable] private var addEventList:ArrayCollection = new ArrayCollection();
 		
-			private function init():void {
+			private static const AddButtonEventLabel:String = "Button Event...";
+			private static const AddButtonEventId:int = -1;
+		
+			private function initAddEventButton():void {
+				var contentEvents:ArrayCollection = ContentEventHandler.getEventList();
+				for (var i:int = 0; i < contentEvents.length; i++) {
+					addEventList.addItem(contentEvents.getItemAt(i));
+				}
+				addEventList.addItem(AddButtonEventId);
+				var menu:Menu = new Menu();
+				menu.dataProvider = addEventList;
+				menu.addEventListener("itemClick", onAddEvent);
+				menu.labelFunction=getAddEventMenuDisplayText;
+				addEventBtn.popUp = menu;
+			}
+			
+			private function getAddEventMenuDisplayText(item:Object):String {
+				var event:int = item as int;
+				if (event == AddButtonEventId) {
+					return AddButtonEventLabel;
+				}
+				
+				return ActionDisplayTextGenerator.getContentEventDisplayText(event);
 			}
 
 			public function update(data:Object):void {
-				eventList = (data as ContentContainer).eventHandlers;
+				eventHandlers = (data as ContentContainer).eventHandlers;
 			}
 			
-			private function onAddEvent(event:Event):void {
-				var addEvent:AddEventDialog = AddEventDialog(PopUpManager.createPopUp(this, AddEventDialog, true));
-				addEvent.x = 200;
-				addEvent.y = 100;
-
+			private function onAddEvent(event:MenuEvent):void {
+				if (event.item == AddButtonEventId) {
+						var addEvent:AddButtonEventDialog = AddButtonEventDialog(PopUpManager.createPopUp(this, AddButtonEventDialog, true));
+						addEvent.x = 200;
+						addEvent.y = 100;
+						addEvent.eventHandlers = eventHandlers;
+				} else {
+					eventHandlers.addItem(new ContentEventHandler(event.item as int));
+				}
 			}
 			
 			private function onAddAction(event:Event):void {
@@ -64,51 +103,8 @@
 			}
 			
 			private function getDisplayTextFromButtonEventHandler(handler:ButtonEventHandler):String {
-				var s:String;
-
-				// button types			
-				if (handler.button1 == ButtonEventHandler.UpButton) {
-					s = "Up";
-				}
-				if (handler.button1 == ButtonEventHandler.DownButton) {
-					s = "Down";
-				}
-				if (handler.button1 == ButtonEventHandler.LeftButton) {
-					s = "Left";
-				}
-				if (handler.button1 == ButtonEventHandler.RightButton) {
-					s = "Right";
-				}
-				if (handler.button1 == ButtonEventHandler.PlusButton) {
-					s = "Plus";
-				}
-				if (handler.button1 == ButtonEventHandler.MinusButton) {
-					s = "Minus";
-				}
-				if (handler.button1 == ButtonEventHandler.StarButton) {
-					s = "Star";
-				}
-				if (handler.button1 == ButtonEventHandler.SelectButton) {
-					s = "Select";
-				}
-				if (handler.button1 == ButtonEventHandler.HomeButton) {
-					s = "Home";
-				}
-				if (handler.button1 == ButtonEventHandler.PlayPauseButton) {
-					s = "Play/Pause";
-				}
-
-
-				// button actions
-				if (handler.buttonAction == ButtonEventHandler.ClickAction) {
-					s += " Click";
-				} 
-
-				if (handler.buttonAction == ButtonEventHandler.HoldAction) {
-					s += " Hold";
-				} 
-
-				return s;
+				return ActionDisplayTextGenerator.getButtonDisplayText(handler.button1)
+							+ " " + ActionDisplayTextGenerator.getButtonActionDisplayText(handler.buttonAction);
 			}
 			
 			private function onSelectEvent(event:Event):void {
@@ -118,24 +114,22 @@
 			private function getActionDisplayText():String {
 				return ActionDisplayTextGenerator.getDisplayTextAsHtml(actionRepeater.currentItem as Action);
 			}
-			
 		]]>
 	</mx:Script>
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox width="100%" height="100%" borderStyle="solid" borderColor="#646464" horizontalGap="0">
 				<mx:DataGrid id="eventGrid"
-					horizontalGridLines="false" rowHeight="25" fontSize="12" dataProvider="{eventList}" 
+					horizontalGridLines="false" rowHeight="25" fontSize="12" dataProvider="{eventHandlers}" 
 					width="120" showHeaders="false" height="100%" 
 					borderStyle="none" backgroundAlpha="1.0" alternatingItemColors="[#FFFFFF, #FFFFFF]"
 					selectionColor="#97cffa" change="onSelectEvent(event)">
 		            <mx:columns>
-		                <mx:DataGridColumn paddingLeft="5" paddingRight="0"
+		                <mx:DataGridColumn paddingLeft="5" paddingRight="0" 
 		                	labelFunction="getDisplayText"/>
 		            </mx:columns>            
 			    </mx:DataGrid>				
-			<mx:VBox width="100%" height="100%" backgroundColor="#97CFFA">
-				<mx:Spacer width="100%" height="50"/>
-				<util:ButtonPanel title="Actions" width="100%" height="100%"
+			<mx:VBox width="100%" height="100%" backgroundColor="#97cffa" backgroundAlpha="1.0">
+				<util:ButtonPanel title="Actions" width="100%" height="100%" borderAlpha="0.0" 
 					buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
 					<mx:Repeater id="actionRepeater" dataProvider="{actionList}">
 					    <ev:ActionElement width="100%" text="{getActionDisplayText()}"/> 
@@ -146,8 +140,9 @@
 			</mx:VBox>
 		</mx:HBox>
 		<mx:HBox>
-			<mx:Button label="Add Button Event" id="addEventButton" click="onAddEvent(event)"/>
-			<mx:Button label="Remove Button Event" id="removeEventButton"/>
+			<mx:PopUpButton label="Add Event" id="addEventBtn" preinitialize="initAddEventButton()" 
+				openAlways="true" popUpStyleName="alignLeftPopUpStyle"/>
+			<mx:Button label="Remove Event" id="removeEventButton"/>
 		</mx:HBox>
 	</mx:VBox>
 </mx:Panel>

@@ -167,7 +167,7 @@
 					<mx:VBox height="100%" width="100%">
 						<views:PlayerControl/>
 						<mx:Spacer/>
-						<views:PlayerControl/>
+						<views:BlockPlayerControl/>
 
 						<!--<views:BlockPlayerControl />-->
 		

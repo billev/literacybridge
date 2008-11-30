@@ -1,30 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:ac="org.literacybridge.authoring.views.events.actions.*"
 	      borderStyle="solid" borderColor="#646464" borderThickness="1"
 	      showCloseButton="true"
 	      title="Add Action" fontSize="12"
-	      close="close()">
+	      close="close()"
+	      initialize="init()">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			import org.literacybridge.authoring.schema.actions.Action;
 			import org.literacybridge.authoring.schema.ContentBlock;
 			import org.literacybridge.authoring.schema.ContentContainer;
 			import org.literacybridge.authoring.schema.SubBlockAppendable;
 			import mx.managers.PopUpManager;
 			
-			[Bindable] public var parentContainer:SubBlockAppendable;
+			[Bindable] public var handler:ButtonEventHandler;
+			[Bindable] private var action:Action;
+			
+			
+			private function init():void {
+
+			}
 			
 			private function close():void {
 				PopUpManager.removePopUp(this);
 			}
 			
 			private function addAction():void {
+				//handler.actions.addItem(action);
+				close();
+			}
+			
+			private function getActionLabel(item:Object):String {
+				return "item";
 			}
 		]]>
 	</mx:Script>
 	      
-	<mx:VBox fontSize="10">
-		<mx:ComboBox text="Set Light"/>
+	<mx:VBox fontSize="10" id="box">
+		<mx:ComboBox labelFunction="getActionLabel"/>
+
 		<mx:Form>
 			<mx:FormItem label="Color:">
 				<mx:ComboBox text="Red"/>

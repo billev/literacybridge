@@ -1,4 +1,6 @@
 package org.literacybridge.authoring.views.events {
+	import org.literacybridge.authoring.schema.ButtonEventHandler;
+	import org.literacybridge.authoring.schema.ContentEventHandler;
 	import org.literacybridge.authoring.schema.actions.Action;
 	import org.literacybridge.authoring.schema.actions.AdjustSpeedVolumeAction;
 	import org.literacybridge.authoring.schema.actions.CallBlockAction;
@@ -11,6 +13,46 @@ package org.literacybridge.authoring.views.events {
 	import org.literacybridge.authoring.schema.actions.SimpleAction;
 	
 	public class ActionDisplayTextGenerator	{
+		public static function getContentEventDisplayText(event:int):String {
+			switch(event) {
+				case ContentEventHandler.Start : return "Start";
+				case ContentEventHandler.End : return "End";
+				case ContentEventHandler.Enter : return "Enter";
+				case ContentEventHandler.Exit : return "Exit";
+				default : return ""; // TODO throw exception
+			}
+		}
+		
+		public static function getButtonDisplayText(button:int):String {
+			var s:String;
+
+			// button types		
+			switch (button) {
+				case ButtonEventHandler.UpButton : return "Up";
+				case ButtonEventHandler.DownButton : return "Down";
+				case ButtonEventHandler.LeftButton : return "Left";
+				case ButtonEventHandler.RightButton : return "Right";
+				case ButtonEventHandler.PlusButton : return "Plus";
+				case ButtonEventHandler.MinusButton : return "Minus";
+				case ButtonEventHandler.StarButton : return "Star";
+				case ButtonEventHandler.SelectButton : return "Select";
+				case ButtonEventHandler.HomeButton : return "Home";
+				case ButtonEventHandler.PlayPauseButton : return "Play/Pause";
+				default : return ""; // TODO throw exception
+			}	
+		}
+
+		public static function getButtonActionDisplayText(buttonAction:int):String {
+			var s:String;
+
+			// button types		
+			switch (buttonAction) {
+				case ButtonEventHandler.ClickAction : return "Click";
+				case ButtonEventHandler.HoldAction : return "Hold";
+				default : return ""; // TODO throw exception
+			}	
+		}
+		
 		public static function getDisplayTextAsHtml(action:Action):String {
 			if (action is SimpleAction) {
 				return getFromSimpleAction(action as SimpleAction);

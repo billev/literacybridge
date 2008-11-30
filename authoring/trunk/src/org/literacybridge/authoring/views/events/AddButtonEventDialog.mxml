@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="420" height="550"
+	title="Add Event" close="close()" showCloseButton="true">
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			import mx.collections.ArrayCollection;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			
+			[Bindable] private var buttonList:ArrayCollection = ButtonEventHandler.getButtonList();
+			[Bindable] private var buttonActionList:ArrayCollection = ButtonEventHandler.getButtonActionList();
+			public var eventHandlers:ArrayCollection;
+			
+			private static const HoldTime:Number = 1000;
+			private var mouseDownTimer:Timer = new Timer(HoldTime);
+			
+			private function onAddEvent():void {
+				var handler:ButtonEventHandler = new ButtonEventHandler();
+				handler.button1 = buttonBox.selectedItem as int;
+				handler.buttonAction = buttonActionBox.selectedItem as int;
+				eventHandlers.addItem(handler);
+				close();
+			}
+			
+			private function onMouseDown(button:int):void {
+				buttonBox.selectedItem = button;
+				buttonActionBox.selectedItem = ButtonEventHandler.ClickAction; 
+				mouseDownTimer.addEventListener(TimerEvent.TIMER, setButtonActionToHold);
+				mouseDownTimer.start();
+			}
+			
+			private function onMouseUp():void {
+				mouseDownTimer.stop();
+				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);	
+			}
+			
+			private function setButtonActionToHold(event:TimerEvent):void {
+				buttonActionBox.selectedItem = ButtonEventHandler.HoldAction;
+				mouseDownTimer.stop();
+				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);	
+			}
+			
+			private function close():void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function getButtonDisplayText(item:Object):String {
+				return ActionDisplayTextGenerator.getButtonDisplayText(item as int);
+			}
+
+			private function getButtonActionDisplayText(item:Object):String {
+				return ActionDisplayTextGenerator.getButtonActionDisplayText(item as int);
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:HBox>
+		<mx:Form>
+			<mx:FormItem label="Button">
+				<mx:ComboBox id="buttonBox" dataProvider="{buttonList}" labelFunction="getButtonDisplayText"/>
+			</mx:FormItem>
+			<mx:FormItem label="Action">
+				<mx:ComboBox id="buttonActionBox" dataProvider="{buttonActionList}" labelFunction="getButtonActionDisplayText"/>
+			</mx:FormItem>
+		</mx:Form>
+
+		<mx:HBox width="100%" height="100%" verticalAlign="middle">
+			<mx:Button label="Add" click="onAddEvent()"/>
+			<mx:Button label="Cancel" click="close()"/>
+		</mx:HBox>
+
+	</mx:HBox>
+	
+	<mx:Canvas width="100%" height="100%">
+		<mx:Image autoLoad="true" source="@Embed(source='/../assets/device-front-400.png')"/>
+		<mx:Box id="starButton" x="100" y="114" width="45" height="42" mouseDown="onMouseDown(ButtonEventHandler.StarButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="plusButton" x="258" y="119" width="45" height="42" mouseDown="onMouseDown(ButtonEventHandler.PlusButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="minusButton" x="294" y="166" width="36" height="35" mouseDown="onMouseDown(ButtonEventHandler.MinusButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="homeButton" x="71" y="163" width="36" height="36" mouseDown="onMouseDown(ButtonEventHandler.HomeButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="selectButton" x="69" y="281" width="36" height="36" mouseDown="onMouseDown(ButtonEventHandler.SelectButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="upButton" x="155" y="152" width="93" height="45" mouseDown="onMouseDown(ButtonEventHandler.UpButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="downButton" x="155" y="274" width="93" height="45" mouseDown="onMouseDown(ButtonEventHandler.DownButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="leftButton" x="82" y="198" width="70" height="73" mouseDown="onMouseDown(ButtonEventHandler.LeftButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="rightButton" x="250" y="200" width="70" height="73" mouseDown="onMouseDown(ButtonEventHandler.RightButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+		<mx:Box id="playPauseButton" x="155" y="199" width="93" height="71" mouseDown="onMouseDown(ButtonEventHandler.PlayPauseButton)" mouseUp="onMouseUp()" mouseOut="onMouseUp()"/>
+	</mx:Canvas>
+</mx:TitleWindow>
