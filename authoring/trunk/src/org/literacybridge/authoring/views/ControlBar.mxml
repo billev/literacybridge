@@ -26,6 +26,9 @@
 					case resourceManager.getString("resources", "CONTROLBAR_MENU_PREFERENCES") :
 						dispatch(event, ExtendedMenuEvent.MENU_PREFERENCES);
 						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_SHOW_VIRTUAL_DEVICE") :
+						dispatch(event, ExtendedMenuEvent.MENU_SHOW_VIRTUAL_PLAYER);
+						break;
 					case resourceManager.getString("resources", "CONTROLBAR_MENU_OPEN") :
 						dispatch(event, ExtendedMenuEvent.MENU_OPEN);
 						break;
@@ -67,6 +70,8 @@
 			</menuitem>
 		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_WINDOW')}">
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_PREFERENCES')}"/>
+				<menuitem type="separator"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SHOW_VIRTUAL_DEVICE')}"/>
 			</menuitem>
 		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_HELP')}">
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_ABOUT')}"/>

@@ -4,14 +4,18 @@
 	xmlns:ev="org.literacybridge.authoring.views.events.*"
 	xmlns:props="org.literacybridge.authoring.views.properties.*"
 	xmlns:ol="org.literacybridge.authoring.views.outline.*"
+	xmlns:maps="org.literacybridge.authoring.maps.*"
 	layout="absolute"
 	applicationComplete="onApplicationComplete()"
 	initialize="onInit()"
 	showStatusBar="true"
 	borderColor="#C8C8C8" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#D2D2D2, #E6E6E6]">
 
+	<maps:MainEventMap/>
+
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.virtualdevice.VirtualDevice;
 			import org.literacybridge.authoring.views.wizards.Wizard;
 			import org.literacybridge.authoring.views.wizards.WelcomeWizard;
 			import org.literacybridge.authoring.schema.ContentPackage;
@@ -85,11 +89,19 @@
 					case ExtendedMenuEvent.MENU_QUIT :
 						onQuit();
 						break;
+					case ExtendedMenuEvent.MENU_SHOW_VIRTUAL_PLAYER :
+						showVirtualDevice();
+						break;
+
 				}
 			}
 
 			private function showSettingsScreen() : void {
 				win = ApplicationSettingsScreen(PopUpManager.createPopUp(this, ApplicationSettingsScreen, true));
+			}
+
+			private function showVirtualDevice() : void {
+				var device:VirtualDevice = VirtualDevice(PopUpManager.createPopUp(this, VirtualDevice, true));
 			}
 
 			private var file:File;

@@ -13,6 +13,7 @@ package org.literacybridge.authoring.events {
 		public static const MENU_QUIT:int = 3;
 		public static const MENU_PREFERENCES:int = 4;
 		public static const MENU_ABOUT:int = 5;
+		public static const MENU_SHOW_VIRTUAL_PLAYER:int = 6;
 		
 		public var id:int;
 		
