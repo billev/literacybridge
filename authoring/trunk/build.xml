@@ -66,6 +66,7 @@
         <arg line="${src.dir}/${app.name}.mxml" />
         <arg line="-locale=${locale}"/>
         <arg line="-source-path locale/{locale}"/>
+        <arg line="-include-libraries libs/Mate_08_5.swc"/>
       </exec>
       <copy file="${src.dir}/${app.name}-app.xml" tofile="${dist.dir}/${app.name}-app.xml"/>
     </sequential>
