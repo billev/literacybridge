@@ -3,7 +3,7 @@
   
   <!--TODO: use KEY and KEYREF to ensure ContainerName and Class references match up.-->
   
-  <xs:element name="NoOp" type="simpleActionType">
+  <xs:element name="noOp" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
         NoOp means no action at all.
@@ -15,7 +15,7 @@
     </xs:annotation>
   </xs:element>
   
-  <xs:element name="Stop" type="simpleActionType">
+  <xs:element name="stop" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
         Stops playback, returns to beginning of container. Buttons still respond unil sleep mode begins. 
@@ -24,7 +24,7 @@
     </xs:annotation>
   </xs:element >
   
-  <xs:element name="Pause" type="simpleActionType">
+  <xs:element name="pause" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
         Pauses playback; user can resume from same point after hitting Play again.
@@ -32,7 +32,7 @@
     </xs:annotation>
   </xs:element >
   
-  <xs:element name="Return" type="simpleActionType">
+  <xs:element name="return" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
         Pauses playback; user can resume from same point after hitting Play again.
@@ -40,7 +40,7 @@
     </xs:annotation>
   </xs:element >
 
-  <xs:element name="Goto">
+  <xs:element name="goto">
     <xs:annotation>
       <xs:documentation>
         Moves to the named container (block, file, or package).
@@ -49,11 +49,11 @@
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="ContainerName" type="xs:string" use="required"/>
+      <xs:attribute name="containerName" type="xs:string" use="required"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="LoadPackage">
+  <xs:element name="loadPackage">
     <xs:annotation>
       <xs:documentation>
         This ends the current package and causes the device to load and transfer control to a new package.
@@ -63,11 +63,11 @@
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="Name" type="xs:string" use="required"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="PlayPause" type="simpleActionType">
+  <xs:element name="playPause" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
         If stopped, plays audio at beginning of latest block to start.  
@@ -77,36 +77,36 @@
     </xs:annotation>
   </xs:element>
   
-  <xs:element name="CallBlock">
+  <xs:element name="callBlock">
     <xs:complexType>
-      <xs:attribute name="BlockName" type="xs:string" use="required"/>
-      <xs:attribute name="ReturnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>
+      <xs:attribute name="blockName" type="xs:string" use="required"/>
+      <xs:attribute name="returnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="RelativeTimeJump">
+  <xs:element name="relativeTimeJump">
     <xs:complexType>
-      <xs:attribute name="RelativeTime" type="xs:int" use="required"/>
+      <xs:attribute name="relativeTime" type="xs:int" use="required"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="NextBlock" type="nextPreviousBlockType"/>
+  <xs:element name="nextBlock" type="nextPreviousBlockType"/>
 
-  <xs:element name="PreviousBlock" type="nextPreviousBlockType"/>
+  <xs:element name="previousBlock" type="nextPreviousBlockType"/>
   
   <!-- Device Interface -->
-  <xs:element name="SetLight">
+  <xs:element name="setLight">
     <xs:complexType>
-      <xs:attribute name="Light" type="lightColorType" use="required"/>
-      <xs:attribute name="Mode" type="lightModeType" use="required"/>
+      <xs:attribute name="light" type="lightColorType" use="required"/>
+      <xs:attribute name="mode" type="lightModeType" use="required"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="SetVolume" type="adjustSpeedVolumeType"/>
+  <xs:element name="setVolume" type="adjustSpeedVolumeType"/>
 
-  <xs:element name="SetSpeed" type="adjustSpeedVolumeType"/>
+  <xs:element name="setSpeed" type="adjustSpeedVolumeType"/>
   
-  <xs:element name="SetUSBMode">
+  <xs:element name="setUSBMode">
     <xs:annotation>
       <xs:documentation>
         This should only be allowed in the system package.  If found in user packages, it will be ignored.
@@ -114,8 +114,8 @@
       </xs:documentation>
     </xs:annotation>
       <xs:complexType>
-        <xs:attribute name="HostOrDevice" type="hostOrDeviceType" fixed="device" use="required"/>
-        <xs:attribute name="Active" type="xs:boolean" use="required"/>
+        <xs:attribute name="hostOrDevice" type="hostOrDeviceType" fixed="device" use="required"/>
+        <xs:attribute name="active" type="xs:boolean" use="required"/>
       </xs:complexType>
   </xs:element>
 
@@ -127,7 +127,7 @@
   <xs:complexType name="simpleActionType"/>
 
   <xs:complexType name="nextPreviousBlockType">
-    <xs:attribute name="Class" type="xs:string" use="optional" default="#all"/>
+    <xs:attribute name="class" type="xs:string" use="optional" default="#all"/>
   </xs:complexType>
   
   <xs:complexType name="adjustSpeedVolumeType">
@@ -159,15 +159,15 @@
   
   <xs:simpleType name="lightColorType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Red"/>
-      <xs:enumeration value="Green"/>
+      <xs:enumeration value="red"/>
+      <xs:enumeration value="green"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="lightModeType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Off"/>
-      <xs:enumeration value="On"/> 
+      <xs:enumeration value="off"/>
+      <xs:enumeration value="on"/> 
     </xs:restriction>
   </xs:simpleType>
 
