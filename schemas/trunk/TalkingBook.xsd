@@ -135,8 +135,8 @@ Each of these elements acts as a container for:
         <xs:element name="onEnter" type="actionsEnterExitType" minOccurs="0" maxOccurs="1">
           <xs:annotation>
             <xs:documentation>
-              This event fires whenever a container is entered.
-              During normal playback, this event is triggered immediately before the OnStart event.
+              This event fires whenever the block is entered.
+              This is the first event to be triggered in a block.
             </xs:documentation>
           </xs:annotation>
         </xs:element>
@@ -172,7 +172,7 @@ Each of these elements acts as a container for:
                     </xs:sequence>
                   </xs:complexType>
                 </xs:element>
-                <xs:element name="onEnd"></xs:element>
+                <xs:element name="onEnd" type="actionsEndType"/>
               </xs:sequence>
               <xs:attribute name="label" type="xs:token"/>
             </xs:complexType>
@@ -203,28 +203,6 @@ Each of these elements acts as a container for:
   <xs:attributeGroup name="containerAttributes">
     <xs:attribute name="name" use="required" type="xs:token"/>
   </xs:attributeGroup>
-
-  <xs:group name="eventHandlerElements">
-    <xs:sequence>
-      <xs:element name="onStart" type="actionsStartEndType" minOccurs="0" maxOccurs="1">
-        <xs:annotation>
-          <xs:documentation>
-            This event fires whenever the 0 offset in a container is played.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element >
-      <xs:element name="onEnd" type="actionsStartEndType" minOccurs="0" maxOccurs="1">
-        <xs:annotation>
-          <xs:documentation>
-            During normal playback, this event is triggered immediately after the end point of the container and before 
-            the OnExit event handler is triggered.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-    </xs:sequence>
-  </xs:group>
-
-
 
   <!--
 =========================================
@@ -262,8 +240,22 @@ Each of these elements acts as a container for:
     </xs:sequence >
   </xs:complexType>
 
-  <xs:complexType name="actionsStartEndType">
+  <xs:complexType name="actionsEndType">
     <xs:sequence>
+      <xs:element ref="return" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="insertSound" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:choice minOccurs="1" maxOccurs="1">
         <xs:element ref="stop">
           <xs:annotation>
@@ -286,34 +278,19 @@ Each of these elements acts as a container for:
             </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <!--<xs:element ref="LoadPackage"/>-->
+        <xs:element ref="loadPackage"/>
       </xs:choice>    
-      <xs:element ref="return" minOccurs="0" maxOccurs="1">
-        <xs:annotation>
-          <xs:documentation>
-            Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
     </xs:sequence>
-    <xs:attribute name="insertSoundBlock" type="xs:string" use="optional">
-      <xs:annotation>
-        <xs:documentation>
-          Documentation for the behavior of this event/action pair will be posted on the wiki with a URL inserted here.
-        </xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
   </xs:complexType>
   
   <xs:complexType name="buttonEventHandlerType">
     <xs:sequence>
+      <xs:element ref="return" minOccurs="0" maxOccurs="1"/>  
+      <xs:element ref="insertSound" minOccurs="0" maxOccurs="1"/>
       <xs:choice minOccurs="0" maxOccurs="1">
         <xs:element ref="playPause"/>  
         <xs:element ref="pause"/>  
         <xs:element ref="stop"/>  
-      </xs:choice>
-      <xs:element ref="return" minOccurs="0" maxOccurs="1"/>  
-      <xs:choice minOccurs="0" maxOccurs="1">
         <xs:element ref="loadPackage"/>
         <xs:element ref="gotoBlock"/>  
         <xs:element ref="callBlock"/>  

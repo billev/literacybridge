@@ -71,6 +71,17 @@
 <!--      <xs:attribute name="returnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>  -->
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="insertSound">
+    <xs:annotation>
+      <xs:documentation>
+        Simply plays the label section of audio without transfering control to another block (keeping same event handling).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="label" type="xs:token"/>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="relativeTimeJump">
     <xs:complexType>
