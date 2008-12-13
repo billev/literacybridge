@@ -3,18 +3,6 @@
   
   <!--TODO: use KEY and KEYREF to ensure ContainerName and Class references match up.-->
   
-  <xs:element name="noOp" type="simpleActionType">
-    <xs:annotation>
-      <xs:documentation >
-        NoOp means no action at all.
-        This is the implicit default action for a Block's Start and End events.
-        It might also be used explicitly when a Start or End event should trigger a return if there is a stack, but
-        otherwise the device should continue playing into the next Block.  
-        It could also be used when an InsertSound is desired but no other action is needed.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:element>
-  
   <xs:element name="stop" type="simpleActionType">
     <xs:annotation>
       <xs:documentation >
@@ -40,16 +28,16 @@
     </xs:annotation>
   </xs:element >
 
-  <xs:element name="goto">
+  <xs:element name="gotoBlock">
     <xs:annotation>
       <xs:documentation>
-        Moves to the named container (block, file, or package).
-        The ContainerName attribute must match the Name attribute of a Block or File in this package.
-        To load a new package, see element LoadPackage.
+        Moves to the named block container.
+        The blockName attribute must match the name attribute of a Block in this package.
+        To load a new package, see element loadPackage.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="containerName" type="xs:string" use="required"/>
+      <xs:attribute name="blockName" type="xs:string" use="required"/>
     </xs:complexType>
   </xs:element>
 
@@ -79,8 +67,8 @@
   
   <xs:element name="callBlock">
     <xs:complexType>
-      <xs:attribute name="blockName" type="xs:string" use="required"/>
-      <xs:attribute name="returnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>
+      <xs:attribute name="blockName" type="xs:token" use="required"/>
+<!--      <xs:attribute name="returnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>  -->
     </xs:complexType>
   </xs:element>
 
