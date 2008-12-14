@@ -44,6 +44,8 @@
 			
 				properties.update(tree.selectedItem);
 				actions.update(tree.selectedItem);
+				// Update the waveform visualization to show the child blocks
+				player.updateWaveform(tree.selectedItem);
 			}
 		
 			private function onApplicationComplete() : void {
@@ -177,7 +179,7 @@
 
 				<mx:VDividedBox width="100%" height="100%">
 					<mx:VBox height="100%" width="100%">
-						<views:PlayerControl/>
+						<views:PlayerControl id="player"/>
 						<mx:Spacer/>
 						<views:BlockPlayerControl/>
 

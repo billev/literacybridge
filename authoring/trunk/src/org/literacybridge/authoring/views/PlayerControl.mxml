@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel width="100%" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*" backgroundAlpha="0.5" borderStyle="solid" borderThickness="1" borderColor="#646464">
+<mx:Panel width="100%" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*" xmlns:waveform="org.literacybridge.authoring.views.waveform.*" backgroundAlpha="0.5" borderStyle="solid" borderThickness="1" borderColor="#646464">
 	<mx:Script>
 		<![CDATA[
 			import org.literacybridge.authoring.player.PlayerStates;
@@ -198,23 +198,32 @@
 				soundPositionCtrlID.setPositionInMilliSecs(value);	
 			}
 			
+			
+			// Method for updating blocks in the player display
+			public function updateWaveform(data:Object):void {
+				waveformContainer.updateWaveform(data);
+			}
 		]]>
 	</mx:Script>
+	
 
+	
 	<mx:HBox width="100%" height="100%">
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL')}" id="playBtn" click="play()" />
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />
 		<views:SoundPositionControl id="soundPositionCtrlID"/>	
 	</mx:HBox>
-	<mx:HBox width="100%" height="100%">
-		<mx:Label text="Position:"/>
-			<mx:HSlider width="100%" 
-					minimum="0" 
-					maximum="100" 
-					value="0" 
-					change="getCurrentSoundPos()" 
-					id="playerPositionSliderID"/> 
-	</mx:HBox>	
+
+ 	<waveform:WaveFormContainer id="waveformContainer"/>
+	
+		
+	<mx:HSlider width="100%" 
+			minimum="0" 
+			maximum="100" 
+			value="0"
+			change="getCurrentSoundPos()" 
+			id="playerPositionSliderID"/>
+			
 	<mx:HBox width="100%" height="100%">
 		<mx:TextInput width="100%" id="soundFilePathComboBox"/>
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_OPEN_BUTTON')}" id="setBtn"  click="openFileBrowser()" />
