@@ -20,10 +20,13 @@
         <PlayPause/>
     </OnButtonClick>
     <File Name="bell">
-        <Block Name="bellBlock" Start="0">
+        <Block Name="bellBlock" Start="0" End="5000">
             <OnEnd>
                 <Goto ContainerName="welcome"/>
             </OnEnd>
+	    <Block Name="bellBlock1" Start="30" End="600"></Block>
+	    <Block Name="bellBlock2" Start="2000" End="3000"></Block>
+	    <Block Name="bellBlock3" Start="3500" End="4000"></Block>
         </Block>
         <Block Name="short-bell" Start="500" End="1000">
             <OnEnd>

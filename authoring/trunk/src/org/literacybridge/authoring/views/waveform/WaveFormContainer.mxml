@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:ev="org.literacybridge.authoring.views.waveform.*"
+		xmlns:util="org.literacybridge.authoring.util.*"
+		width="100%" height="100">
+
+
+	<mx:Style>
+     	.myAxisStyle {
+        	tickLength:0;
+			showLine:false;
+		}
+		
+		.blockContainer {
+			borderColor: gray;
+			backgroundColor: gray;
+			backgroundAlpha: 0.2;
+		}
+		
+		.block {
+			backgroundColor: #97cffa;
+			backgroundAlpha: 0.6;
+			paddingTop: 5;
+			paddingBottom: 5;
+		}
+		
+		.newBlock {
+			backgroundColor: red;
+			backgroundAlpha: 0.6;
+			paddingTop: 5;
+			paddingBottom: 5;
+		}
+     </mx:Style>
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentFile;
+			
+			import org.literacybridge.authoring.schema.ContentBlock;
+			
+			// Internal variables to keep track of start and end of active block
+			internal var blockBeginning:Number;
+			internal var blockEnd:Number;
+			
+			internal var createdBlock:Canvas = null;
+			internal var startPos:Number = 0;
+			
+			// Method for updating blocks in the player display
+			public function updateWaveform(data:Object):void {
+				// Build blocks in the display to match this container
+				blocks.removeAllChildren();
+				this.blockBeginning = Number.MAX_VALUE;
+				this.blockEnd = 0;
+				if (data is ContentFile) {
+					// Find the max and min from the child blocks
+					var aFile:ContentFile = data as ContentFile;
+					if (aFile.children != null) {
+						for (var i:Number = 0; i < aFile.children.length; i++) {
+							var aChild:Object = aFile.children.getItemAt(i);
+							if (aChild is ContentBlock) {
+								if (aChild.start < this.blockBeginning) {
+									this.blockBeginning = aChild.start;
+								}
+								if (aChild.end > this.blockEnd) {
+									this.blockEnd = aChild.end;
+								}
+							}
+						}
+					}
+				} else if (data is ContentBlock) {
+					this.blockBeginning = data.start;
+					this.blockEnd = data.end;
+				}
+
+				if (data.children != null && data.children.length > 0) {
+					// build the sub blocks in the diagram
+					for (i = 0; i < data.children.length; i++) {
+						var block:Object = data.children.getItemAt(i);
+						if (block is ContentBlock && block.end > block.start) {
+							// Build this block
+							var newBlock:Canvas = new Canvas();
+							var containerSize:Number = this.blockEnd - this.blockBeginning;
+							newBlock.styleName = "block";
+							newBlock.setStyle("left", (block.start/containerSize) * blocks.width);
+							newBlock.percentHeight = 100;
+							newBlock.percentWidth = 100* (block.end - block.start)/containerSize;
+							newBlock.toolTip = block.label;
+							blocks.addChild(newBlock);
+						}
+					}
+				}
+
+			}
+			
+			private function startAddBlock(event:MouseEvent):void {
+				if (event.target.id != "blocks") {
+					// User must have clicked one of the existing blocks, and
+					// we can't allow overlap
+					return;
+				}
+				// Create a new canvas object and draw the new block
+				this.createdBlock = new Canvas();
+				this.createdBlock.styleName = "newBlock";
+				this.createdBlock.setStyle("left", event.localX);
+				this.startPos = event.localX;
+				this.createdBlock.percentHeight = 100;
+				this.createdBlock.width = 1;
+				blocks.addChild(this.createdBlock);
+			}
+			
+			private function resizeAddBlock(event:MouseEvent):void {
+				if (event.target.id != "blocks" && event.target != this.createdBlock) {
+					return;
+				}
+				
+				var xPos:Number = event.localX;
+				if (event.target == this.createdBlock) {
+					// If the mouse moved over the block we are creating, we need
+					// to adjust the x position to be relative to the parent
+					xPos = xPos + this.createdBlock.getStyle("left");
+				}
+				if (this.createdBlock != null) {
+					if (xPos < this.startPos) {
+						this.createdBlock.width = this.startPos - xPos;
+						this.createdBlock.setStyle("left", xPos);
+					} else {
+						this.createdBlock.width = xPos - this.startPos;
+					}
+				}			
+			}
+			
+			private function endAddBlock(event:MouseEvent):void {
+				this.createdBlock.styleName = "block";
+				this.createdBlock = null;
+			}
+			
+		]]>
+	</mx:Script>
+
+
+	<mx:Canvas id="blocks" width="100%" height="100%" styleName="blockContainer" mouseDown="startAddBlock(event)" mouseMove="resizeAddBlock(event)" mouseUp="endAddBlock(event)" >
+	</mx:Canvas>
+
+</mx:Canvas>
+
