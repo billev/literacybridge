@@ -34,16 +34,22 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentContainer;
 			import org.literacybridge.authoring.schema.ContentFile;
-			
+			import org.literacybridge.authoring.schema.SubBlockAppendable;
+			import mx.managers.PopUpManager;
+			import org.literacybridge.authoring.views.outline.AddBlock;	
 			import org.literacybridge.authoring.schema.ContentBlock;
 			
-			// Internal variables to keep track of start and end of active block
+			// Internal variables to keep track of active block
+			internal var activeBlock:ContentContainer;
 			internal var blockBeginning:Number;
 			internal var blockEnd:Number;
 			
 			internal var createdBlock:Canvas = null;
 			internal var startPos:Number = 0;
+			
+			internal var addBlockDialog:AddBlock = null;
 			
 			// Method for updating blocks in the player display
 			public function updateWaveform(data:Object):void {
@@ -51,6 +57,7 @@
 				blocks.removeAllChildren();
 				this.blockBeginning = Number.MAX_VALUE;
 				this.blockEnd = 0;
+				this.activeBlock = null;
 				if (data is ContentFile) {
 					// Find the max and min from the child blocks
 					var aFile:ContentFile = data as ContentFile;
@@ -70,7 +77,12 @@
 				} else if (data is ContentBlock) {
 					this.blockBeginning = data.start;
 					this.blockEnd = data.end;
+				} else {
+					// We don't support appending blocks to hyperlinks
+					return;
 				}
+				
+				this.activeBlock = data as ContentContainer;
 
 				if (data.children != null && data.children.length > 0) {
 					// build the sub blocks in the diagram
@@ -93,7 +105,7 @@
 			}
 			
 			private function startAddBlock(event:MouseEvent):void {
-				if (event.target.id != "blocks") {
+				if (event.target.id != "blocks" || this.activeBlock == null) {
 					// User must have clicked one of the existing blocks, and
 					// we can't allow overlap
 					return;
@@ -109,7 +121,7 @@
 			}
 			
 			private function resizeAddBlock(event:MouseEvent):void {
-				if (event.target.id != "blocks" && event.target != this.createdBlock) {
+				if ((event.target.id != "blocks" && event.target != this.createdBlock) || this.createdBlock == null) {
 					return;
 				}
 				
@@ -130,10 +142,31 @@
 			}
 			
 			private function endAddBlock(event:MouseEvent):void {
+				this.onAddAction(event);
+			}
+			
+			private function confirmAddBlock(event:MouseEvent):void {
 				this.createdBlock.styleName = "block";
+				this.createdBlock.toolTip = this.addBlockDialog.blockName.text;
 				this.createdBlock = null;
 			}
 			
+			private function cancelAddBlock(event:MouseEvent):void {
+				blocks.removeChild(this.createdBlock);
+				this.createdBlock = null;				
+			}
+			
+			private function onAddAction(event:MouseEvent):void {
+				this.addBlockDialog = AddBlock(PopUpManager.createPopUp(this, AddBlock, true));
+				this.addBlockDialog.parentContainer = this.activeBlock as SubBlockAppendable;
+				// Calculate the new start and end points for this block
+				this.addBlockDialog.blockStart.text = "" + Math.round((this.createdBlock.getStyle("left")/blocks.width) * (this.blockEnd - this.blockBeginning) + this.blockBeginning);
+				this.addBlockDialog.blockEnd.text = "" + Math.round(((this.createdBlock.getStyle("left") + this.createdBlock.width)/blocks.width) * (this.blockEnd - this.blockBeginning) + this.blockBeginning);
+				this.addBlockDialog.x = event.stageX;
+				this.addBlockDialog.y = event.stageY;
+				this.addBlockDialog.addBlockConfirm.addEventListener(MouseEvent.CLICK, this.confirmAddBlock);
+				this.addBlockDialog.addBlockCancel.addEventListener(MouseEvent.CLICK, this.cancelAddBlock);
+			}
 		]]>
 	</mx:Script>
 
