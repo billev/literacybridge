@@ -21,6 +21,8 @@
 			private function addBlock():void {
 				var b:ContentBlock = new ContentBlock();
 				b.label = blockName.text;
+				b.start = parseInt(blockStart.text);
+				b.end = parseInt(blockEnd.text);
 				parentContainer.appendSubBlock(b);
 				close();
 			}
@@ -35,10 +37,16 @@
 			<mx:FormItem label="Block Name:">
 				<mx:TextInput id="blockName"/>
 			</mx:FormItem>
+			<mx:FormItem label="Start:">
+				<mx:TextInput id="blockStart"/>
+			</mx:FormItem>
+			<mx:FormItem label="End:">
+				<mx:TextInput id="blockEnd"/>
+			</mx:FormItem>
 		</mx:Form>
 		<mx:HBox width="100%">		
-			<mx:Button label="Add" click="addBlock()"/>
-			<mx:Button label="Cancel" click="close()"/>
+			<mx:Button label="Add" click="addBlock()" id="addBlockConfirm"/>
+			<mx:Button label="Cancel" click="close()" id="addBlockCancel"/>
 		</mx:HBox>
 	</mx:VBox>
 </mx:TitleWindow>
