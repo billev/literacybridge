@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <!--TODO: use KEY and KEYREF to ensure ContainerName and Class references match up.-->
+  
+  <xs:element name="stop" type="simpleActionType">
+    <xs:annotation>
+      <xs:documentation >
+        Stops playback, returns to beginning of container. Buttons still respond unil sleep mode begins. 
+        This is the default action for files.  This action also stops relative jumps in time or blocks.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element >
+  
+  <xs:element name="pause" type="simpleActionType">
+    <xs:annotation>
+      <xs:documentation >
+        Pauses playback; user can resume from same point after hitting Play again.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element >
+  
+  <xs:element name="return" type="simpleActionType">
+    <xs:annotation>
+      <xs:documentation >
+        Pauses playback; user can resume from same point after hitting Play again.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element >
+
+  <xs:element name="gotoBlock">
+    <xs:annotation>
+      <xs:documentation>
+        Moves to the named block container.
+        The blockName attribute must match the name attribute of a Block in this package.
+        To load a new package, see element loadPackage.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="blockName" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="loadPackage">
+    <xs:annotation>
+      <xs:documentation>
+        This ends the current package and causes the device to load and transfer control to a new package.
+        The Name attribute should match a directory name and a control track's filename (without extension) 
+        at the top level of that directory.
+        If the device cannot find such a package, it is ignored and treated as a No-Op.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="playPause" type="simpleActionType">
+    <xs:annotation>
+      <xs:documentation >
+        If stopped, plays audio at beginning of latest block to start.  
+        If paused, plays audio at paused point.  
+        If playing, pauses audio at current point.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  
+  <xs:element name="callBlock">
+    <xs:complexType>
+      <xs:attribute name="blockName" type="xs:token" use="required"/>
+<!--      <xs:attribute name="returnRewindSeconds" type="xs:unsignedShort" default="0" use="optional"/>  -->
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="insertSound">
+    <xs:annotation>
+      <xs:documentation>
+        Simply plays the label section of audio without transfering control to another block (keeping same event handling).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="label" type="xs:token"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="relativeTimeJump">
+    <xs:complexType>
+      <xs:attribute name="relativeTime" type="xs:int" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="nextBlock" type="nextPreviousBlockType"/>
+
+  <xs:element name="previousBlock" type="nextPreviousBlockType"/>
+  
+  <!-- Device Interface -->
+  <xs:element name="setLight">
+    <xs:complexType>
+      <xs:attribute name="light" type="lightColorType" use="required"/>
+      <xs:attribute name="mode" type="lightModeType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="setVolume" type="adjustSpeedVolumeType"/>
+
+  <xs:element name="setSpeed" type="adjustSpeedVolumeType"/>
+  
+  <xs:element name="setUSBMode">
+    <xs:annotation>
+      <xs:documentation>
+        This should only be allowed in the system package.  If found in user packages, it will be ignored.
+        HostOrDevice attribute is fixed at 'device' until 'host' mode is impleneted (which will happen before Jan 2009 pilot).
+      </xs:documentation>
+    </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="hostOrDevice" type="hostOrDeviceType" fixed="device" use="required"/>
+        <xs:attribute name="active" type="xs:boolean" use="required"/>
+      </xs:complexType>
+  </xs:element>
+
+<!--
+=========================================
+  Supporting Complex Types
+=========================================
+-->
+  <xs:complexType name="simpleActionType"/>
+
+  <xs:complexType name="nextPreviousBlockType">
+    <xs:attribute name="class" type="xs:string" use="optional" default="#all"/>
+  </xs:complexType>
+  
+  <xs:complexType name="adjustSpeedVolumeType">
+      <xs:attribute name="relative" type="relativeSpeedVolumeType" use="required"/>
+      <!-- <xs:attribute name="absolute" type="xs:byte" use="optional"/> -->
+      <!-- Absolute value may or may not be implemented before pilot. --> 
+  </xs:complexType>
+  
+  <!--
+=========================================
+  Supporting Simple Types
+=========================================
+  -->
+  
+  <xs:simpleType name="relativeSpeedVolumeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="up"/>
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="normal"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="hostOrDeviceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="host"/>
+      <xs:enumeration value="device"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="lightColorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="red"/>
+      <xs:enumeration value="green"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="lightModeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="off"/>
+      <xs:enumeration value="on"/> 
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
