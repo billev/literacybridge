@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+      elementFormDefault="qualified"
+      attributeFormDefault="unqualified"
+      xmlns="http://www.literacybridge.org/2008/book"
+      xmlns:tb="http://www.literacybridge.org/2008/book"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      >
+
+  <xs:element name="Playlist">
+    <xs:annotation>
+      <xs:documentation>
+        Defines a list of packages to be played in the player.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Package" minOccurs ="0" maxOccurs ="unbounded">
+          <xs:complexType>
+            <xs:attribute name="Url" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  A URL of the package definition xml to be played.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute >
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>
