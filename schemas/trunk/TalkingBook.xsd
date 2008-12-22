@@ -104,6 +104,13 @@ Each of these elements acts as a container for:
             </xs:documentation>
           </xs:annotation>          
         </xs:element>
+        <xs:element name="hyperlink" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:group ref="hyperlinkElements"/>
+            <xs:attribute name="start" type="xs:unsignedInt" use="required"/>
+            <xs:attribute name="end" type="xs:unsignedInt" use="required"/>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attributeGroup ref="containerAttributes"/>
     </xs:complexType>
@@ -127,7 +134,6 @@ Each of these elements acts as a container for:
       <xs:attribute name="start" type="xs:unsignedInt" default="0"/>
       <xs:attribute name="end" type="xs:unsignedInt" use="optional"/>
       <xs:attribute name="class" type="xs:string" use="optional"/>
-      <xs:attribute name="hyperlinked" type="xs:boolean" use="optional" default="1"/>
     </xs:complexType>
   </xs:element>
 
@@ -136,7 +142,14 @@ Each of these elements acts as a container for:
 =========================================
   Common Attribute and Element Groups
 =========================================
--->
+  -->
+  <xs:group name="hyperlinkElements">
+    <xs:choice>
+      <xs:element ref="goto"/>
+      <xs:element ref="callBlock"/>
+    </xs:choice>
+  </xs:group>
+  
   <xs:attributeGroup name="containerAttributes">
     <xs:attribute name="name" use="required" type="xs:token"/>
   </xs:attributeGroup>
@@ -200,7 +213,6 @@ Each of these elements acts as a container for:
   Supprting Event, Definition, and Meta Types
 =========================================
 -->
-
   <xs:complexType name="actionsEnterExitType">
     <xs:sequence>
       <xs:element ref="setLight" minOccurs="0" maxOccurs="2">
@@ -352,6 +364,5 @@ Each of these elements acts as a container for:
       <xs:enumeration value="star"/>
     </xs:restriction>
   </xs:simpleType>
-
-
+  
 </xs:schema>
