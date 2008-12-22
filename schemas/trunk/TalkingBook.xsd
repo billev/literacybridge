@@ -75,7 +75,7 @@ Each of these elements acts as a container for:
                       </xs:annotation>
                       <xs:complexType>
                         <xs:attributeGroup ref="containerAttributes"/>
-                        <xs:attribute name="start" type="xs:unsignedInt" default="0"/>
+                        <xs:attribute name="start" type="xs:unsignedInt" use="required"/>
                         <xs:attribute name="end" type="xs:unsignedInt" use="optional"/>
                       </xs:complexType>
                     </xs:element>
@@ -161,7 +161,9 @@ Each of these elements acts as a container for:
           </xs:complexType>
         </xs:element>
         <xs:choice minOccurs="0" maxOccurs="1">
-          <xs:element ref="block"/>
+          <xs:sequence>
+            <xs:element ref="block" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
           <xs:element name="playAudio">
             <xs:complexType>
               <xs:sequence>
