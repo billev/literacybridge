@@ -14,6 +14,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
 			import mx.controls.Menu;
 			import mx.events.MenuEvent;
 			import mx.collections.ArrayCollection;
@@ -120,15 +122,29 @@
 			
 			private function removeEventFromList():void {
 				// remove selected item
-				if (eventGrid.selectedItem) {
+				if (eventGrid.selectedItem != null) {
+					var text:String;
+					if (actionList == null || actionList.length == 0) {
+						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "'?";
+					} else if (actionList.length == 1) {
+						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "' and its action?";
+					} else {
+						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "' and its " + actionList.length + " actions?"
+					}
+                	Alert.show(text, "Remove Event", Alert.YES + Alert.NO, this, removeEventHandler, null, Alert.NO);					
+				}
+				enableControls();
+			}
+			
+            private function removeEventHandler(event:CloseEvent):void {
+                if (event.detail==Alert.YES) {
 					var curSel:int = eventGrid.selectedIndex;
 					eventHandlers.removeItemAt(eventGrid.selectedIndex);
 					if (curSel != 0) {
 						eventGrid.selectedIndex = curSel-1;
 					}
-				}
-				enableControls();
-			}
+                }
+            }
 			
 			private function enableControls():void {
 				removeEventButton.enabled = (eventGrid.selectedIndex != -1);				
