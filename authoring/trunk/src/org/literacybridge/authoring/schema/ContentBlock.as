@@ -8,6 +8,9 @@ package org.literacybridge.authoring.schema {
 		public var className:String = "#all";
 		
 		public function appendSubBlock(subBlock:ContentBlock):void {
+			if (children == null) {
+				children = new ArrayCollection();
+			}
 			children.addItem(subBlock);
 		}
 	}
