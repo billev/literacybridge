@@ -4,7 +4,7 @@
 		xmlns:util="org.literacybridge.authoring.util.*"
 		width="100%" height="100%" title="Events" backgroundAlpha="0.5" 
 		borderStyle="solid" borderThickness="1" borderColor="#646464" fontSize="12" layout="vertical"
-		themeColor="#009DFF">
+		themeColor="#009DFF" initialize="initControl()">
 
 	<mx:Style>
 	    .alignLeftPopUpStyle {
@@ -67,7 +67,9 @@
 						addEvent.eventHandlers = eventHandlers;
 				} else {
 					eventHandlers.addItem(new ContentEventHandler(event.item as int));
+					eventGrid.selectedIndex = eventHandlers.length-1;
 				}
+				enableControls();
 			}
 			
 			private function onAddAction(event:Event):void {
@@ -109,11 +111,33 @@
 			
 			private function onSelectEvent(event:Event):void {
 				actionList = (eventGrid.selectedItem as EventHandler).actions;
+				enableControls();
 			}
 
 			private function getActionDisplayText():String {
 				return ActionDisplayTextGenerator.getDisplayTextAsHtml(actionRepeater.currentItem as Action);
 			}
+			
+			private function removeEventFromList():void {
+				// remove selected item
+				if (eventGrid.selectedItem) {
+					var curSel:int = eventGrid.selectedIndex;
+					eventHandlers.removeItemAt(eventGrid.selectedIndex);
+					if (curSel != 0) {
+						eventGrid.selectedIndex = curSel-1;
+					}
+				}
+				enableControls();
+			}
+			
+			private function enableControls():void {
+				removeEventButton.enabled = (eventGrid.selectedIndex != -1);				
+			}
+			
+			private function initControl():void {
+				enableControls();
+			} 
+			
 		]]>
 	</mx:Script>
 	<mx:VBox width="100%" height="100%">
@@ -130,19 +154,17 @@
 			    </mx:DataGrid>				
 			<mx:VBox width="100%" height="100%" backgroundColor="#97cffa" backgroundAlpha="1.0">
 				<util:ButtonPanel title="Actions" width="100%" height="100%" borderAlpha="0.0" 
-					buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
+									buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
 					<mx:Repeater id="actionRepeater" dataProvider="{actionList}">
 					    <ev:ActionElement width="100%" text="{getActionDisplayText()}"/> 
   					</mx:Repeater>
-
-				</util:ButtonPanel>
-							
+				</util:ButtonPanel>							
 			</mx:VBox>
 		</mx:HBox>
 		<mx:HBox>
 			<mx:PopUpButton label="Add Event" id="addEventBtn" preinitialize="initAddEventButton()" 
 				openAlways="true" popUpStyleName="alignLeftPopUpStyle"/>
-			<mx:Button label="Remove Event" id="removeEventButton"/>
+			<mx:Button label="Remove Event" id="removeEventButton" click="removeEventFromList()"/>
 		</mx:HBox>
 	</mx:VBox>
 </mx:Panel>
