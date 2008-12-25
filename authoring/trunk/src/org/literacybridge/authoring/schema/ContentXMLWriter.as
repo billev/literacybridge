@@ -1,6 +1,7 @@
 package org.literacybridge.authoring.schema {
 	import mx.collections.ArrayCollection;
 	
+	import org.literacybridge.authoring.schema.actions.Action;
 	import org.literacybridge.authoring.schema.actions.AdjustSpeedVolumeAction;
 	import org.literacybridge.authoring.schema.actions.CallBlockAction;
 	import org.literacybridge.authoring.schema.actions.GotoAction;
@@ -44,6 +45,7 @@ package org.literacybridge.authoring.schema {
 				appendContainerAttributes(fileData, file);
 			    appendEventHandlers(fileData, file.eventHandlers);
 				appendBlocks(fileData, file.children);
+				appendHyperlinks(fileData, file.hyperlinks);
 				data.appendChild(fileData);
 			}
 		}
@@ -62,6 +64,20 @@ package org.literacybridge.authoring.schema {
 				appendEventHandlers(blockData, block.eventHandlers);
 				appendBlocks(blockData, block.children);
 				data.appendChild(blockData);
+			}
+		}
+
+		private function appendHyperlinks(data:XML, hyperlinks:ArrayCollection):void {
+			for (var i:int=0; i<hyperlinks.length; i++) {
+				var hyperlink:Hyperlink = hyperlinks.getItemAt(i) as Hyperlink;
+				var hyperlinkData:XML;
+				hyperlinkData = <{SchemaConstants.Hyperlink}/>
+				
+				hyperlinkData.@[SchemaConstants.Hyperlink_Att_Start] = hyperlink.start;
+				hyperlinkData.@[SchemaConstants.Hyperlink_Att_End] = hyperlink.end;
+
+				appendAction(hyperlinkData, hyperlink.action);
+				data.appendChild(hyperlinkData);
 			}
 		}
 		
@@ -123,37 +139,40 @@ package org.literacybridge.authoring.schema {
 		
 		private function appendActions(event:XML, actions:ArrayCollection):void {
 			for (var i:int=0; i < actions.length; i++) {
-				var action:Object = actions.getItemAt(i);
-				var a:XML;
-				if (action is SimpleAction) {
-					a = getSimpleAction(action as SimpleAction);
-				}
-				if (action is AdjustSpeedVolumeAction) {
-					a = getAdjustSpeedVolumeAction(action as AdjustSpeedVolumeAction);
-				}
-				if (action is CallBlockAction) {
-					a = getCallBlockAction(action as CallBlockAction);
-				}
-				if (action is GotoAction) {
-					a = getGotoAction(action as GotoAction);
-				}
-				if (action is LoadPackageAction) {
-					a = getLoadPackageAction(action as LoadPackageAction);
-				}
-				if (action is NextPreviousBlockAction) {
-					a = getNextPreviousBlockAction(action as NextPreviousBlockAction);
-				}
-				if (action is RelativeTimeJumpAction) {
-					a = getRelativeTimeJumpAction(action as RelativeTimeJumpAction);
-				}
-				if (action is SetLightAction) {
-					a = getSetLightAction(action as SetLightAction);
-				}
-				if (action is SetUSBModeAction) {
-					a = getSetUSBModeAction(action as SetUSBModeAction);
-				}
-				event.appendChild(a);
+				appendAction(event, actions.getItemAt(i) as Action);
+			}			
+		}
+		
+		private function appendAction(data:XML, action:Action):void {
+			var a:XML;
+			if (action is SimpleAction) {
+				a = getSimpleAction(action as SimpleAction);
 			}
+			if (action is AdjustSpeedVolumeAction) {
+				a = getAdjustSpeedVolumeAction(action as AdjustSpeedVolumeAction);
+			}
+			if (action is CallBlockAction) {
+				a = getCallBlockAction(action as CallBlockAction);
+			}
+			if (action is GotoAction) {
+				a = getGotoAction(action as GotoAction);
+			}
+			if (action is LoadPackageAction) {
+				a = getLoadPackageAction(action as LoadPackageAction);
+			}
+			if (action is NextPreviousBlockAction) {
+				a = getNextPreviousBlockAction(action as NextPreviousBlockAction);
+			}
+			if (action is RelativeTimeJumpAction) {
+				a = getRelativeTimeJumpAction(action as RelativeTimeJumpAction);
+			}
+			if (action is SetLightAction) {
+				a = getSetLightAction(action as SetLightAction);
+			}
+			if (action is SetUSBModeAction) {
+				a = getSetUSBModeAction(action as SetUSBModeAction);
+			}
+			data.appendChild(a);
 		}
 		
 		private function getSimpleAction(action:SimpleAction):XML {

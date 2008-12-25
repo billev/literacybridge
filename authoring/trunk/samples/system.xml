@@ -20,6 +20,9 @@
         <playPause/>
     </onButtonClick>
     <file name="bell">
+    	<hyperlink start="1000" end="2000">
+    		<goto containerName="your recordings"/>
+    	</hyperlink>
         <block name="bellblock" start="0" end="5000">
             <onEnd>
                 <goto containerName="welcome"/>
@@ -38,7 +41,7 @@
     <file name="aos">
         <block start="0" end="29600">
             <onButtonClick button="left">
-                <Goto containerName="share"/>
+                <goto containerName="share"/>
             </onButtonClick>
             <onButtonClick button="right">
                 <goto containerName="listen"/>
@@ -174,7 +177,7 @@
                 <goto containerName="slow"/>
             </onButtonClick>
         </block>
-        <block name="your recordings" start="51250" end="53000" hyperlinked="true">
+        <block name="your recordings" start="51250" end="53000">
             <onEnd>
                 <stop/>
             </onEnd>

@@ -32,6 +32,7 @@ package org.literacybridge.authoring.schema {
 				f.parent = p;				
 				p.addFile(f);
 				addSubBlocksRecursively(f, file);
+				addHyperlinks(f, file);
 			}
 			return p;
 		}
@@ -42,6 +43,14 @@ package org.literacybridge.authoring.schema {
 				b.parent = container as ContentContainer;
 				container.appendSubBlock(b);
 				addSubBlocksRecursively(b, subBlock);
+			}			
+		}
+
+		private function addHyperlinks(file:ContentFile, data:XML):void {
+			for each (var hyperlink:XML in data.elements(SchemaConstants.Hyperlink)) {
+				var h : Hyperlink = parseSingleHyperlink(hyperlink);
+				h.parent = file;
+				file.hyperlinks.addItem(h);
 			}			
 		}
 
@@ -81,6 +90,29 @@ package org.literacybridge.authoring.schema {
 			}
 			parseEventHandlers(b, block);
 			return b;	
+		}
+
+		private function parseSingleHyperlink(data:XML):Hyperlink {
+			var h:Hyperlink = new Hyperlink();
+			h.start = data.attribute(SchemaConstants.Hyperlink_Att_Start);
+			h.end = data.attribute(SchemaConstants.Hyperlink_Att_End);
+			// Goto action
+			if (data.elements(SchemaConstants.ActionGoto) != undefined) {
+				var goto:GotoAction = new GotoAction();
+				goto.containerName = data.elements(SchemaConstants.ActionGoto).attribute(SchemaConstants.ActionGoto_Att_ContainerName);
+				h.action = goto;
+			}
+			// CallBlock action
+			if (data.elements(SchemaConstants.ActionCallBlock) != undefined) {
+				var callBlock:CallBlockAction = new CallBlockAction();
+				callBlock.blockName = 
+					data.elements(SchemaConstants.ActionCallBlock).attribute(SchemaConstants.ActionCallBlock_Att_BlockName);
+				callBlock.returnRewindSeconds = 
+					Number(data.elements(SchemaConstants.ActionCallBlock).attribute(SchemaConstants.ActionCallBlock_Att_ReturnRewindSeconds));
+				h.action = callBlock;
+			}
+
+			return h;			
 		}
 
 		

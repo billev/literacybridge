@@ -19,6 +19,9 @@ package org.literacybridge.authoring.schema {
 			public static const Block_Att_End:String = "end";
 			public static const Block_Att_Class:String = "class";
 			
+		public static const Hyperlink:String = "hyperlink";
+			public static const Hyperlink_Att_Start:String = "start";
+			public static const Hyperlink_Att_End:String = "end";
 					
 		// eventHandlerElements
 		public static const OnEnter:String = "onEnter";
