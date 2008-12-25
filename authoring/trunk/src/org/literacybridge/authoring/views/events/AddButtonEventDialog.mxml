@@ -19,7 +19,7 @@
 						
 			private function onAddEvent():void {
 				var handler:ButtonEventHandler = new ButtonEventHandler();
-				handler.button1 = buttonBox.selectedItem as int;
+				handler.button = buttonBox.selectedItem as int;
 				handler.buttonAction = buttonActionBox.selectedItem as int;
 				eventHandlers.addItem(handler);
 				close();

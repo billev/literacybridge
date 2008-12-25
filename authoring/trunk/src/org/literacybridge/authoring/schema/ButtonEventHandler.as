@@ -51,7 +51,6 @@ package org.literacybridge.authoring.schema {
 		public var buttonAction:int;
 		public var insertSoundBlock:String;
 		public var setSpeed:int;
-		public var button1:int;
-		public var button2:int;
+		public var button:int;
 	}
 }

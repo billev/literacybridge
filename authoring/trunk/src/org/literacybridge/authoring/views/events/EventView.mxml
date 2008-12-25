@@ -103,7 +103,7 @@
 			}
 			
 			private function getDisplayTextFromButtonEventHandler(handler:ButtonEventHandler):String {
-				return ActionDisplayTextGenerator.getButtonDisplayText(handler.button1)
+				return ActionDisplayTextGenerator.getButtonDisplayText(handler.button)
 							+ " " + ActionDisplayTextGenerator.getButtonActionDisplayText(handler.buttonAction);
 			}
 			
