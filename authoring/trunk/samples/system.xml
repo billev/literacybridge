@@ -1,290 +1,290 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Package 
- Name="system" Precision="128" Version="0000">
-    <OnStart>
-        <Goto ContainerName="bell"/>
-    </OnStart>    
-    <OnButtonClick Button1="Home" Button2="Up">
-        <Goto ContainerName="welcome"/>
-    </OnButtonClick>
-    <OnButtonClick Button1="Star">
-        <SetUSBMode Active="true" HostOrDevice="device"/>
-    </OnButtonClick>
-    <OnButtonClick Button1="Plus" InsertSoundBlock="short-bell">
-        <SetVolume relative="up" />
-    </OnButtonClick>
-    <OnButtonClick Button1="Minus" InsertSoundBlock="short-bell">
-        <SetVolume relative="down"/>
-    </OnButtonClick>
-    <OnButtonClick Button1="PlayPause">
-        <PlayPause/>
-    </OnButtonClick>
-    <File Name="bell">
-        <Block Name="bellBlock" Start="0" End="5000">
-            <OnEnd>
-                <Goto ContainerName="welcome"/>
-            </OnEnd>
-	    <Block Name="bellBlock1" Start="30" End="600"></Block>
-	    <Block Name="bellBlock2" Start="2000" End="3000"></Block>
-	    <Block Name="bellBlock3" Start="3500" End="4000"></Block>
-        </Block>
-        <Block Name="short-bell" Start="500" End="1000">
-            <OnEnd>
-                <Stop/>
-                <Return/>
-            </OnEnd>
-        </Block>
-    </File>
-    <File Name="aos">
-        <Block Start="0" End="29600">
-            <OnButtonClick Button1="Left">
-                <Goto ContainerName="share"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Right">
-                <Goto ContainerName="listen"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Home">
-                <Goto ContainerName="help"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="welcome" Start="1000" End="2000">
-            <OnEnd>
-                <Goto ContainerName="forhelp"/>
-            </OnEnd>
-        </Block>
-        <Block Name="forhelp" Start="27000" End="29500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-        </Block>
-        <Block Name="listen" Start="62250" End="63500" Class="main-menu">
-            <OnEnter>
-                <SetLight Light="Red" Mode="On"/>
-                <SetLight Light="Green" Mode="Off"/>
-            </OnEnter>
-            <OnExit>
-                <SetLight Light="Red" Mode="Off"/>
-            </OnExit>
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Select" Button2="Down">
-                <Goto ContainerName="your recordings"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Right" InsertSoundBlock="bell">
-                <Goto ContainerName="speak"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Left">
-                <Goto ContainerName="share"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="speak" Start="66000" End="67500" Class="main-menu">
-            <OnEnter>
-                <SetLight Light="Red" Mode="On"/>
-                <SetLight Light="Green" Mode="On"/>
-            </OnEnter>
-            <OnExit>
-                <SetLight Light="Red" Mode="Off"/>
-                <SetLight Light="Green" Mode="On"/>
-            </OnExit>
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonHold Button1="Select" Button2="Down" InsertSoundBlock="share">
-                <Goto ContainerName="notready"/>
-            </OnButtonHold>
-            <OnButtonClick Button1="Left">
-                <Goto ContainerName="listen"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Right">
-                <Goto ContainerName="share"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="share" Start="70000" End="71000" Class="main-menu">
-            <OnEnter>
-                <SetLight Light="Red" Mode="Off"/>
-                <SetLight Light="Green" Mode="Off"/>
-            </OnEnter>
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Select" Button2="Down" InsertSoundBlock="share">
-                <Goto ContainerName="notready"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Left">
-                <Goto ContainerName="speak"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Right">
-                <Goto ContainerName="listen"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="notready" Start="75000" End="77000">
-            <OnStart InsertSoundBlock="bell">
-                <Stop/>
-            </OnStart>
-            <OnEnd InsertSoundBlock="bell">
-                <Stop/>
-            </OnEnd>
-            <OnButtonHold Button1="Down">
-                <LoadPackage Name="sikulu"/>
-            </OnButtonHold>
-        </Block>
-        <Block Name="help" Start="168500" End="169250">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Left">
-                <Goto ContainerName="buttons"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Right">
-                <Goto ContainerName="speed"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="buttons" Start="194000" End="195500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-        </Block>
-        <Block Name="speed" Start="126750" End="127500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="normal"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Down">
-                <Goto ContainerName="slow"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Up">
-                <Goto ContainerName="fast"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="normal" Start="130500" End="131750">
-            <OnEnter>
-                <SetSpeed relative="normal"/>
-            </OnEnter>
-            <OnEnd>
-                <Stop/>
-                <Return/>
-            </OnEnd>
-            <OnButtonClick Button1="Up" SetSpeed="up">
-                <Goto ContainerName="fast"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Down" SetSpeed="down">
-                <Goto ContainerName="slow"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="your recordings" Start="51250" End="53000" Hyperlinked="true">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Left" Button2="Right">
-                <Goto ContainerName="other recordings"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <CallBlock BlockName="normal" ReturnRewindSeconds="5"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="other recordings" Start="57000" End="58500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Left" Button2="Right">
-                <Goto ContainerName="your recordings"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="notready"/>
-            </OnButtonClick>
-        </Block>
-        <Block Start="130000" End="150600">
-            <OnButtonClick Button1="Right">
-                <NextBlock Class="main-menu"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Left">
-                <PreviousBlock Class="main-menu"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="slow" Start="138250" End="139250">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Down" SetSpeed="down">
-                <Goto ContainerName="slower"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Up" SetSpeed="normal">
-                <Goto ContainerName="normal"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="welcome"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="slower" Start="146250" End="147500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Down" SetSpeed="down">
-                <Goto ContainerName="slowest"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Up" SetSpeed="up">
-                <Goto ContainerName="slow"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="welcome"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="slowest" Start="153500" End="154750">
-            <OnStart>
-                <Stop/>
-            </OnStart>
-            <OnEnd>
-                <Pause/>
-            </OnEnd>
-            <OnButtonClick Button1="PlayPause">
-                <PlayPause/>
-                <Return/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Up" SetSpeed="up">
-                <Goto ContainerName="slower"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="welcome"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="fast" Start="134500" End="135500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Down" SetSpeed="normal">
-                <Goto ContainerName="normal"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Up" SetSpeed="up">
-                <Goto ContainerName="faster"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="welcome"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="faster" Start="142250" End="143500">
-            <OnEnd>
-                <Stop/>
-            </OnEnd>
-            <OnButtonClick Button1="Down" SetSpeed="down">
-                <Goto ContainerName="slowest"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Up" SetSpeed="up">
-                <Goto ContainerName="fastest"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="welcome"/>
-            </OnButtonClick>
-        </Block>
-        <Block Name="fastest" Start="149250" End="150500">
-            <OnButtonClick Button1="Down" SetSpeed="down">
-                <Goto ContainerName="faster"/>
-            </OnButtonClick>
-            <OnButtonClick Button1="Select">
-                <Goto ContainerName="welcome"/>
-            </OnButtonClick>
-        </Block>
-    </File>
-</Package>
+<package 
+ name="system" precision="128" version="0000">
+    <onStart>
+        <goto containerName="bell"/>
+    </onStart>    
+    <onButtonClick button="home">
+        <goto containerName="welcome"/>
+    </onButtonClick>
+    <onButtonClick button="star">
+        <setUSBMode active="true" hostOrDevice="device"/>
+    </onButtonClick>
+    <onButtonClick button="plus" insertSoundBlock="short-bell">
+        <setVolume relative="up" />
+    </onButtonClick>
+    <onButtonClick button="minus" insertSoundBlock="short-bell">
+        <setVolume relative="down"/>
+    </onButtonClick>
+    <onButtonClick button="playPause">
+        <playPause/>
+    </onButtonClick>
+    <file name="bell">
+        <block name="bellblock" start="0" end="5000">
+            <onEnd>
+                <goto containerName="welcome"/>
+            </onEnd>
+	    <block name="bellblock1" start="30" end="600"></block>
+	    <block name="bellblock2" start="2000" end="3000"></block>
+	    <block name="bellblock3" start="3500" end="4000"></block>
+        </block>
+        <block name="short-bell" start="500" end="1000">
+            <onEnd>
+                <stop/>
+                <return/>
+            </onEnd>
+        </block>
+    </file>
+    <file name="aos">
+        <block start="0" end="29600">
+            <onButtonClick button="left">
+                <Goto containerName="share"/>
+            </onButtonClick>
+            <onButtonClick button="right">
+                <goto containerName="listen"/>
+            </onButtonClick>
+            <onButtonClick button="home">
+                <goto containerName="help"/>
+            </onButtonClick>
+        </block>
+        <block name="welcome" start="1000" end="2000">
+            <onEnd>
+                <goto containerName="forhelp"/>
+            </onEnd>
+        </block>
+        <block name="forhelp" start="27000" end="29500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+        </block>
+        <block name="listen" start="62250" end="63500" class="main-menu">
+            <onEnter>
+                <setLight light="red" Mode="on"/>
+                <setLight light="green" Mode="off"/>
+            </onEnter>
+            <onExit>
+                <setLight light="red" Mode="off"/>
+            </onExit>
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="select">
+                <goto containerName="your recordings"/>
+            </onButtonClick>
+            <onButtonClick button="right" insertSoundBlock="bell">
+                <goto containerName="speak"/>
+            </onButtonClick>
+            <onButtonClick button="left">
+                <goto containerName="share"/>
+            </onButtonClick>
+        </block>
+        <block name="speak" start="66000" end="67500" class="main-menu">
+            <onEnter>
+                <setLight light="red" Mode="on"/>
+                <setLight light="green" Mode="on"/>
+            </onEnter>
+            <onExit>
+                <setLight light="red" Mode="off"/>
+                <setLight light="green" Mode="on"/>
+            </onExit>
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonHold button="select" insertSoundBlock="share">
+                <goto containerName="notready"/>
+            </onButtonHold>
+            <onButtonClick button="left">
+                <goto containerName="listen"/>
+            </onButtonClick>
+            <onButtonClick button="right">
+                <goto containerName="share"/>
+            </onButtonClick>
+        </block>
+        <block name="share" start="70000" end="71000" class="main-menu">
+            <onEnter>
+                <setLight light="red" Mode="off"/>
+                <setLight light="green" Mode="off"/>
+            </onEnter>
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="select" insertSoundBlock="share">
+                <goto containerName="notready"/>
+            </onButtonClick>
+            <onButtonClick button="left">
+                <goto containerName="speak"/>
+            </onButtonClick>
+            <onButtonClick button="right">
+                <goto containerName="listen"/>
+            </onButtonClick>
+        </block>
+        <block name="notready" start="75000" end="77000">
+            <onStart insertSoundBlock="bell">
+                <stop/>
+            </onStart>
+            <onEnd insertSoundBlock="bell">
+                <stop/>
+            </onEnd>
+            <onButtonHold button="down">
+                <loadPackage name="sikulu"/>
+            </onButtonHold>
+        </block>
+        <block name="help" start="168500" end="169250">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="left">
+                <goto containerName="buttons"/>
+            </onButtonClick>
+            <onButtonClick button="right">
+                <goto containerName="speed"/>
+            </onButtonClick>
+        </block>
+        <block name="buttons" start="194000" end="195500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+        </block>
+        <block name="speed" start="126750" end="127500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="select">
+                <goto containerName="normal"/>
+            </onButtonClick>
+            <onButtonClick button="down">
+                <goto containerName="slow"/>
+            </onButtonClick>
+            <onButtonClick button="up">
+                <goto containerName="fast"/>
+            </onButtonClick>
+        </block>
+        <block name="normal" start="130500" end="131750">
+            <onEnter>
+                <setSpeed relative="normal"/>
+            </onEnter>
+            <onEnd>
+                <stop/>
+                <return/>
+            </onEnd>
+            <onButtonClick button="Up" setSpeed="up">
+                <goto containerName="fast"/>
+            </onButtonClick>
+            <onButtonClick button="down" setSpeed="down">
+                <goto containerName="slow"/>
+            </onButtonClick>
+        </block>
+        <block name="your recordings" start="51250" end="53000" hyperlinked="true">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="left">
+                <goto containerName="other recordings"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <callblock blockname="normal" returnRewindSeconds="5"/>
+            </onButtonClick>
+        </block>
+        <block name="other recordings" start="57000" end="58500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="left">
+                <goto containerName="your recordings"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="notready"/>
+            </onButtonClick>
+        </block>
+        <block start="130000" end="150600">
+            <onButtonClick button="right">
+                <nextblock class="main-menu"/>
+            </onButtonClick>
+            <onButtonClick button="Left">
+                <previousblock class="main-menu"/>
+            </onButtonClick>
+        </block>
+        <block name="slow" start="138250" end="139250">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="down" setSpeed="down">
+                <goto containerName="slower"/>
+            </onButtonClick>
+            <onButtonClick button="up" SetSpeed="normal">
+                <goto containerName="normal"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="welcome"/>
+            </onButtonClick>
+        </block>
+        <block name="slower" start="146250" end="147500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="down" setSpeed="down">
+                <goto containerName="slowest"/>
+            </onButtonClick>
+            <onButtonClick button="up" setSpeed="up">
+                <goto containerName="slow"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="welcome"/>
+            </onButtonClick>
+        </block>
+        <block name="slowest" start="153500" end="154750">
+            <onStart>
+                <stop/>
+            </onStart>
+            <onEnd>
+                <pause/>
+            </onEnd>
+            <onButtonClick button="playPause">
+                <playPause/>
+                <return/>
+            </onButtonClick>
+            <onButtonClick button="up" setSpeed="up">
+                <goto containerName="slower"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="welcome"/>
+            </onButtonClick>
+        </block>
+        <block name="fast" start="134500" end="135500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="down" setSpeed="normal">
+                <goto containerName="normal"/>
+            </onButtonClick>
+            <onButtonClick button="up" setSpeed="up">
+                <goto containerName="faster"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="welcome"/>
+            </onButtonClick>
+        </block>
+        <block name="faster" start="142250" end="143500">
+            <onEnd>
+                <stop/>
+            </onEnd>
+            <onButtonClick button="down" setSpeed="down">
+                <goto containerName="slowest"/>
+            </onButtonClick>
+            <onButtonClick button="up" setSpeed="up">
+                <goto containerName="fastest"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="welcome"/>
+            </onButtonClick>
+        </block>
+        <block name="fastest" start="149250" end="150500">
+            <onButtonClick button="down" setSpeed="down">
+                <goto containerName="faster"/>
+            </onButtonClick>
+            <onButtonClick button="select">
+                <goto containerName="welcome"/>
+            </onButtonClick>
+        </block>
+    </file>
+</package>

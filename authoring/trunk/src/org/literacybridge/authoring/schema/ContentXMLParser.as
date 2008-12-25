@@ -37,7 +37,7 @@ package org.literacybridge.authoring.schema {
 		}
 		
 		private function addSubBlocksRecursively(container:SubBlockAppendable, data:XML):void {
-			for each (var subBlock:XML in data.Block) {
+			for each (var subBlock:XML in data.elements(SchemaConstants.Block)) {
 				var b : ContentBlock = parseSingleBlock(subBlock);
 				b.parent = container as ContentContainer;
 				container.appendSubBlock(b);
@@ -119,8 +119,7 @@ package org.literacybridge.authoring.schema {
 		private function parseButtonEvent(container:ContentContainer, buttonEvent:XML, buttonAction:int) :void {
 			var b:ButtonEventHandler = new ButtonEventHandler();
 			b.buttonAction = buttonAction;
-			b.button1 = determineButton(buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button1));
-			b.button2 = determineButton(buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button2));
+			b.button = determineButton(buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_Button));
 			b.insertSoundBlock = buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_InsertSoundBlock);
 			
 			if (buttonEvent.attribute(SchemaConstants.ButtonEvent_Att_SetSpeed) != undefined) {

@@ -113,8 +113,7 @@ package org.literacybridge.authoring.schema {
 				}
 			}
 
-			buttonEvent.@[SchemaConstants.ButtonEvent_Att_Button1] = determineButtonName(eventHandler.button1);
-			buttonEvent.@[SchemaConstants.ButtonEvent_Att_Button2] = determineButtonName(eventHandler.button2);
+			buttonEvent.@[SchemaConstants.ButtonEvent_Att_Button] = determineButtonName(eventHandler.button);
 			buttonEvent.@[SchemaConstants.ButtonEvent_Att_InsertSoundBlock] = eventHandler.insertSoundBlock;
 			buttonEvent.@[SchemaConstants.ButtonEvent_Att_SetSpeed] = determineRelativeValue(eventHandler.setSpeed);
 			
