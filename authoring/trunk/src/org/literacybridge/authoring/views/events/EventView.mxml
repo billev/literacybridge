@@ -76,6 +76,7 @@
 			
 			private function onAddAction(event:Event):void {
 				var addAction:AddActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
+				addAction.setMode(AddActionDialog.ModeAdd);
 				addAction.x = mouseX;
 				addAction.y = mouseY;
 			}
@@ -116,10 +117,6 @@
 				enableControls();
 			}
 
-			private function getActionDisplayText():String {
-				return ActionDisplayTextGenerator.getDisplayTextAsHtml(actionRepeater.currentItem as Action);
-			}
-			
 			private function removeEventFromList():void {
 				// remove selected item
 				if (eventGrid.selectedItem != null) {
@@ -172,7 +169,7 @@
 				<util:ButtonPanel title="Actions" width="100%" height="100%" borderAlpha="0.0" 
 									buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
 					<mx:Repeater id="actionRepeater" dataProvider="{actionList}">
-					    <ev:ActionElement width="100%" text="{getActionDisplayText()}"/> 
+					    <ev:ActionElement width="100%" action="{actionRepeater.currentItem as Action}"/> 
   					</mx:Repeater>
 				</util:ButtonPanel>							
 			</mx:VBox>

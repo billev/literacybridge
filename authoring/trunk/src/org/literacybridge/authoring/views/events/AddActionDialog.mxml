@@ -5,7 +5,7 @@
 	      showCloseButton="true"
 	      title="Add Action" fontSize="12"
 	      close="close()"
-	      initialize="init()">
+	      initialize="init()" xmlns:events="org.literacybridge.authoring.views.events.*">
 	
 	<mx:Script>
 		<![CDATA[
@@ -20,9 +20,18 @@
 			[Bindable] public var handler:ButtonEventHandler;
 			[Bindable] private var action:Action;
 			
+			public static const ModeAdd:int = 1;
+			public static const ModeEdit:int = 2; 
+			
+			[Bindable]
+			private static var actionList:ArrayCollection = Action.getActionList();
 			
 			private function init():void {
-
+//				box.addChildAt(new SetColorActionDialog(), 1);
+//				trace(box.numChildren);
+//				box.removeChildAt(1);
+//				trace(box.numChildren);
+//				box.addChildAt(new SetColorActionDialog(), 1);
 			}
 			
 			private function close():void {
@@ -35,24 +44,32 @@
 			}
 			
 			private function getActionLabel(item:Object):String {
-				return "item";
+				var a:int = item as int;
+				switch (a) {
+					case Action.GotoBlock : return "Goto Block";
+					default : return "";
+				}
+			}
+			
+			public function setMode(mode:int):void {
+				if (mode==ModeAdd) {
+					addEditBtn.label="Add";
+					title="Add Action";
+					comboBox.enabled = true;
+				} else {					
+					addEditBtn.label="Edit";
+					title="Edit Action";
+					comboBox.enabled = false;
+				}
 			}
 		]]>
 	</mx:Script>
 	      
 	<mx:VBox fontSize="10" id="box">
-		<mx:ComboBox labelFunction="getActionLabel"/>
-
-		<mx:Form>
-			<mx:FormItem label="Color:">
-				<mx:ComboBox text="Red"/>
-			</mx:FormItem>
-			<mx:FormItem label="State:">
-				<mx:ComboBox text="On"/>
-			</mx:FormItem>
-		</mx:Form>
+		<mx:ComboBox labelFunction="getActionLabel" id="comboBox" dataProvider="{actionList}"/>
+		
 		<mx:HBox width="100%">		
-			<mx:Button label="Add" click="addAction()"/>
+			<mx:Button label="Add" click="addAction()" id="addEditBtn"/>
 			<mx:Button label="Cancel" click="close()"/>
 		</mx:HBox>
 	</mx:VBox>
