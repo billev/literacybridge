@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	verticalAlign="middle"
-	horizontalGap="0">
+	horizontalGap="0"
+	initialize="init()">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.binding.utils.BindingUtils;
+			import org.literacybridge.authoring.schema.actions.Action;
 			import mx.controls.Alert;
 			import mx.controls.HTML;	
 			
-			[Bindable] public var text:String;
+			[Bindable] private var text:String;
+			[Bindable] public var action:Action;
 			
 			private function onMouseOver():void {
 				setStyle("backgroundColor", btn.getStyle("rollOverColor"));
@@ -18,12 +23,26 @@
 				setStyle("backgroundColor", "#ffffff");
 			}
 			
+			private function editAction():void {
+				var addAction:AddActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
+				addAction.setMode(AddActionDialog.ModeEdit);
+				addAction.x = mouseX;
+				addAction.y = mouseY;
+			}
+			
+			private function setActionDisplayText(a:Object):void {
+				textBox.htmlText=ActionDisplayTextGenerator.getDisplayTextAsHtml(a as Action); 
+			}
+
+			private function init():void {
+				BindingUtils.bindSetter(setActionDisplayText, this, "action");
+			}
+			
 		]]>
 	</mx:Script>
 	
-	<mx:Text width="100%">
-		<mx:htmlText>{text}</mx:htmlText>
-	</mx:Text>
+	<mx:Text width="100%" id="textBox"/>
 	
-	<mx:LinkButton label="X" id="btn" mouseOver="onMouseOver()" mouseOut="onMouseOut()"/>
+	<mx:LinkButton icon="@Embed(source='/../assets/pen.png')" toolTip="Edit Action" mouseOver="onMouseOver()" mouseOut="onMouseOut()" click="editAction()"/>
+	<mx:LinkButton label="X" fontSize="14" id="btn" mouseOver="onMouseOver()" toolTip="Remove Action" mouseOut="onMouseOut()" color="#D00808"/>
 </mx:HBox>

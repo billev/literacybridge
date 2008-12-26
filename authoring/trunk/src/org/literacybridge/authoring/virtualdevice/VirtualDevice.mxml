@@ -12,24 +12,30 @@
 			private var mouseDownTimer:Timer = new Timer(HoldTime);
 			private var buttonDown:int;
 			private var actionType:int;
+			private var dispatchOnMouseUp:Boolean;
 			
 			private function onMouseDown(button:int):void {
 				buttonDown = button;
 			    actionType = ButtonEventHandler.ClickAction; 
 				mouseDownTimer.addEventListener(TimerEvent.TIMER, setButtonActionToHold);
+				dispatchOnMouseUp = true;
 				mouseDownTimer.start();
 			}
 			
 			private function onMouseUp():void {
 				mouseDownTimer.stop();
-				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);	
-				dispatchEvent(new VirtualDeviceButtonEvent(VirtualDeviceButtonEvent.TYPE, buttonDown, actionType));
+				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);
+				if (dispatchOnMouseUp) {	
+					dispatchEvent(new VirtualDeviceButtonEvent(VirtualDeviceButtonEvent.TYPE, buttonDown, actionType));
+				}
 			}
 			
 			private function setButtonActionToHold(event:TimerEvent):void {
 				actionType = ButtonEventHandler.HoldAction;
 				mouseDownTimer.stop();
 				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);	
+				dispatchOnMouseUp = false;
+				dispatchEvent(new VirtualDeviceButtonEvent(VirtualDeviceButtonEvent.TYPE, buttonDown, actionType));
 			}
 			
 			private function onMouseOut():void {

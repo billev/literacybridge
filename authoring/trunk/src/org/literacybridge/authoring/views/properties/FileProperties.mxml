@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:properties="org.literacybridge.authoring.views.properties.*">
 	<mx:Script>
 		<![CDATA[
 			import org.literacybridge.authoring.schema.ContentFile;
@@ -13,9 +13,11 @@
 		]]>
 	</mx:Script>
 
-		<mx:Form backgroundAlpha="1.0" width="100%" fontSize="10">
+		<mx:Form backgroundAlpha="1.0" width="100%" fontSize="12">
 		<mx:FormItem label="Name:">
 			<mx:TextInput id="fileName" editable="true" text="{contentFile.label}" change="onChange()"/>
 		</mx:FormItem>
+		<mx:Spacer height="10"/>
+		<mx:Label text="Hyperlinks:"/>
 	</mx:Form>
 </mx:HBox>
