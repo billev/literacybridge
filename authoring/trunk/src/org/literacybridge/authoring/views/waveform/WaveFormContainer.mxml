@@ -142,6 +142,10 @@
 			}
 			
 			private function endAddBlock(event:MouseEvent):void {
+				if ((event.target.id != "blocks" && event.target != this.createdBlock) || this.createdBlock == null) {
+					return;
+				}
+
 				this.onAddAction(event);
 			}
 			
