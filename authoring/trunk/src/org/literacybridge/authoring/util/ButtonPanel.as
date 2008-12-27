@@ -15,6 +15,10 @@ package org.literacybridge.authoring.util {
         public function ButtonPanel() {
             super();
         }
+              
+        public function getButton():Button {
+        	return mybtn;
+        }      
                 
         protected override function createChildren():void {
             super.createChildren();
