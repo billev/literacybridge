@@ -6,6 +6,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
 			import mx.binding.utils.BindingUtils;
 			import org.literacybridge.authoring.schema.actions.Action;
@@ -14,6 +15,7 @@
 			
 			[Bindable] private var text:String;
 			[Bindable] public var action:Action;
+			private var addAction:AddActionDialog = null;
 			
 			private function onMouseOver():void {
 				setStyle("backgroundColor", btn.getStyle("rollOverColor"));
@@ -24,10 +26,11 @@
 			}
 			
 			private function editAction():void {
-				var addAction:AddActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
-				addAction.setMode(AddActionDialog.ModeEdit);
+				addAction = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
+				addAction.setAction(action);
 				addAction.x = mouseX;
 				addAction.y = mouseY;
+				addAction.addEventListener(CloseEvent.CLOSE, windowClosing);
 			}
 			
 			private function setActionDisplayText(a:Object):void {
@@ -38,6 +41,10 @@
 				BindingUtils.bindSetter(setActionDisplayText, this, "action");
 			}
 			
+			private function windowClosing(event:CloseEvent):void {
+				setActionDisplayText(action); // force text update
+				addAction.removeEventListener(CloseEvent.CLOSE, windowClosing);
+			}
 		]]>
 	</mx:Script>
 	

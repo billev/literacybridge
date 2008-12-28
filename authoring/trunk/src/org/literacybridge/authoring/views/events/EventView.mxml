@@ -32,6 +32,7 @@
 			[Bindable] private var actionList:ArrayCollection = new ArrayCollection();
 			[Bindable] private var addEventList:ArrayCollection = new ArrayCollection();
 		
+		
 			private static const AddButtonEventLabel:String = "Button Event...";
 			private static const AddButtonEventId:int = -1;
 		
@@ -90,10 +91,12 @@
 			
 			private function onAddAction(event:Event):void {
 				var addAction:AddActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
-				addAction.setMode(AddActionDialog.ModeAdd);
+				addAction.setAction(null);	// null == we want to add a new action
 				addAction.x = mouseX;
 				addAction.y = mouseY;
+				addAction.actions = actionList; 
 			}
+			
 			
 			private function getDisplayText(item:Object, column:DataGridColumn):String {
 				if (item is ContentEventHandler) {
@@ -105,21 +108,22 @@
 			
 			private function getDisplayTextFromContentEventHandler(handler:ContentEventHandler):String {
 				if (handler.event == ContentEventHandler.Start) {
-					return "Start";
+					return resourceManager.getString('resources', 'EVENT_START');
 				}
 				if (handler.event == ContentEventHandler.End) {
-					return "End";
+					return resourceManager.getString('resources', 'EVENT_END');
 				}
 				if (handler.event == ContentEventHandler.Enter) {
-					return "Enter";
+					return resourceManager.getString('resources', 'EVENT_ENTER');
 				}
 				if (handler.event == ContentEventHandler.Exit) {
-					return "Exit";
+					return resourceManager.getString('resources', 'EVENT_EXIT');
 				}
 
 				// TODO: throw exception
 				return "Noop";
 			}
+				
 			
 			private function getDisplayTextFromButtonEventHandler(handler:ButtonEventHandler):String {
 				return ActionDisplayTextGenerator.getButtonDisplayText(handler.button)
