@@ -4,8 +4,15 @@
 	horizontalGap="0"
 	initialize="init()">
 	
+	<mx:Metadata>
+		[Event(name="removeActionEvent", type="org.literacybridge.authoring.events.RemoveActionEvent")] 
+	</mx:Metadata>
+
+	
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.RemoveActionEvent;
+			import org.literacybridge.authoring.schema.actions.SimpleAction;
 			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
 			import mx.binding.utils.BindingUtils;
@@ -30,26 +37,36 @@
 				addAction.setAction(action);
 				addAction.x = mouseX;
 				addAction.y = mouseY;
-				addAction.addEventListener(CloseEvent.CLOSE, windowClosing);
+				addAction.addEventListener(CloseEvent.CLOSE, popupClosing);
+			}
+			
+			private function removeAction():void {
+				dispatchEvent(new RemoveActionEvent(action));
 			}
 			
 			private function setActionDisplayText(a:Object):void {
 				textBox.htmlText=ActionDisplayTextGenerator.getDisplayTextAsHtml(a as Action); 
+				if (a is SimpleAction) {
+					editButton.visible = false;
+				} else {
+					editButton.visible = true;
+				}
 			}
 
 			private function init():void {
 				BindingUtils.bindSetter(setActionDisplayText, this, "action");
 			}
 			
-			private function windowClosing(event:CloseEvent):void {
+			private function popupClosing(e:Event):void {
 				setActionDisplayText(action); // force text update
-				addAction.removeEventListener(CloseEvent.CLOSE, windowClosing);
+				addAction.removeEventListener(CloseEvent.CLOSE, popupClosing);
+				PopUpManager.removePopUp(addAction);
 			}
 		]]>
 	</mx:Script>
 	
 	<mx:Text width="100%" id="textBox"/>
 	
-	<mx:LinkButton icon="@Embed(source='/../assets/pen.png')" toolTip="Edit Action" mouseOver="onMouseOver()" mouseOut="onMouseOut()" click="editAction()"/>
-	<mx:LinkButton label="X" fontSize="14" id="btn" mouseOver="onMouseOver()" toolTip="Remove Action" mouseOut="onMouseOut()" color="#D00808"/>
+	<mx:LinkButton id="editButton" icon="@Embed(source='/../assets/pen.png')" toolTip="Edit Action" mouseOver="onMouseOver()" mouseOut="onMouseOut()" click="editAction()"/>
+	<mx:LinkButton label="X" fontSize="14" id="btn" mouseOver="onMouseOver()" toolTip="Remove Action" mouseOut="onMouseOut()" color="#D00808" click="removeAction()"/>
 </mx:HBox>
