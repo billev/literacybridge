@@ -4,7 +4,6 @@
 	      borderStyle="solid" borderColor="#646464" borderThickness="1"
 	      showCloseButton="true"
 	      title="Add Action" fontSize="12"
-	      close="close()"
 	      initialize="init()" xmlns:events="org.literacybridge.authoring.views.events.*">
 	<mx:states>
 		<mx:State name="VolumeState">
@@ -103,11 +102,7 @@
 				collectAvailableBlocks_PrevBlock();  // only dummy call here; MUST BE CALLED SOMEWHERE ELSE
 				
 			}
-			
-			private function close():void {
-				PopUpManager.removePopUp(this);
-			}
-			
+						
 			private function applyAction():void {
 				var curSel:int = actionComboBox.selectedItem as int;
 				var editAction:Boolean = (action != null);	// true if we had edited a parameter of an existing action
@@ -243,6 +238,10 @@
 						// Should never be reached
 				}
 				close();
+			}
+			
+			private function close():void {
+				this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
 			}
 			
 			private function getActionLabel(item:Object):String {

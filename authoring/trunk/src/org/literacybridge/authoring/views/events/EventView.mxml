@@ -14,6 +14,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.RemoveActionEvent;
 			import mx.events.CloseEvent;
 			import mx.controls.Alert;
 			import mx.controls.Menu;
@@ -29,9 +30,9 @@
 			import mx.collections.ArrayCollection;
 			
 			[Bindable] private var eventHandlers:ArrayCollection = new ArrayCollection();
-			[Bindable] private var actionList:ArrayCollection = new ArrayCollection();
 			[Bindable] private var addEventList:ArrayCollection = new ArrayCollection();
 		
+			private var addActionDialog:AddActionDialog = null;
 		
 			private static const AddButtonEventLabel:String = "Button Event...";
 			private static const AddButtonEventId:int = -1;
@@ -60,6 +61,7 @@
 
 			public function update(data:Object):void {
 				eventHandlers = (data as ContentContainer).eventHandlers;
+				actionRepeater.dataProvider = null;
 			}
 			
 			private function onAddEvent(event:MenuEvent):void {
@@ -68,19 +70,22 @@
 						addEvent.x = 200;
 						addEvent.y = 100;
 						addEvent.eventHandlers = eventHandlers;
+						
 				} else {
 					// check if event was already added
 					var alreadyExists:Boolean = false;
 					for (var i:int=0; i<eventHandlers.length; ++i) {
-						var content:ContentEventHandler = eventHandlers.getItemAt(i) as ContentEventHandler;		
-						if (event.item as int == content.event) {
-							alreadyExists = true;
-							break;
+						if (eventHandlers.getItemAt(i) is ContentEventHandler) {
+							var content:ContentEventHandler = eventHandlers.getItemAt(i) as ContentEventHandler;		
+							if (event.item as int == content.event) {
+								alreadyExists = true;
+								break;
+							}
 						}
 					}
 					
 					if (alreadyExists) {
-	                	Alert.show("This action already exists!", "Warning", Alert.OK, this);										
+	                	Alert.show("This event already exists!", "Warning", Alert.OK, this);										
 					} else {
 						eventHandlers.addItem(new ContentEventHandler(event.item as int));
 						eventGrid.selectedIndex = eventHandlers.length-1;					
@@ -90,11 +95,17 @@
 			}
 			
 			private function onAddAction(event:Event):void {
-				var addAction:AddActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
-				addAction.setAction(null);	// null == we want to add a new action
-				addAction.x = mouseX;
-				addAction.y = mouseY;
-				addAction.actions = actionList; 
+				addActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
+				addActionDialog.setAction(null);	// null == we want to add a new action
+				addActionDialog.actions = (eventGrid.selectedItem as EventHandler).actions;
+				addActionDialog.x = mouseX;
+				addActionDialog.y = mouseY; 
+				addActionDialog.addEventListener(CloseEvent.CLOSE, popupClosing);
+			}
+			
+			private function popupClosing(e:Event):void {
+				addActionDialog.removeEventListener(CloseEvent.CLOSE, popupClosing);
+				PopUpManager.removePopUp(addActionDialog);
 			}
 			
 			
@@ -131,13 +142,13 @@
 			}
 			
 			private function onSelectEvent(event:Event):void {
-				actionList = (eventGrid.selectedItem as EventHandler).actions;
 				enableControls();
 			}
 
 			private function removeEventFromList():void {
 				// remove selected item
 				if (eventGrid.selectedItem != null) {
+					var actionList:ArrayCollection = (eventGrid.selectedItem as EventHandler).actions;
 					var text:String;
 					if (actionList == null || actionList.length == 0) {
 						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "'?";
@@ -163,13 +174,25 @@
             }
 			
 			private function enableControls():void {
-				removeEventButton.enabled = (eventGrid.selectedIndex != -1);
-				addbuttonPanel.getButton().enabled = (eventGrid.selectedIndex != -1);				
+				if (eventGrid.selectedIndex != -1) {
+					removeEventButton.enabled = true;
+					addbuttonPanel.getButton().enabled = true;	
+					actionRepeater.dataProvider = (eventGrid.selectedItem as EventHandler).actions;			
+				}
 			}
 			
 			private function initControl():void {
 				enableControls();
 			} 
+			
+			private function removeAction(event:RemoveActionEvent):void {
+				if (eventGrid.selectedIndex != -1) {
+					var actionList:ArrayCollection = (eventGrid.selectedItem as EventHandler).actions;
+					var index:int = actionList.getItemIndex(event.action);
+					actionList.removeItemAt(index);			
+				}
+
+			}
 			
 		]]>
 	</mx:Script>
@@ -188,8 +211,8 @@
 			<mx:VBox width="100%" height="100%" backgroundColor="#97cffa" backgroundAlpha="1.0">
 				<util:ButtonPanel title="Actions" width="100%" height="100%" borderAlpha="0.0" id="addbuttonPanel" 
 									buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
-					<mx:Repeater id="actionRepeater" dataProvider="{actionList}">
-					    <ev:ActionElement width="100%" action="{actionRepeater.currentItem as Action}"/> 
+					<mx:Repeater id="actionRepeater">
+					    <ev:ActionElement width="100%" action="{actionRepeater.currentItem as Action}" removeActionEvent="removeAction(event)"/> 
   					</mx:Repeater>
 				</util:ButtonPanel>							
 			</mx:VBox>
