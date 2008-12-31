@@ -1,6 +1,8 @@
 package org.literacybridge.authoring.schema.actions {
 	import mx.collections.ArrayCollection;
 	
+	import org.literacybridge.authoring.schema.helper.IBaseActionVisitor;
+	
 	[Bindable]
 	public class AdjustSpeedVolumeAction extends Action {
 		// volume
@@ -41,6 +43,11 @@ package org.literacybridge.authoring.schema.actions {
 				speedList.addItem(Normal);
 			}
 			return speedList;
+		}
+		
+		
+		override public function accept(baseActionVisitor:IBaseActionVisitor):void {
+			baseActionVisitor.visitAdjustSpeedVolumeAction(this);
 		}
 	}
 }

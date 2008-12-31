@@ -1,6 +1,7 @@
 package org.literacybridge.authoring.schema.actions {
 	import mx.collections.ArrayCollection;
-	import mx.resources.ResourceManager;
+	
+	import org.literacybridge.authoring.schema.helper.IBaseActionVisitor;
 	
 	[Bindable]
 	public class SetLightAction	extends Action {
@@ -34,6 +35,10 @@ package org.literacybridge.authoring.schema.actions {
 				stateList.addItem(Off);
 			}
 			return stateList;
-		}		
+		}
+		
+		override public function accept(baseActionVisitor:IBaseActionVisitor):void	{
+			baseActionVisitor.visitSetLightAction(this);
+		}	
 	}
 }

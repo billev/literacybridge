@@ -1,23 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:properties="org.literacybridge.authoring.views.properties.*">
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:properties="org.literacybridge.authoring.views.properties.*"
+	initialize="init()">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.actions.GotoAction;
+			import mx.events.DataGridEvent;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import org.literacybridge.authoring.schema.Hyperlink;
+			import org.literacybridge.authoring.schema.actions.Action;
+			import org.literacybridge.authoring.schema.helper.NameVisitor;
 			import org.literacybridge.authoring.schema.ContentFile;
 			
 			[Bindable] public var contentFile:ContentFile;		
+
+			private function init():void {
+				if (contentFile.hyperlinks.length != 0) {
+					hyperlinkDataGrid.selectedIndex = 0;	// pre-select first element
+				}
+			}
 			
+
 			private function onChange():void {
 				contentFile.label = fileName.text;
 			}
 				
+			private function displayActionName(item:Object, col:DataGridColumn):String {
+				var nameVisitor:NameVisitor = new NameVisitor();
+				var label:String = new String();
+				try {
+					label = nameVisitor.getActionName((item as Hyperlink).action);
+				} catch (e:Error) {
+					label = e.message;
+				}		
+				return label;
+			}
+			
+			private function onItemEdit(event:DataGridEvent):void {
+				var curHyperlink:Hyperlink = contentFile.hyperlinks.getItemIndex(event.rowIndex) as Hyperlink;
+				
+				// check range clashes here ... 
+			}
+				
+			private function addNewHyperlink():void {
+				
+			}
+			
+			private function removeSelectedHyperlink():void {
+				var curSel:int = hyperlinkDataGrid.selectedIndex;
+				if (curSel != -1) {
+					contentFile.hyperlinks.removeItemAt(curSel);
+					/*
+					if (contentFile.hyperlinks.length != 0) {
+						if (curSel == 0) {
+							hyperlinkDataGrid.selectedIndex = curSel;
+						} else {
+							hyperlinkDataGrid.selectedIndex = curSel-1;
+						}
+					}
+					*/
+				}
+			}
+			
+			private function enableControls():void {
+				removeHyperlinkButton.enabled = (hyperlinkDataGrid.selectedIndex != -1);
+			}
+			
 		]]>
 	</mx:Script>
 
-		<mx:Form backgroundAlpha="1.0" width="100%" fontSize="12">
+		<mx:Form backgroundAlpha="1.0" width="100%" fontSize="12" height="100%">
 		<mx:FormItem label="Name:">
 			<mx:TextInput id="fileName" editable="true" text="{contentFile.label}" change="onChange()"/>
 		</mx:FormItem>
 		<mx:Spacer height="10"/>
 		<mx:Label text="Hyperlinks:"/>
+		<mx:DataGrid id="hyperlinkDataGrid" 
+						draggableColumns="false" 
+						dataProvider="{contentFile.hyperlinks}"
+						itemEditEnd="onItemEdit(event)" 
+						height="144" width="100%"
+						editable="true">
+			<mx:columns>
+				<mx:DataGridColumn sortable="false" editable="false" headerText="Name" labelFunction="displayActionName"/>
+				<mx:DataGridColumn sortable="false" headerText="Start" dataField="start"/>
+				<mx:DataGridColumn sortable="false" headerText="End" dataField="end"/>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:HBox>
+			<mx:Button id="addHyperlinkButton" label="Add" click="addNewHyperlink()"/>
+			<mx:Button id="removeHyperlinkButton" label="Remove" click="removeSelectedHyperlink()"/>		
+		</mx:HBox>
 	</mx:Form>
 </mx:HBox>
