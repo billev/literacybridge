@@ -1,6 +1,8 @@
 package org.literacybridge.authoring.schema.actions {
 	import mx.collections.ArrayCollection;
 	
+	import org.literacybridge.authoring.schema.helper.IBaseActionVisitor;
+	
 	[Bindable]
 	public class Action {
 		private static var actionList:ArrayCollection;
@@ -89,6 +91,10 @@ package org.literacybridge.authoring.schema.actions {
 			}
 			
 			return -1;
+		}
+		
+		public function accept(baseActionVisitor:IBaseActionVisitor):void {
+			// do nothing as default
 		}
 	}
 }

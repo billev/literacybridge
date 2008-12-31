@@ -1,4 +1,6 @@
 package org.literacybridge.authoring.schema.actions {
+	import org.literacybridge.authoring.schema.helper.IBaseActionVisitor;
+	
 	[Bindable]
 	public class NextPreviousBlockAction extends Action {
 		public static const Next:int = 1;
@@ -9,6 +11,10 @@ package org.literacybridge.authoring.schema.actions {
 		
 		public function NextPreviousBlockAction(mode:int) {
 			this.mode = mode;
+		}
+		
+		override public function accept(baseActionVisitor:IBaseActionVisitor):void {
+			baseActionVisitor.visitNextPreviousBlockAction(this);
 		}
 	}
 }
