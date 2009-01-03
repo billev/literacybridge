@@ -4,12 +4,13 @@
 	initialize="init()">
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.PopUpManager;
 			import org.literacybridge.authoring.schema.actions.GotoAction;
 			import mx.events.DataGridEvent;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import org.literacybridge.authoring.schema.Hyperlink;
 			import org.literacybridge.authoring.schema.actions.Action;
-			import org.literacybridge.authoring.schema.helper.NameVisitor;
+			import org.literacybridge.authoring.schema.helper.HyperlinkNameVisitor;
 			import org.literacybridge.authoring.schema.ContentFile;
 			
 			[Bindable] public var contentFile:ContentFile;		
@@ -26,7 +27,7 @@
 			}
 				
 			private function displayActionName(item:Object, col:DataGridColumn):String {
-				var nameVisitor:NameVisitor = new NameVisitor();
+				var nameVisitor:HyperlinkNameVisitor = new HyperlinkNameVisitor();
 				var label:String = new String();
 				try {
 					label = nameVisitor.getActionName((item as Hyperlink).action);
@@ -43,7 +44,9 @@
 			}
 				
 			private function addNewHyperlink():void {
-				
+				var hyperlinkDialog:HyperlinkDialog = HyperlinkDialog(PopUpManager.createPopUp(this, HyperlinkDialog, true));
+				hyperlinkDialog.contentFile = contentFile;
+				PopUpManager.centerPopUp(hyperlinkDialog);
 			}
 			
 			private function removeSelectedHyperlink():void {

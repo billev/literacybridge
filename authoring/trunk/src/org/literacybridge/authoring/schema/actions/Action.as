@@ -93,6 +93,54 @@ package org.literacybridge.authoring.schema.actions {
 			return -1;
 		}
 		
+		public static function getActionNameForActionID(id:int):String {
+			switch (id) {
+				case Stop:
+					return "Stop";
+				break;
+				case Pause:
+					return "Pause";
+				break;
+				case Return:
+					return "Return";
+				break;
+				case PlayPause:
+					return "PlayPause";
+				break;
+				case SetSpeed:
+					return "SetSpeed";
+				break;
+				case SetVolume:
+					return "SetVolume";
+				break;
+				case CallBlock:
+					return "CallBlock";
+				break;
+				case Goto:
+					return "Goto";
+				break;
+				case NextBlock:
+					return "NextBlock";
+				break;
+				case PrevBlock:
+					return "PrevBlock";
+				break;
+				case RelTimeJump:
+					return "RelTimeJump";
+				break;
+				case SetLight:
+					return "SetLight";
+				break;
+				case SetUSBMode:
+					return "SetUSBMode";
+				break;
+				default:
+					return "";
+			}
+		}
+		
+		
+		
 		public function accept(baseActionVisitor:IBaseActionVisitor):void {
 			// do nothing as default
 		}
