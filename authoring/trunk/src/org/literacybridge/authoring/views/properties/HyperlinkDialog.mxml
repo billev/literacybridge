@@ -23,7 +23,7 @@
 <mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
-		import org.literacybridge.authoring.schema.helper.HyperlinkChecker;
+		import org.literacybridge.authoring.schema.helper.HyperlinkUtil;
 		import org.literacybridge.authoring.schema.helper.HyperlinkNameVisitor;
 		import mx.managers.PopUpManager;
 		import org.literacybridge.authoring.schema.actions.CallBlockAction;
@@ -132,7 +132,7 @@
 			
 			// check for ranges clashes
 			if (isOK) {
-				if (!HyperlinkChecker.checkForRangeClashes(contentFile.hyperlinks, newHyperlink)) {
+				if (!HyperlinkUtil.checkForRangeClashes(contentFile.hyperlinks, newHyperlink)) {
 					messageText = "Range clashes with range of an already existing hyperlink";
 					isOK = false;
 				}
