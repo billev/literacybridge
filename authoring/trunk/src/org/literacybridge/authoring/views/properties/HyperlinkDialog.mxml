@@ -108,8 +108,7 @@
 				break;
 				case Action.Goto:
 				default:
-					currentState = '';
-					
+					currentState = '';				
 			}
 		}
 		

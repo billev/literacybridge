@@ -15,6 +15,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.views.dialogs.NewPackageDialog;
 			import org.literacybridge.authoring.virtualdevice.VirtualDevice;
 			import org.literacybridge.authoring.views.wizards.Wizard;
 			import org.literacybridge.authoring.views.wizards.WelcomeWizard;
@@ -33,6 +34,9 @@
 			
 			private var win:ApplicationSettingsScreen;
 			private var welcome:Wizard;
+			
+			private var file:File;
+
 		
 			private function onInit() : void {
 				outline.outlineTree.addEventListener(ListEvent.CHANGE, updateProperties);
@@ -56,11 +60,13 @@
 					welcome.x=50;
 					welcome.y=50;
 				} else {
+			/*		
 					var openedFile:File = Settings.getInstance().lastOpenFile;
 					if (openedFile != null && openedFile.exists) {
 						var parser:ContentXMLParser = new ContentXMLParser();
 						outline.contents.addItem(parser.parse(openedFile));
 					}
+				*/	
 				}
 			}
 			
@@ -78,6 +84,9 @@
 				switch (event.id) {
 					case ExtendedMenuEvent.MENU_PREFERENCES :
 						showSettingsScreen();
+						break;
+					case ExtendedMenuEvent.MENU_NEW:
+						createPackage();
 						break;
 					case ExtendedMenuEvent.MENU_OPEN :
 						openFileBrowserOpen();
@@ -106,7 +115,11 @@
 				var device:VirtualDevice = VirtualDevice(PopUpManager.createPopUp(this, VirtualDevice, true));
 			}
 
-			private var file:File;
+			private function createPackage():void {
+				var newPackageDlg:NewPackageDialog = NewPackageDialog(PopUpManager.createPopUp(this, NewPackageDialog, true));
+				newPackageDlg.contents = outline.contents;
+				PopUpManager.centerPopUp(newPackageDlg);
+			}
 
 			private function save():void {
 				var writer:ContentXMLWriter = new ContentXMLWriter();
@@ -114,7 +127,11 @@
 			}
 
 			private function openFileBrowserSaveAs():void {
-	            file = new File();  		
+				// (outline.contents.getItemAt(0) as ContentPackage).label
+				// 					var fileName:String = (outline.contents.getItemAt(0) as ContentPackage).label + ".xml";		
+
+				
+	            file = new File();  
 				file.addEventListener(Event.SELECT, onFileSelectSaveAs);
 				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
 				try {
@@ -122,7 +139,7 @@
 				} catch (err:Error)	{
 					trace("Something went wrong browsing for a file");
 					// do s.th. useful
-				}
+				}					
 			}
 
 			private function onFileSelectSaveAs(event:Event):void {
