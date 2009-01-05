@@ -44,6 +44,9 @@
 					case resourceManager.getString("resources", "CONTROLBAR_MENU_QUIT") :
 						dispatch(event, ExtendedMenuEvent.MENU_QUIT);
 						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_NEW"):
+						dispatch(event, ExtendedMenuEvent.MENU_NEW);
+					break;
 
 
 				}
@@ -61,6 +64,8 @@
 		labelField="@label" itemClick="onMenuItemClick(event)">
 		<mx:XMLList>
 		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_FILE')}">
+   				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_NEW')}"/>
+				<menuitem type="separator"/>
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_OPEN')}"/>
 				<menuitem type="separator"/>
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SAVE')}"/>

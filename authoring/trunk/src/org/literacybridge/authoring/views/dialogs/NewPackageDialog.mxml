@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	borderStyle="solid" borderColor="#646464" borderThickness="1"
+	width="424"	height="222"
+	showCloseButton="true"
+	title="{resourceManager.getString('resources', 'CREATE_NEW_PACKAGE_TITLE')}" 
+	fontSize="12"
+	close="close()">
+
+
+<mx:Script>
+	<![CDATA[
+		import mx.managers.PopUpManager;
+		import mx.controls.Alert;
+		import org.literacybridge.authoring.schema.ContentPackage;
+		import mx.collections.ArrayCollection;
+		
+		[Bindable] public var contents:ArrayCollection = null;
+		
+		private var file:File = null;
+	
+		private function onOK():void {
+			var ok:Boolean = true;
+			if (nameTI.text == '') {	// name not optional, as it will be used as file name
+				Alert.show(resourceManager.getString('resources', 'NAME_NOT_OPTIONAL')
+						,	resourceManager.getString('resources', 'ERROR'), Alert.OK, this);
+				ok = false;
+			} 
+			
+			if (pathTI.text == '') {  
+				Alert.show(resourceManager.getString('resources', 'DIRECTORY_NOT_OPTIONAL')
+						,	resourceManager.getString('resources', 'ERROR'), Alert.OK, this);
+				ok = false;				
+			}
+			
+			if (ok) {
+				var contentPackage:ContentPackage = new ContentPackage();
+				var packageName:String = nameTI.text;
+				contentPackage.label = packageName;
+				contentPackage.version = versionTI.text;
+				contentPackage.precision = precisionTI.text;
+				contentPackage.packageFile = new File("file:///" + file.url + nameTI.text + ".xml");
+				contents.addItem(contentPackage);
+				close();				
+			}	
+		}
+	
+		private function onCancel():void {
+			close();
+		}
+		
+		private function close():void {
+			PopUpManager.removePopUp(this);
+		}
+		
+		
+		private function openFileBrowser():void {
+            file = new File();  
+			var xmlFilter:FileFilter = new FileFilter("XML", "*.xml");		
+			file.addEventListener(Event.SELECT, onFileSelectOpen);
+			var dialogTitle:String = resourceManager.getString('resources', 'DIRECTORY_TO_STORE_FILE');
+			try {
+				file.browseForDirectory(dialogTitle);	
+			} catch (err:Error)	{
+				trace("Something went wrong browsing for a file");
+			}				
+		}
+
+		private function onFileSelectOpen(event:Event):void {
+         	var openedDirectory:File = event.target as File;
+         	file.removeEventListener(Event.COMPLETE, onFileSelectOpen);
+			pathTI.text = openedDirectory.url;
+		}
+		
+	]]>
+</mx:Script>
+
+	<mx:HBox id="pathBox" width="100%">		
+		<mx:Label id="pathLabel" text="{resourceManager.getString('resources', 'SAVE_DIRECTORY')}" width="150" />
+		<mx:TextInput id="pathTI" width="100%" editable="false"/>		
+		<mx:Button id="openFileBtn" click="openFileBrowser()" label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_OPEN_BUTTON')}" />
+	</mx:HBox>
+	<mx:HBox id="nameBox" width="100%">
+		<mx:Label id="nameLabel" text="{resourceManager.getString('resources', 'NAME')}" width="150" />
+		<mx:TextInput id="nameTI" width="150"/>
+	</mx:HBox>
+	<mx:HBox id="versionBox" width="100%">
+		<mx:Label id="versionLabel" text="{resourceManager.getString('resources', 'VERSION')}" width="150" />
+		<mx:TextInput id="versionTI" width="150"/>
+	</mx:HBox>
+	<mx:HBox id="precisionBox" width="100%">
+		<mx:Label id="precisionLabel" text="{resourceManager.getString('resources', 'PRECISION')}" width="150" />
+		<mx:TextInput id="precisionTI" width="150" restrict="0123456789"/>
+	</mx:HBox>
+	<mx:HBox id="buttonBox" width="100%" textAlign="right">
+		<mx:Button id="okButton" label="{resourceManager.getString('resources', 'OK')}" click="onOK()"/>
+		<mx:Button id="cancelButton" label="{resourceManager.getString('resources', 'CANCEL')}" click="onCancel()"/>		
+	</mx:HBox>
+</mx:TitleWindow>
