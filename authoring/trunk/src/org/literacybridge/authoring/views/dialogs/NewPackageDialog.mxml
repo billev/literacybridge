@@ -39,7 +39,7 @@
 				contentPackage.label = packageName;
 				contentPackage.version = versionTI.text;
 				contentPackage.precision = precisionTI.text;
-				contentPackage.packageFile = new File("file:///" + file.url + nameTI.text + ".xml");
+				contentPackage.packageFile = new File(file.url + File.separator + nameTI.text + ".xml");
 				contents.addItem(contentPackage);
 				close();				
 			}	
