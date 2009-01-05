@@ -42,7 +42,7 @@
 			private function onFileSelect(event:Event):void {
 				file.removeEventListener(Event.SELECT, onFileSelect);
 	         	var openedFile:File = event.target as File;
-	         	fileName.text=openedFile.name;
+	         	fileName.text=openedFile.name.substr(0, openedFile.name.length - openedFile.extension.length - 1);
 	        }
 		]]>
 	</mx:Script>
