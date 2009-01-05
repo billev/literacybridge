@@ -29,7 +29,9 @@ package org.literacybridge.authoring.schema {
 			data.@[SchemaConstants.Package_Att_Version] = content.version;
 			
 			appendEventHandlers(data, content.eventHandlers);
-			appendFiles(data, content.children);
+			if (content.children != null) {
+				appendFiles(data, content.children);
+			}
 		    return data;
 		}
 
@@ -43,9 +45,15 @@ package org.literacybridge.authoring.schema {
 				var fileData:XML;
 				fileData = <{SchemaConstants.File}/>;
 				appendContainerAttributes(fileData, file);
-			    appendEventHandlers(fileData, file.eventHandlers);
-				appendBlocks(fileData, file.children);
-				appendHyperlinks(fileData, file.hyperlinks);
+				if (file.eventHandlers != null) {
+			    	appendEventHandlers(fileData, file.eventHandlers);
+			 	}
+			 	if (file.children != null) {
+					appendBlocks(fileData, file.children);
+				}
+				if (file.hyperlinks != null) {
+					appendHyperlinks(fileData, file.hyperlinks);
+				}
 				data.appendChild(fileData);
 			}
 		}
@@ -60,9 +68,13 @@ package org.literacybridge.authoring.schema {
 				blockData.@[SchemaConstants.Block_Att_Start] = block.start;
 				blockData.@[SchemaConstants.Block_Att_End] = block.end;
 				blockData.@[SchemaConstants.Block_Att_Class] = block.className;
-
-				appendEventHandlers(blockData, block.eventHandlers);
-				appendBlocks(blockData, block.children);
+				
+				if (block.eventHandlers != null) {
+					appendEventHandlers(blockData, block.eventHandlers);
+				}
+				if (block.children != null) {
+					appendBlocks(blockData, block.children);
+				}
 				data.appendChild(blockData);
 			}
 		}

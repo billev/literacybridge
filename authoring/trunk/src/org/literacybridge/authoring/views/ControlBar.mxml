@@ -65,7 +65,6 @@
 		<mx:XMLList>
 		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_FILE')}">
    				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_NEW')}"/>
-				<menuitem type="separator"/>
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_OPEN')}"/>
 				<menuitem type="separator"/>
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SAVE')}"/>
