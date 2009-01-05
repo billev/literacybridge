@@ -9,39 +9,54 @@ package org.literacybridge.authoring.schema.helper
 		public function HyperlinkUtil() { /* nothing */ }
 
 
-		public static function checkForRangeClashes(hyperlinkList:ArrayCollection, hyperlink:Hyperlink):Boolean {
-			var i:int = 0;
-			while (i < hyperlinkList.length) {
-				var curHyperlink:Hyperlink = hyperlinkList.getItemAt(i) as Hyperlink;
+		public static function validateRanges(hyperlinkList:ArrayCollection):Boolean {
+			if (hyperlinkList.length <= 1) return true;
+			
+			var clashFound:Boolean = false;
+			// as the start values are sorted, we must compare the end value of the current hyperlink with the previous one...
+			for (var i:int=1; i<hyperlinkList.length && !clashFound; ++i) {
+				// previous hyperlink
+				var prevHyperlink:Hyperlink = hyperlinkList.getItemAt(i-1) as Hyperlink;
+				var currHyperlink:Hyperlink = hyperlinkList.getItemAt(i) as Hyperlink;
 				
-				if (curHyperlink.start <= hyperlink.start && hyperlink.end <= curHyperlink.end) {
-					
+				if (prevHyperlink.end >= currHyperlink.start) {
+					clashFound = true;
 					// clash found
 					var nameVisitor:HyperlinkNameVisitor = new HyperlinkNameVisitor();
 					var nameOld:String = 'Unknown hyperlink';
 					var nameNew:String = 'Unknown hyperlink';
 					try {
-						nameOld = nameVisitor.getActionName(curHyperlink.action);						
+						nameOld = nameVisitor.getActionName(currHyperlink.action);						
 					} catch (e:Error) {
 						trace ("Fatal error: Hyperlink without name in hyperlink list found!");
 					}
 					
 					try {
-						nameNew = nameVisitor.getActionName(hyperlink.action);						
+						nameNew = nameVisitor.getActionName(prevHyperlink.action);						
 					} catch (e:Error) {
-						trace ("New hyperlink has no name");
+						trace ("Fatal error: Hyperlink without name in hyperlink list found!");
 					}
 					
 					trace ("Hyperlink: Range clash found.\n\t '" 
-									+ nameOld + "' start=" + curHyperlink.start + " ; end=" + curHyperlink.end + " and '" 
-									+ nameNew + "' start=" + hyperlink.start + " ; end=" + hyperlink.end);
-
-					
-					return false;
+									+ nameOld + "' start=" + currHyperlink.start + " ; end=" + currHyperlink.end + " and '" 
+									+ nameNew + "' start=" + prevHyperlink.start + " ; end=" + prevHyperlink.end);
 				}
-				++i;
-			}		
-			return true;
+			}
+			
+			return !clashFound;
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

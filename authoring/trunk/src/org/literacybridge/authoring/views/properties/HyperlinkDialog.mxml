@@ -129,13 +129,26 @@
 					isOK = false;
 				}
 			}
+
+			// start pos < end pos
+			if (isOK) {
+				if (newHyperlink.start >= newHyperlink.end) {	
+					messageText = "The hyperlink's start position must lie before the its end position.";
+					isOK = false;
+				}
+			}			
 			
 			// check for ranges clashes
 			if (isOK) {
-				if (!HyperlinkUtil.checkForRangeClashes(contentFile.hyperlinks, newHyperlink)) {
+				// try add the new hyperlink and check if ranges clashes would occure
+				contentFile.hyperlinks.addItem(newHyperlink);
+				if (!HyperlinkUtil.validateRanges(contentFile.hyperlinks)) {
 					messageText = "Range clashes with range of an already existing hyperlink";
 					isOK = false;
 				}
+				// delete it from list 
+				var pos:int = contentFile.hyperlinks.getItemIndex(newHyperlink);
+				contentFile.hyperlinks.removeItemAt(pos);
 			}
 		
 			if (!isOK && !quit) {
