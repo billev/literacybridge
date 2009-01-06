@@ -1,9 +1,11 @@
 package org.literacybridge.authoring.player
 {
+	import flash.media.Sound;
+	
 	public interface IPlayer
 	{
 		// Call this to initialize the player with a sound file
-		function init(filePath:String):void;	
+		function init(sound:Sound):void;	
 		function start():void;
 		function pause():void;
 		function stop():void;

@@ -29,7 +29,7 @@ package org.literacybridge.authoring.player
 			return (player != null && player.isInitialized());
 		}
 		
-		public function startPlayer(startPosition:Number=0):void
+		public function startPlayer(startPosition:Number):void
 		{
 			if (player.isInitialized())
 			{

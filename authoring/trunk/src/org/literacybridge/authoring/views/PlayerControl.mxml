@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel width="100%" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*" xmlns:waveform="org.literacybridge.authoring.views.waveform.*" backgroundAlpha="0.5" borderStyle="solid" borderThickness="1" borderColor="#646464">
+<mx:Box width="100%" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initControl()" xmlns:views="org.literacybridge.authoring.views.*" xmlns:waveform="org.literacybridge.authoring.views.waveform.*">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.views.waveform.WaveFormPosition;
 			import org.literacybridge.authoring.player.PlayerStates;
 			import org.literacybridge.authoring.player.PlayerController;
 			import mx.formatters.Formatter;
@@ -19,55 +20,25 @@
 			internal var _positionWatcher:ChangeWatcher     = null;
 			internal var _playerStateWatcher:ChangeWatcher 	= null;
 			
-			internal var file:File;
-			internal var filePath:String;
+			public var position:WaveFormPosition;
+			private var audio:Sound;
 
-
-			/*
-			 * File Browser 
-			 */
-			private function openFileBrowser():void 
+			public function init(audio:Sound):void 
 			{
-	            file = new File();  
-				var mp3Filter:FileFilter = new FileFilter("MP3", "*.mp3")		
-				file.addEventListener(Event.SELECT, onFileSelect);
-				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
-				try 
-				{
-					file.browseForOpen(dialogTitle, ([mp3Filter]));	
-				} 
-				catch (err:Error)	
-				{
-					trace("Something went wrong browsing for a file");
-				}
-			}
-
-			private function onFileSelect(event:Event):void 
-			{
-	         	var openedFile:File = event.target as File;
-	         	filePath = openedFile.url;
-	         	soundFilePathComboBox.text = filePath;
-	         	file.removeEventListener(Event.COMPLETE, onFileSelect);
-
+				this.audio = audio;
 	         	player = new Player();
-	         	player.init(filePath);	         	
+	         	player.init(audio);	         	
 	         	playerController = new PlayerController(player);	         	
-	         	player.addEventListener(Player.PLAYER_INITIALIZED, fileLoadingComplete);
 	         	player.addEventListener(Player.PLAYER_FINISHED, onPlayerFinished);
-	        }
-	        
-	        private function fileLoadingComplete(event:Event):void 
-	        {
-	        	initPositionSlider();
-	         	enabelControls(true);
+ 				enabelControls(true);
 				if (player != null && playerController)
 				{
 					_playerStateWatcher = BindingUtils.bindSetter(playerStateChanged, player, "state");
+	        		//_positionWatcher = BindingUtils.bindSetter(channelPositionChanged, position, "pos");
 	        		_positionWatcher = BindingUtils.bindSetter(channelPositionChanged, playerController, "currentPlayerPosition");
 				}
-	        	player.removeEventListener(Player.PLAYER_INITIALIZED, fileLoadingComplete);
 	        }
-	     		
+	        
 	     	private function onPlayerFinished(event:Event):void
 			{
 				resetPlayerControl();
@@ -83,7 +54,7 @@
 					}
 					else
 					{
-						playerController.startPlayer();	
+						playerController.startPlayer(position.pos);	
 					}
 				}
 			}
@@ -98,8 +69,7 @@
 			
 			private function resetPlayerControl():void 
 			{
-				playerPositionSliderID.value = 0;
-				soundPositionCtrlID.setPositionInMilliSecs(0);
+				position.pos = 0;
 			}
 				
 	      	private function playerStateChanged(arg:*):void
@@ -124,51 +94,38 @@
 	        {
 	        	if (playerController != null && player != null && player.state == PlayerStates.PLAYER_RUNNING) 
 	        	{
-		        	var currentChannelPosition:Number = player.currentPosition;	        	
-		        	playerPositionSliderID.value = currentChannelPosition / 1000;
-		        	soundPositionCtrlID.setPositionInMilliSecs(currentChannelPosition);
+		        	position.pos = player.currentPosition;	        	
 	        	}
 	        }
 			
 			private function initControl():void 
 			{
-				playerPositionSliderID.value = 0;
+				position.pos = 0;
 				enabelControls(false);
-				soundFilePathComboBox.enabled = false;	// always insensitive
-				playerPositionSliderID.addEventListener(SliderEvent.THUMB_PRESS, onSliderThumbPressed); 
-				playerPositionSliderID.addEventListener(SliderEvent.THUMB_RELEASE, onSliderThumbReleased);
+				//playerPositionSliderID.addEventListener(SliderEvent.THUMB_PRESS, onSliderThumbPressed); 
+				//playerPositionSliderID.addEventListener(SliderEvent.THUMB_RELEASE, onSliderThumbReleased);
 			}
 	
 			private function enabelControls(enable:Boolean):void 
 			{
 				playBtn.enabled = enable;
 				stopBtn.enabled = enable;
-				if (playerController != null) 
-				{
-					playerPositionSliderID.enabled = playerController.isInitialized();
-				}
-				else 
-				{
-					playerPositionSliderID.enabled = false;
-				}
+//				if (playerController != null) 
+//				{
+//					playerPositionSliderID.enabled = playerController.isInitialized();
+//				}
+//				else 
+//				{
+//					playerPositionSliderID.enabled = false;
+//				}
 			}
 			
 	
-			/*
-			 * Position Slider ...
-			 */ 
-			private function initPositionSlider():void 
-	        {
-	        	if (player != null && player.isInitialized()) 
-	        	{
-	        		var soundLength:Number = player.soundLength/1000;
-	        		playerPositionSliderID.value = 0;
-	        		playerPositionSliderID.maximum = soundLength.valueOf();
-	        	}
-	        }
-			private function getCurrentSoundPos():void 
+			public function setCurrentSoundPos():void 
 			{
-				playerController.startPlayer(playerPositionSliderID.value*1000);
+				if (player.state == PlayerStates.PLAYER_RUNNING) {
+					playerController.startPlayer(position.pos);
+				}
 			}		
 			private function onSliderThumbPressed(event:Event):void 
 			{
@@ -178,14 +135,14 @@
 			{
 				reattachPosWatching();	
 			}
-			private function reattachPosWatching():void
+			public function reattachPosWatching():void
 			{
 				if (_positionWatcher != null && !_positionWatcher.isWatching())
 				{
 					_positionWatcher.reset(playerController);
 				}
 			}			
-			private function detachPosWatching():void
+			public function detachPosWatching():void
 			{
 				if (_positionWatcher != null && _positionWatcher.isWatching())	
 				{
@@ -195,14 +152,14 @@
 				
 			private function setPositionInMilliSecs(value:Number=-1):void 
 			{
-				soundPositionCtrlID.setPositionInMilliSecs(value);	
+				position.pos=value;	
 			}
 			
 			
 			// Method for updating blocks in the player display
-			public function updateWaveform(data:Object):void {
-				waveformContainer.updateWaveform(data);
-			}
+//			public function updateWaveform(data:Object):void {
+//				waveformContainer.updateWaveform(data);
+//			}
 		]]>
 	</mx:Script>
 	
@@ -211,21 +168,6 @@
 	<mx:HBox width="100%" height="100%">
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_PLAY_LABEL')}" id="playBtn" click="play()" />
 		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_STOP_LABEL')}" id="stopBtn"  click="stop()" />
-		<views:SoundPositionControl id="soundPositionCtrlID"/>	
+		<!--<views:SoundPositionControl id="soundPositionCtrlID" visible="false"/>	-->
 	</mx:HBox>
-
- 	<waveform:WaveFormContainer id="waveformContainer"/>
-	
-		
-	<mx:HSlider width="100%" 
-			minimum="0" 
-			maximum="100" 
-			value="0"
-			change="getCurrentSoundPos()" 
-			id="playerPositionSliderID"/>
-			
-	<mx:HBox width="100%" height="100%">
-		<mx:TextInput width="100%" id="soundFilePathComboBox"/>
-		<mx:Button label="{resourceManager.getString('resources', 'PLAYERCONTROL_FILE_OPEN_BUTTON')}" id="setBtn"  click="openFileBrowser()" />
-	</mx:HBox>
-</mx:Panel>
+</mx:Box>

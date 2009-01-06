@@ -16,8 +16,6 @@ package org.literacybridge.authoring.player
 		private var _state:String 					= PlayerStates.PLAYER_STOPPED;
 		// if true, do not notify listeners of state changes
 		private var internalStateChanging:Boolean	= false;			
-		// path to current sound file
-		private var filePath:String = "";
 
 		// Sound
 		private var sound:Sound 		 	= null;
@@ -34,15 +32,12 @@ package org.literacybridge.authoring.player
 		 * Methods 
 		 */
 		
-		public function init(filePath:String):void	
+		public function init(sound:Sound):void	
 		{	
-			this.filePath = filePath;
 			internalStateChanging = false;
 			position = 0;
 			channel = null;
-			sound = new Sound();
-			sound.addEventListener(Event.COMPLETE, onLoadingComplete);
-			sound.load(new URLRequest(filePath));
+			this.sound = sound;
 		}
 
 		public function start():void 
@@ -139,11 +134,6 @@ package org.literacybridge.authoring.player
 		 * Events
 		 */
 		
-        private function onLoadingComplete(event:Event):void 
-        {
-        	dispatchEvent(new Event(Player.PLAYER_INITIALIZED));
-        }
-        
         private function onSoundComplete(event:Event):void 
         {
         	state = PlayerStates.PLAYER_STOPPED;
