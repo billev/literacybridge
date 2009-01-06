@@ -9,12 +9,14 @@
 	applicationComplete="onApplicationComplete()"
 	initialize="onInit()"
 	showStatusBar="true"
-	borderColor="#C8C8C8" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#D2D2D2, #E6E6E6]">
+	borderColor="#C8C8C8" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#D2D2D2, #E6E6E6]" xmlns:waveform="org.literacybridge.authoring.views.waveform.*">
 
 	<maps:MainEventMap/>
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentFile;
+			import org.literacybridge.authoring.schema.ContentContainer;
 			import org.literacybridge.authoring.audio.SynchronousFileLoader;
 			import org.literacybridge.authoring.views.dialogs.NewPackageDialog;
 			import org.literacybridge.authoring.virtualdevice.VirtualDevice;
@@ -50,8 +52,14 @@
 			
 				properties.update(tree.selectedItem);
 				actions.update(tree.selectedItem);
-				// Update the waveform visualization to show the child blocks
-				player.updateWaveform(tree.selectedItem);
+                var file:ContentContainer = tree.selectedItem as ContentContainer;
+                while (file != null && !(file is ContentFile)) {
+                    file = file.parent;
+                }
+                if (file != null) {
+                    waveform.file = file as ContentFile;
+                    waveform.update();
+                }
 			}
 		
 			private function onApplicationComplete() : void {
@@ -207,12 +215,7 @@
 
 				<mx:VDividedBox width="100%" height="100%">
 					<mx:VBox height="100%" width="100%">
-						<views:PlayerControl id="player"/>
-						<mx:Spacer/>
-						<views:BlockPlayerControl/>
-
-						<!--<views:BlockPlayerControl />-->
-		
+						<waveform:WaveFormView id="waveform"/>		
 					</mx:VBox>
 		
 					<mx:HDividedBox width="100%" height="100%">

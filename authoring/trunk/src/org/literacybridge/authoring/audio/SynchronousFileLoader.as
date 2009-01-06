@@ -28,6 +28,8 @@ package org.literacybridge.authoring.audio {
 			progress = ProgressIndicator(PopUpManager.createPopUp(SystemManager.getSWFRoot(this), ProgressIndicator, true));
 			PopUpManager.centerPopUp(progress);
 			index = 0;
+			var fileName:String = (files.getItemAt(index) as ContentFile).label;
+			progress.setProgress(fileName, index, files.length);
 			loadFile();
 		}
 		

@@ -1,0 +1,81 @@
+package org.literacybridge.authoring.views.waveform
+{
+	import mx.collections.ArrayCollection;
+	
+	import org.literacybridge.authoring.schema.ContentBlock;
+	
+	public class WaveFormBlocks extends VisualizerBase {
+		public var blocks:ArrayCollection;
+		private static const curveSize:int = 5;
+		
+		override public function draw():void {
+			if (blocks == null) return; // nothing to do
+
+            this.graphics.clear();
+			
+			for (var i:int = 0; i < blocks.length; i++) {
+				var b:ContentBlock = blocks.getItemAt(i) as ContentBlock
+				if (waveFormState.isInDisplayRange(b.start, b.end)) {
+					drawBlock(b);
+				}
+			}
+		}
+		
+		public function drawBlock(block:ContentBlock):void {			
+            this.graphics.lineStyle( 2, 0x1d02be );
+            this.graphics.beginFill(0x1d02be, 0.2);
+            
+            var x1:int = waveFormState.getPixel(block.start);
+            var x2:int = waveFormState.getPixel(block.end);
+
+			var drawLeftLine:Boolean;
+			var drawRightLine:Boolean;
+
+			var curveLeft:int = curveSize;
+			var curveRight:int = curveSize;
+
+			if (x1 >= 0) {
+				drawLeftLine = true;
+			} else {
+				drawLeftLine = false;
+				curveLeft = Math.max(0, Math.min(x1 + curveSize, curveSize));
+				x1 = 0;
+			}
+
+			if (x2 - curveRight < 0) {
+				curveRight = x2;
+			}
+
+			// draw round block clockwise
+			// start at lower-left corner
+			this.graphics.moveTo(x1 + curveLeft, this.height);
+			this.graphics.curveTo(x1, this.height, x1, this.height - curveLeft);
+			
+			if (drawLeftLine) {
+				// left line
+				this.graphics.lineTo(x1, curveLeft);
+			} else {
+				this.graphics.lineStyle( 1 , 0, 0.2);
+				this.graphics.lineTo(0, curveLeft);
+				this.graphics.lineStyle( 2, 0x1d02be );
+			}
+			// top-left curve
+            this.graphics.curveTo(x1, 0, x1 + curveLeft, 0);
+            // top line, left to right
+            this.graphics.lineTo(x2 - curveRight, 0);
+            // top-right curve
+            this.graphics.curveTo(x2, 0, x2, curveRight);
+            // right line
+            this.graphics.lineTo(x2, this.height - curveRight);
+            // lower-right curve
+            this.graphics.curveTo(x2, this.height, x2-curveRight, this.height);
+            // lower line
+            this.graphics.lineTo(x1 + curveLeft, this.height);
+            
+
+            //this.graphics.drawRoundRect(x, 0, y-x, this.height, 10, 10);
+            this.graphics.endFill();			
+		}
+		
+	}
+}
