@@ -40,7 +40,7 @@
 			private function draw():void {
 				waveFormState.interval = zoomSlider.value;
 				waveFormState.start = scrollBar.scrollPosition;
-				waveFormState.end = waveFormState.start + blocks.width * waveFormState.interval;
+				waveFormState.end = Math.min(waveFormState.length, waveFormState.start + blocks.width * waveFormState.interval);
 				scrollBar.minScrollPosition = 0;
 				scrollBar.maxScrollPosition = waveFormState.length - blocks.width * waveFormState.interval;
 
