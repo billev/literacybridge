@@ -40,7 +40,16 @@
 			private var loadingPackage:ContentPackage = null;
 			
 			private var file:File;
-
+			
+			private static var instance:AuthoringTool;
+			
+			public static function getInstance():AuthoringTool {
+				return instance;
+			}
+			
+			public function schemaUpdated():void {
+				waveform.draw();
+			}
 		
 			private function onInit() : void {
 				outline.outlineTree.addEventListener(ListEvent.CHANGE, updateProperties);
@@ -63,6 +72,7 @@
 			}
 		
 			private function onApplicationComplete() : void {
+				instance=this;
 				stage.nativeWindow.addEventListener(Event.CLOSING, windowClosingHandler);
 				loadAndApplySettings();
 				if (Settings.getInstance().showWizard) {
@@ -218,7 +228,7 @@
 						<waveform:WaveFormView id="waveform"/>		
 					</mx:VBox>
 		
-					<mx:HDividedBox width="100%" height="100%">
+					<mx:HDividedBox width="100%" height="100%" >
 						<props:PropertiesView id="properties" width="40%"/>
 						<ev:EventView id="actions" width="60%"/>
 					</mx:HDividedBox>
