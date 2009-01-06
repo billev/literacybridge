@@ -7,6 +7,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.SchemaUpdateEvent;
 			import org.literacybridge.authoring.schema.ContentBlock;
 			import org.literacybridge.authoring.schema.ContentContainer;
 			import org.literacybridge.authoring.schema.SubBlockAppendable;
@@ -24,6 +25,7 @@
 				b.start = parseInt(blockStart.text);
 				b.end = parseInt(blockEnd.text);
 				parentContainer.appendSubBlock(b);
+				dispatchEvent(new SchemaUpdateEvent(SchemaUpdateEvent.UPDATE));
 				close();
 			}
 		]]>

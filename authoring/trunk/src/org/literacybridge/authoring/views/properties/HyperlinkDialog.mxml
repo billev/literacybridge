@@ -22,6 +22,7 @@
 	
 <mx:Script>
 	<![CDATA[
+		import org.literacybridge.authoring.events.SchemaUpdateEvent;
 		import mx.controls.Alert;
 		import org.literacybridge.authoring.schema.helper.HyperlinkUtil;
 		import org.literacybridge.authoring.schema.helper.HyperlinkNameVisitor;
@@ -82,6 +83,7 @@
 				// validate data before adding them to hyperlink collection
 				if (validateInput(newHyperlink, newName)) {
 					contentFile.hyperlinks.addItem(newHyperlink);
+					dispatchEvent(new SchemaUpdateEvent(SchemaUpdateEvent.UPDATE));
 					close();	
 				}
 			}

@@ -17,6 +17,11 @@
 			public var file:ContentFile;
 			[Bindable]
 			public var waveFormState:WaveFormState = new WaveFormState();
+
+	        override protected function updateDisplayList(w:Number, h:Number):void {
+	            super.updateDisplayList(w, h);
+    	        draw();
+        	}
 			
 			public function init():void {
 				zoomSlider.minimum=128;
@@ -25,19 +30,20 @@
 			}
 			
 			public function update():void {
-				blocks.blocks = file.children;
 				waveFormState.length = file.spectrum.audio.length;
 				waveFormState.autoZoom(blocks.width);
 				zoomSlider.value = waveFormState.interval;
 				waveForm.spectrum=file.spectrum;
 				hyper.spectrum = file.spectrum;
-				hyper.hyperlinks = file.hyperlinks;
 				player.init(file.spectrum.audio);
 				position.init();
 				draw();
 			}
 			
-			private function draw():void {
+			public function draw():void {
+				if (file == null)  return;
+				blocks.blocks = file.children;
+				hyper.hyperlinks = file.hyperlinks;
 				waveFormState.interval = zoomSlider.value;
 				waveFormState.start = scrollBar.scrollPosition;
 				waveFormState.end = Math.min(waveFormState.length, waveFormState.start + blocks.width * waveFormState.interval);
