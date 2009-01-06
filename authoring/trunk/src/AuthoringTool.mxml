@@ -15,6 +15,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
 			import org.literacybridge.authoring.views.dialogs.NewPackageDialog;
 			import org.literacybridge.authoring.virtualdevice.VirtualDevice;
 			import org.literacybridge.authoring.views.wizards.Wizard;
@@ -34,6 +35,7 @@
 			
 			private var win:ApplicationSettingsScreen;
 			private var welcome:Wizard;
+			private var loadingPackage:ContentPackage = null;
 			
 			private var file:File;
 
@@ -170,8 +172,17 @@
 	         	file.removeEventListener(Event.COMPLETE, onFileSelectOpen);
 	         	Settings.getInstance().lastOpenFile=openedFile;
 				var parser:ContentXMLParser = new ContentXMLParser();
-				outline.contents.addItem(parser.parse(openedFile));
-	        }
+                loadingPackage = parser.parse(openedFile);
+                var dir:File = openedFile.parent;
+                var loader: SynchronousFileLoader = new SynchronousFileLoader(loadingPackage.children, dir.url);
+                loader.addEventListener(Event.COMPLETE, packageLoadingComplete);
+                loader.load();
+            }
+
+            private function packageLoadingComplete(event:Event):void {
+                outline.contents.addItem(loadingPackage);
+                loadingPackage = null;
+            }
 	        
 	        private function onQuit():void {
 	        	close();

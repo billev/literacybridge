@@ -3,9 +3,12 @@ package org.literacybridge.authoring.schema {
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	
+	import org.literacybridge.authoring.audio.AudioSpectrum;
+	
 	[Bindable]
 	public class ContentFile extends ContentContainer implements SubBlockAppendable {
 		public var hyperlinks:ArrayCollection = new ArrayCollection();
+		public var spectrum:AudioSpectrum;
 		
 		public function ContentFile() {
 			// sort hyperlink list according to the hyperlink's start values
