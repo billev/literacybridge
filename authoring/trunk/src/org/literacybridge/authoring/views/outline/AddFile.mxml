@@ -7,6 +7,8 @@
 	      
   	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
+			import mx.collections.ArrayCollection;
 			import org.literacybridge.authoring.schema.ContentFile;
 			import org.literacybridge.authoring.schema.ContentPackage;
 			import mx.managers.PopUpManager;
@@ -23,8 +25,17 @@
 				var f:ContentFile = new ContentFile();
 				f.label = fileName.text;
 				parentContainer.addFile(f);
+                var dir:File = parentContainer.packageFile.parent;
+                var files:ArrayCollection = new ArrayCollection();
+                files.addItem(f);
+                var loader: SynchronousFileLoader = new SynchronousFileLoader(files, dir.url);
+                loader.addEventListener(Event.COMPLETE, fileLoadingComplete);
+                loader.load();
+            }
+
+            private function fileLoadingComplete(event:Event):void {
 				close();
-			}
+            }
 			
 			private function fileBrowse():void {
 	            file = new File();  
