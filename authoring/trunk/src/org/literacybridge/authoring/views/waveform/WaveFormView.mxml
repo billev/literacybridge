@@ -32,8 +32,6 @@
 				waveForm.spectrum=file.spectrum;
 				hyper.spectrum = file.spectrum;
 				hyper.hyperlinks = file.hyperlinks;
-				scrollBar.minScrollPosition = 0;
-				scrollBar.maxScrollPosition = waveFormState.length;
 				player.init(file.spectrum.audio);
 				position.init();
 				draw();
@@ -43,6 +41,8 @@
 				waveFormState.interval = zoomSlider.value;
 				waveFormState.start = scrollBar.scrollPosition;
 				waveFormState.end = waveFormState.start + blocks.width * waveFormState.interval;
+				scrollBar.minScrollPosition = 0;
+				scrollBar.maxScrollPosition = waveFormState.length - blocks.width * waveFormState.interval;
 
 				
 				blocks.draw();
