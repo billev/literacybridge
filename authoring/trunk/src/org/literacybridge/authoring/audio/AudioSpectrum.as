@@ -52,6 +52,7 @@ package org.literacybridge.authoring.audio {
 			
 			while (numSoundSamples > 0) {
 				var toLoad:int = Math.min(numSoundSamples, bufferSize / 8);
+				buffer.position = 0;
 				audio.extract(buffer, toLoad, pos);
 				pos += toLoad;
 				numSoundSamples -= toLoad;
