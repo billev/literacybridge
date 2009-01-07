@@ -45,7 +45,7 @@ package org.literacybridge.authoring.views.waveform
 		private static const MODE_AUTO_SCROLL_RIGHT:int = 2;
 		private var autoScrollPositionX:int;
 		private var scrollSpeed:int;
-		private static const INITIAL_SCROLL_SPEED:int = 10;
+		private static const INITIAL_SCROLL_SPEED:int = 200;
 		
 		private var blockToolTip:IToolTip = null;
 		
@@ -151,7 +151,7 @@ package org.literacybridge.authoring.views.waveform
 					autoScrollMode = 0;
 					autoScrollTimer.stop();					
 				} else if (contentMouseX < autoScrollPositionX && contentMouseX >= 0) {
-					scrollSpeed += ((autoScrollPositionX - contentMouseX) / 5);
+					//scrollSpeed += ((autoScrollPositionX - contentMouseX) / 5);
 					autoScrollPositionX = contentMouseX;
 				}
 				return;
@@ -160,7 +160,7 @@ package org.literacybridge.authoring.views.waveform
 					autoScrollMode = 0;
 					autoScrollTimer.stop();					
 				} else if (contentMouseX > autoScrollPositionX && contentMouseX <= this.width) {
-					scrollSpeed += ((contentMouseX - autoScrollPositionX) / 5);
+					//scrollSpeed += ((contentMouseX - autoScrollPositionX) / 5);
 					autoScrollPositionX = contentMouseX;
 				}				
 				return;
@@ -209,7 +209,7 @@ package org.literacybridge.authoring.views.waveform
 		}
 		
 		private function updateToolTip():void {
-			if (blockToolTip != null) {
+			if (blockToolTip != null && selectedBlock != null) {
 				var x:int = waveFormState.getPixel(selectedBlock.start);
 				
 				blockToolTip.text = selectedBlock.start.toString() + " ms - " + selectedBlock.end.toString() + " ms";
