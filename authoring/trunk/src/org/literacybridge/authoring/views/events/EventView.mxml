@@ -29,7 +29,7 @@
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
 			
-			[Bindable] private var eventHandlers:ArrayCollection = new ArrayCollection();
+			[Bindable] private var eventHandlers:ArrayCollection = null;
 			[Bindable] private var addEventList:ArrayCollection = new ArrayCollection();
 		
 			private var addActionDialog:AddActionDialog = null;
@@ -61,7 +61,11 @@
 
 			public function update(data:Object):void {
 				eventHandlers = (data as ContentContainer).eventHandlers;
+				if (eventHandlers.length > 0) {
+					eventGrid.selectedIndex = 0;
+				}
 				actionRepeater.dataProvider = null;
+				enableControls();
 			}
 			
 			private function onAddEvent(event:MenuEvent):void {
@@ -174,10 +178,30 @@
             }
 			
 			private function enableControls():void {
-				if (eventGrid.selectedIndex != -1) {
-					removeEventButton.enabled = true;
-					addbuttonPanel.getButton().enabled = true;	
-					actionRepeater.dataProvider = (eventGrid.selectedItem as EventHandler).actions;			
+				// disable all as default
+				addEventBtn.enabled = false;
+				removeEventButton.enabled = false;
+				var addButton:Button = addbuttonPanel.getButton();
+				if (addButton != null) {	// JTBD
+					addButton.enabled = false;
+				} 
+				actionRepeater.dataProvider = null;
+				
+
+				// we have an event handler
+				if (eventHandlers != null) {	
+					addEventBtn.enabled = true;   // adding always possible
+		
+					if (eventGrid.selectedIndex != -1) {
+						removeEventButton.enabled = true; // remove only seleted
+						// add action always possible if an event is selected						
+						var addButton:Button = addbuttonPanel.getButton();
+						if (addButton != null) {	// JTBD
+							addButton.enabled = true;
+						} 	
+						// show actions of selected event
+						actionRepeater.dataProvider = (eventGrid.selectedItem as EventHandler).actions;			
+					}
 				}
 			}
 			
@@ -191,7 +215,7 @@
 					var index:int = actionList.getItemIndex(event.action);
 					actionList.removeItemAt(index);			
 				}
-
+				enableControls();
 			}
 			
 		]]>
