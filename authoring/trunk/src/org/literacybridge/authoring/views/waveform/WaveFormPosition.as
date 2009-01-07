@@ -31,6 +31,7 @@ package org.literacybridge.authoring.views.waveform
 		}
 		
 		public function mouseDown(event:MouseEvent):void {
+			if (contentMouseY > WaveFormView.POSITION_SLIDER_HEIGHT || contentMouseX < 0) return;
 			pos = waveFormState.getMilliseconds(contentMouseX);
 			mouseButtonDown = true;		
 			playerControl.detachPosWatching();		
@@ -51,7 +52,7 @@ package org.literacybridge.authoring.views.waveform
 		}
 
 		public function mouseMove(event:MouseEvent):void {
-			if (mouseButtonDown) {
+			if (mouseButtonDown && contentMouseX >= 0) {
 				pos = waveFormState.getMilliseconds(contentMouseX);
 			}				
 		}
@@ -65,9 +66,15 @@ package org.literacybridge.authoring.views.waveform
             g.clear();
 			if (waveFormState.isInDisplayRange(pos, pos)) {
                 var x:int = waveFormState.getPixel(pos);          
-	            g.moveTo(x, 0);
+	            g.moveTo(x, WaveFormView.POSITION_SLIDER_HEIGHT);
 	            g.lineStyle( 2, 0xff0000 );
 	            g.lineTo(x, this.height);
+	            g.beginFill(0xff0000, 1);
+	            g.moveTo(x, WaveFormView.POSITION_SLIDER_HEIGHT);
+	            g.lineTo(x-4, 0);
+	            g.lineTo(x+4, 0);
+	            g.lineTo(x, WaveFormView.POSITION_SLIDER_HEIGHT);
+	            g.endFill();
 	            
 	            if (positionToolTip != null) {
 	            	positionToolTip.visible = true;
@@ -82,8 +89,8 @@ package org.literacybridge.authoring.views.waveform
 		
 		private function updateToolTip():void {
 			var p:Point = localToGlobal(new Point(waveFormState.getPixel(pos)));
-			positionToolTip.x = p.x;
-			positionToolTip.y = p.y + this.height;
+			positionToolTip.x = p.x + 4;
+			positionToolTip.y = p.y - 17;
 			positionToolTip.text = pos.toString() + " ms";
 
 		}
