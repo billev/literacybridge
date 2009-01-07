@@ -30,6 +30,7 @@ package org.literacybridge.authoring.util {
             mybtn.visible = true;
             mybtn.includeInLayout = true;
             mybtn.addEventListener( MouseEvent.CLICK, buttonClickHandler );
+            mybtn.enabled = false; // disable as default
             rawChildren.addChild( mybtn );
             
             

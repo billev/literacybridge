@@ -5,55 +5,140 @@
 	      showCloseButton="true"
 	      title="Add Action" fontSize="12"
 	      initialize="init()" xmlns:events="org.literacybridge.authoring.views.events.*">
+	
+	
 	<mx:states>
+	
+		<!-- only for Volume -->
 		<mx:State name="VolumeState">
-			<mx:SetProperty target="{volumnBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{volumnBox}" name="height" value="25"/>	
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox id="volumnBox" width="100%" height="100%">
+					<mx:Label id="newVolumeValueLabel" text="{resourceManager.getString('resources', 'NEW_VALUE')}" textAlign="left" />
+					<mx:ComboBox id="volumeComboBox" labelFunction="getVolumeLabel" dataProvider="{volumeList}" width="100%" />	
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
 		</mx:State>
+	
+		<!-- only for Speed --> 
 		<mx:State name="SpeedState">
-			<mx:SetProperty target="{speedBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{speedBox}" name="height" value="25"/>	
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox id="speedBox" width="100%" height="100%">
+					<mx:Label id="newSpeedValueLabel" text="{resourceManager.getString('resources', 'NEW_VALUE')}" textAlign="left" />
+					<mx:ComboBox id="speedComboBox" labelFunction="getSpeedLabel" dataProvider="{speedList}" />	
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
 		</mx:State>
+		
+		<!-- CallBlock -->	
 		<mx:State name="CallBlockState">
-			<mx:SetProperty target="{callBlockBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{callBlockBox}" name="height" value="50"/>	
-			<mx:SetProperty target="{callBlockBlockNameVBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{callBlockBlockNameVBox}" name="height" value="25"/>	
-			<mx:SetProperty target="{callBlockRewindVBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{callBlockRewindVBox}" name="height" value="25"/>		
-		</mx:State>		
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:VBox id="callBlockBox" width="100%" height="100%">		
+					<mx:HBox width="100%" height="100%" id="callBlockBlockNameVBox">
+						<mx:Label id="newBlockNameLabel" text="{resourceManager.getString('resources', 'BLOCK_NAME')}" textAlign="left" />
+						<mx:TextInput id="callBlockTI"  width="100%" />
+					</mx:HBox>
+					<mx:HBox width="100%" height="100%" id="callBlockRewindVBox">
+						<mx:Label id="newReturnRewindSecondsLabel" text="{resourceManager.getString('resources', 'RETURN_REWIND_SECONDS')}" textAlign="left"/>
+						<mx:TextInput id="newReturnRewindSecondsTextfield"  width="100%" restrict="0123456789"/>			
+					</mx:HBox>		
+				</mx:VBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>	
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>	
+		</mx:State>	
+
+		<!-- Goto -->	
 		<mx:State name="GotoState">
-			<mx:SetProperty target="{gotoVBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{gotoVBox}" name="height" value="25"/>	
-		</mx:State>
-		<mx:State name="NextBlockState">
-			<mx:SetProperty target="{nextBlockVBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{nextBlockVBox}" name="height" value="25"/>	
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="gotoVBox">
+					<mx:Label id="newGotoLabel" text="{resourceManager.getString('resources', 'BLOCK_NAME')}" textAlign="left" />
+					<mx:TextInput id="gotoTI"  width="100%" />
+				</mx:HBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
 		</mx:State>		
+
+
+		<!-- Next Block -->
+		<mx:State name="NextBlockState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="nextBlockVBox">
+					<mx:Label id="newNextBlockLabel" text="{resourceManager.getString('resources', 'CLASS_NAME')}" textAlign="left" />
+					<mx:TextInput id="nextBlockTI" width="100%" />
+				</mx:HBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
+		</mx:State>		
+
+
+		<!-- Prev Block -->
 		<mx:State name="PrevBlockState">
-			<mx:SetProperty target="{prevBlockVBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{prevBlockVBox}" name="height" value="25"/>	
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="prevBlockVBox">
+					<mx:Label id="newPrevBlockLabel" text="{resourceManager.getString('resources', 'CLASS_NAME')}" textAlign="left" />
+					<mx:TextInput id="prevBlockTI" width="100%" />
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
 		</mx:State>
+				
+				
+		<!-- Relative Time Jump -->				
 		<mx:State name="RelTimeJumpState">
-			<mx:SetProperty target="{relTimeJumpVBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{relTimeJumpVBox}" name="height" value="25"/>	
-		</mx:State>					
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="relTimeJumpVBox">
+					<mx:Label id="newRelTimeJumpLabel" text="{resourceManager.getString('resources', 'JUMP_MILLI_SECONDS')}" textAlign="left" />
+					<mx:TextInput id="newRelTimeJumpTextfield"  width="100%" restrict="0123456789"/>			
+				</mx:HBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>	
+		</mx:State>	
+	
+	
+		<!-- Set Light -->
 		<mx:State name="LightState">
-			<mx:SetProperty target="{setLightBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{setLightBox}" name="height" value="50"/>
-			<mx:SetProperty target="{lightStateBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{lightStateBox}" name="height" value="25"/>	
-			<mx:SetProperty target="{lightColorBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{lightColorBox}" name="height" value="25"/>								
-		</mx:State>
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:VBox width="100%" height="100%" id="setLightBox">
+					<mx:HBox width="100%" height="100%" id="lightStateBox">
+						<mx:Label id="newLightStateLabel" text="{resourceManager.getString('resources', 'LIGHT_STATE')}" textAlign="left" />
+						<mx:ComboBox id="newLightStateComboBox"  labelFunction="getLightStateLabel" dataProvider="{lightStateList}" width="100%" />
+					</mx:HBox>		
+					<mx:HBox width="100%" height="100%" id="lightColorBox">
+						<mx:Label id="newLightColorLabel" text="{resourceManager.getString('resources', 'LIGHT_COLOR')}" textAlign="left" />
+						<mx:ComboBox id="newLightColorComboBox" labelFunction="getLightColorLabel" dataProvider="{lightColorList}" width="100%" />
+					</mx:HBox>									
+				</mx:VBox>		
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>		
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>					
+		</mx:State>		
+				
+				
+		<!-- USB mode -->
 		<mx:State name="USBState">
-			<mx:SetProperty target="{usbBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{usbBox}" name="height" value="50"/>
-			<mx:SetProperty target="{usbModeBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{usbModeBox}" name="height" value="25"/>	
-			<mx:SetProperty target="{usbActiveBox}" name="width" value="100%"/>
-			<mx:SetProperty target="{usbActiveBox}" name="height" value="25"/>								
-		</mx:State>				
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:VBox width="100%" height="100%" id="usbBox">
+					<mx:HBox width="100%" height="100%" id="usbModeBox">
+						<mx:Label id="newUSBDeviceLabel" text="{resourceManager.getString('resources', 'USB_MODE')}" textAlign="left" />
+						<mx:ComboBox id="newUSBDeviceComboBox"  labelFunction="getUSBModeLabel" dataProvider="{usbModeList}" width="100%" />
+					</mx:HBox>		
+					<mx:HBox width="100%" height="100%" id="usbActiveBox">
+						<mx:Label id="newUSBActiveLabel" text="{resourceManager.getString('resources', 'USB_ACTIVE')}" textAlign="left" />
+						<mx:ComboBox id="newUSBActiveComboBox" labelFunction="getUSBActiveLabel" dataProvider="{[0,1]}" width="100%" />
+					</mx:HBox>									
+				</mx:VBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>	
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>								
+		</mx:State>					
 	</mx:states>
 
 	<mx:Script>
@@ -84,11 +169,7 @@
 			
 			[Bindable] private static var actionList:ArrayCollection = Action.getActionList();
 			[Bindable] private static var volumeList:ArrayCollection = AdjustSpeedVolumeAction.getVolumeList();	// volumn
-			[Bindable] private static var speedList:ArrayCollection = AdjustSpeedVolumeAction.getSpeedList();	// speed
-			[Bindable] private static var blockList:ArrayCollection; //  blocks
-			[Bindable] private static var gotoList:ArrayCollection;	// goto list
-			[Bindable] private static var nextBlockList:ArrayCollection;	// next Block list
-			[Bindable] private static var prevBlockList:ArrayCollection;	// previous Block list			
+			[Bindable] private static var speedList:ArrayCollection = AdjustSpeedVolumeAction.getSpeedList();	// speed	
 			[Bindable] private static var lightStateList:ArrayCollection = SetLightAction.getStateList();
 			[Bindable] private static var lightColorList:ArrayCollection = SetLightAction.getColorList();
 			[Bindable] private static var usbModeList:ArrayCollection = SetUSBModeAction.getModeList();
@@ -96,10 +177,6 @@
 			
 			
 			private function init():void {
-				collectAvailableBlocks();	// only dummy call here; MUST BE CALLED SOMEWHERE ELSE
-				collectAvailableBlocks_Goto(); // only dummy call here; MUST BE CALLED SOMEWHERE ELSE
-				collectAvailableBlocks_NextBlock(); // only dummy call here; MUST BE CALLED SOMEWHERE ELSE
-				collectAvailableBlocks_PrevBlock();  // only dummy call here; MUST BE CALLED SOMEWHERE ELSE
 				
 			}
 						
@@ -149,7 +226,7 @@
 					break;
 					// CallBlock
 					case Action.CallBlock:
-						var newBlockName:String = callBlockComboBox.selectedItem as String;
+						var newBlockName:String = callBlockTI.text;
 						var newReturnRewindSecondsValue:int = parseInt(newReturnRewindSecondsTextfield.text) as int;
 						if (!editAction) {
 							var newCallBlock:CallBlockAction = new CallBlockAction();
@@ -163,7 +240,7 @@
 					break;
 					// Goto
 					case Action.Goto:
-						var newGotoContainerName:String = gotoComboBox.selectedItem as String;
+						var newGotoContainerName:String = gotoTI.text;
 						if (!editAction) {
 							var newGotoAction:GotoAction = new GotoAction();
 							newGotoAction.containerName = newGotoContainerName;
@@ -174,7 +251,7 @@
 					break;	
 					// Next Block
 					case Action.NextBlock:
-						var newNextContainerName:String = newNextBlockComboBox.selectedItem as String;
+						var newNextContainerName:String = nextBlockTI.text;
 						if (!editAction) {
 							var newNextBlockAction:NextPreviousBlockAction = new NextPreviousBlockAction(NextPreviousBlockAction.Next);
 							newNextBlockAction.className = newNextContainerName;
@@ -185,7 +262,7 @@
 					break;	
 					// Prev. Block
 					case Action.PrevBlock:
-						var newPrevContainerName:String = newPrevBlockComboBox.selectedItem as String;
+						var newPrevContainerName:String = prevBlockTI.text;
 						if (!editAction) {
 							var newPrevBlockAction:NextPreviousBlockAction = new NextPreviousBlockAction(NextPreviousBlockAction.Previous);
 							newPrevBlockAction.className = newPrevContainerName;
@@ -335,54 +412,6 @@
 				}				
 			}
 	
-			// CallBlock - here we must collect all available blocks
-			private function collectAvailableBlocks():void {
-				if (blockList == null) {
-					blockList = new ArrayCollection();
-					blockList.addItem("Block 1");
-					blockList.addItem("Block 2");
-					blockList.addItem("Block 3");
-				}
-			}
-
-			// Goto - here we must collect all available blocks, packages...
-			private function collectAvailableBlocks_Goto():void {
-				if (gotoList == null) {
-					gotoList = new ArrayCollection();
-					gotoList.addItem("Block 1");
-					gotoList.addItem("Block 2");
-					gotoList.addItem("Block 3");
-					gotoList.addItem("Package 1");
-					gotoList.addItem("Package 2");
-					
-				}
-			}
-			
-			// Next Block
-			private function collectAvailableBlocks_NextBlock():void {
-				if (nextBlockList == null) {
-					nextBlockList = new ArrayCollection();
-					nextBlockList.addItem("Block 1");
-					nextBlockList.addItem("Block 2");
-					nextBlockList.addItem("Block 3");
-					nextBlockList.addItem("Next 1");
-					nextBlockList.addItem("Next 2");					
-				}
-			}			
-			
-			// Next Block
-			private function collectAvailableBlocks_PrevBlock():void {
-				if (prevBlockList == null) {
-					prevBlockList = new ArrayCollection();
-					prevBlockList.addItem("Block 1");
-					prevBlockList.addItem("Block 2");
-					prevBlockList.addItem("Block 3");
-					prevBlockList.addItem("Previous 1");
-					prevBlockList.addItem("Previous 2");					
-				}
-			}	
-			
-			
 			public function setAction(action:Action=null):void {
 				this.action = action; 
 				if (action == null) {	// if we have no action, we want to create one
@@ -406,19 +435,19 @@
 			private function initParameterInputComponents(action:Action):void {
 				// CallBlock
 				if (action is CallBlockAction) {
-					callBlockComboBox.selectedItem = (action as CallBlockAction).blockName;
+					callBlockTI.text = (action as CallBlockAction).blockName;
 					newReturnRewindSecondsTextfield.text = String((action as CallBlockAction).returnRewindSeconds);
 				}
 				// Goto
 				else if (action is GotoAction) {
-					gotoComboBox.selectedItem = (action as GotoAction).containerName;	
+					gotoTI.text = (action as GotoAction).containerName;	
 				}
 				// Next + Previous Block
 				else if (action is NextPreviousBlockAction) {
 					if ((action as NextPreviousBlockAction).mode == NextPreviousBlockAction.Next) {
-						newNextBlockComboBox.selectedItem = (action as NextPreviousBlockAction).className;	
+						nextBlockTI.text = (action as NextPreviousBlockAction).className;	
 					} else {
-						newPrevBlockComboBox.selectedItem = (action as NextPreviousBlockAction).className;
+						prevBlockTI.text = (action as NextPreviousBlockAction).className;
 					}
 				}
 				// Relative Time Jump
@@ -488,77 +517,10 @@
 		]]>
 	</mx:Script>
 	      
-	<mx:VBox fontSize="12" id="box" borderStyle="solid">
+	<mx:VBox fontSize="12" id="mainBox" height="100%">
 		<!-- Actions ComboBox -->
 		<mx:ComboBox id="actionComboBox" labelFunction="getActionLabel"	dataProvider="{actionList}" 
 						width="100%" rowCount="13"	change="onActionChanged(event)" />
-<mx:VBox borderStyle="solid" width="100%" id="paramBox" >												
-		<!-- only for Volume -->
-		<mx:HBox id="volumnBox" width="0" height="0">
-			<mx:Label id="newVolumeValueLabel" text="{resourceManager.getString('resources', 'NEW_VALUE')}" textAlign="left" />
-			<mx:ComboBox id="volumeComboBox" labelFunction="getVolumeLabel" dataProvider="{volumeList}" />	
-		</mx:HBox>
-		<!-- only for Speed --> 
-		<mx:HBox id="speedBox" width="0" height="0">
-			<mx:Label id="newSpeedValueLabel" text="{resourceManager.getString('resources', 'NEW_VALUE')}" textAlign="left" />
-			<mx:ComboBox id="speedComboBox" labelFunction="getSpeedLabel" dataProvider="{speedList}" />	
-		</mx:HBox>
-		<!-- CallBlock -->
-		<mx:VBox id="callBlockBox" width="0" height="0">		
-			<mx:HBox width="0" height="0" id="callBlockBlockNameVBox">
-				<mx:Label id="newBlockNameLabel" text="{resourceManager.getString('resources', 'BLOCK_NAME')}" textAlign="left" />
-				<mx:ComboBox id="callBlockComboBox"  dataProvider="{blockList}" width="100%" />
-			</mx:HBox>
-			<mx:HBox width="0" height="0" id="callBlockRewindVBox">
-				<mx:Label id="newReturnRewindSecondsLabel" text="{resourceManager.getString('resources', 'RETURN_REWIND_SECONDS')}" textAlign="left"/>
-				<mx:TextInput id="newReturnRewindSecondsTextfield"  width="100%" maxChars="9" restrict="0123456789"/>			
-			</mx:HBox>		
-		</mx:VBox>	
-		<!-- Goto -->
-		<mx:HBox width="0" height="0" id="gotoVBox">
-			<mx:Label id="newGotoLabel" text="{resourceManager.getString('resources', 'BLOCK_NAME')}" textAlign="left" />
-			<mx:ComboBox id="gotoComboBox"  dataProvider="{gotoList}" width="100%" />
-		</mx:HBox>		
-		<!-- Next Block -->
-		<mx:HBox width="0" height="0" id="nextBlockVBox">
-			<mx:Label id="newNextBlockLabel" text="{resourceManager.getString('resources', 'CLASS_NAME')}" textAlign="left" />
-			<mx:ComboBox id="newNextBlockComboBox"  dataProvider="{nextBlockList}" width="100%" />
-		</mx:HBox>			
-		<!-- Prev Block -->
-		<mx:HBox width="0" height="0" id="prevBlockVBox">
-			<mx:Label id="newPrevBlockLabel" text="{resourceManager.getString('resources', 'CLASS_NAME')}" textAlign="left" />
-			<mx:ComboBox id="newPrevBlockComboBox"  dataProvider="{prevBlockList}" width="100%" />
-		</mx:HBox>		
-		<!-- Relative Time Jump -->
-		<mx:HBox width="0" height="0" id="relTimeJumpVBox">
-			<mx:Label id="newRelTimeJumpLabel" text="{resourceManager.getString('resources', 'JUMP_MILLI_SECONDS')}" textAlign="left" />
-			<mx:TextInput id="newRelTimeJumpTextfield"  width="100%" maxChars="9" restrict="0123456789"/>			
-		</mx:HBox>			
-		<!-- Set Light -->
-		<mx:VBox width="0" height="0" id="setLightBox">
-			<mx:HBox width="0" height="0" id="lightStateBox">
-				<mx:Label id="newLightStateLabel" text="{resourceManager.getString('resources', 'LIGHT_STATE')}" textAlign="left" />
-				<mx:ComboBox id="newLightStateComboBox"  labelFunction="getLightStateLabel" dataProvider="{lightStateList}" width="100%" />
-			</mx:HBox>		
-			<mx:HBox width="0" height="0" id="lightColorBox">
-				<mx:Label id="newLightColorLabel" text="{resourceManager.getString('resources', 'LIGHT_COLOR')}" textAlign="left" />
-				<mx:ComboBox id="newLightColorComboBox" labelFunction="getLightColorLabel" dataProvider="{lightColorList}" width="100%" />
-			</mx:HBox>									
-		</mx:VBox>
-		<!-- USB mode -->
-		<mx:VBox width="0" height="0" id="usbBox">
-			<mx:HBox width="0" height="0" id="usbModeBox">
-				<mx:Label id="newUSBDeviceLabel" text="{resourceManager.getString('resources', 'USB_MODE')}" textAlign="left" />
-				<mx:ComboBox id="newUSBDeviceComboBox"  labelFunction="getUSBModeLabel" dataProvider="{usbModeList}" width="100%" />
-			</mx:HBox>		
-			<mx:HBox width="0" height="0" id="usbActiveBox">
-				<mx:Label id="newUSBActiveLabel" text="{resourceManager.getString('resources', 'USB_ACTIVE')}" textAlign="left" />
-				<mx:ComboBox id="newUSBActiveComboBox" labelFunction="getUSBActiveLabel" dataProvider="{[0,1]}" width="100%" />
-			</mx:HBox>									
-		</mx:VBox>
-				
-		
-</mx:VBox>		
 		<!-- Add/Edit/Cancel -->	
 		<mx:HBox width="100%" height="25">		
 			<mx:Button label="{resourceManager.getString('resources', 'ADD')}" click="applyAction()" id="addEditBtn"/>

@@ -6,20 +6,20 @@ package org.literacybridge.authoring.schema.actions {
 	[Bindable]
 	public class SetLightAction	extends Action {
 		
-		static private var colorList:ArrayCollection;
-		static private var stateList:ArrayCollection;
+		static private var colorList:ArrayCollection = null;
+		static private var stateList:ArrayCollection = null;
 		
-		public static const Red:int = 1;
-		public static const Green:int = 2;
+		public static const Red:int = 0;
+		public static const Green:int = 1;
 		
-		public static const On:int = 1;
-		public static const Off:int = 2;
+		public static const On:int = 0;
+		public static const Off:int = 1;
 		
 		public var color:int;
 		public var mode:int;
 		
 		
-		static public function getColorList():ArrayCollection {
+		public static function getColorList():ArrayCollection {
 			if (colorList == null) {
 				colorList = new ArrayCollection();
 				colorList.addItem(Red);
@@ -28,7 +28,7 @@ package org.literacybridge.authoring.schema.actions {
 			return colorList;
 		}
 
-		static public function getStateList():ArrayCollection {
+		public static function getStateList():ArrayCollection {
 			if (stateList == null) {
 				stateList = new ArrayCollection();
 				stateList.addItem(On);
