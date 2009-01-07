@@ -10,7 +10,13 @@ package org.literacybridge.authoring.views.waveform
 			public var end:int;    // end of range to show in milliseconds
 			[Bindable]
 			public var interval:int;    // how many milliseconds one pixel covers
+						
+			public var view:WaveFormView;
 			
+			public function WaveFormState(view:WaveFormView) {
+				this.view = view;
+			}
+						
 			public function autoZoom(width:int):void {
 				interval = 128;
 				while (((end - start) / width) > interval) {
