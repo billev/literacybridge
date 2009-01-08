@@ -67,8 +67,9 @@ package org.literacybridge.authoring.views.waveform
 			if (waveFormState.isInDisplayRange(pos, pos)) {
                 var x:int = waveFormState.getPixel(pos);          
 	            g.moveTo(x, WaveFormView.POSITION_SLIDER_HEIGHT);
-	            g.lineStyle( 2, 0xff0000 );
+	            g.lineStyle( 2, 0 );
 	            g.lineTo(x, this.height);
+	            g.lineStyle( 2, 0xff0000 );
 	            g.beginFill(0xff0000, 1);
 	            g.moveTo(x, WaveFormView.POSITION_SLIDER_HEIGHT);
 	            g.lineTo(x-4, 0);

@@ -12,6 +12,7 @@
 			import org.literacybridge.authoring.audio.AudioSpectrum;
 
 			public static const POSITION_SLIDER_HEIGHT:int = 7;
+			public static const WAVEFORM_HEIGHT:int = 60;
 			
 			[Bindable]
 			public var offset:int;
@@ -42,13 +43,14 @@
 				player.init(file.spectrum.audio);
 				position.init();
 				blocks.init();
+				hyper.init();
 				draw();
 			}
 			
 			public function draw():void {
 				if (file == null)  return;
-				blocks.blocks = file.children;
-				hyper.hyperlinks = file.hyperlinks;
+				blocks.spans = file.children;
+				hyper.spans = file.hyperlinks;
 				waveFormState.interval = zoomSlider.value;
 				waveFormState.start = scrollBar.scrollPosition;
 				waveFormState.end = Math.min(waveFormState.length, waveFormState.start + blocks.width * waveFormState.interval);
@@ -74,14 +76,13 @@
 			<views:PlayerControl position="{position}" id="player"/>
 		</mx:HBox>
 		<mx:Spacer width="100%" height="5"/>
-		<mx:Canvas width="100%" height="75">
-			<waveform:WaveFormBackground width="100%" height="60" y="{POSITION_SLIDER_HEIGHT}" borderStyle="solid"/>
-			<waveform:WaveFormVisualizer id="waveForm" width="100%" height="60" y="{POSITION_SLIDER_HEIGHT}" waveFormState="{waveFormState}"/>
-			<waveform:WaveFormHyperLinks id="hyper" width="100%" height="60" y="{POSITION_SLIDER_HEIGHT}" visible="{showHyperlinks.selected}" waveFormState="{waveFormState}"/>
-			<waveform:WaveFormPosition id="position" width="100%" height="{60 + POSITION_SLIDER_HEIGHT}" y="0" waveFormState="{waveFormState}" playerControl="{player}"/>
-			<waveform:WaveFormBlocks id="blocks" width="100%" height="60" y="{POSITION_SLIDER_HEIGHT}" visible="{showBlocks.selected}" waveFormState="{waveFormState}"/>
+		<mx:Canvas width="100%" height="85">
+			<waveform:WaveFormBackground width="100%" height="{WAVEFORM_HEIGHT}" y="{POSITION_SLIDER_HEIGHT}" borderStyle="solid"/>
+			<waveform:WaveFormVisualizer id="waveForm" width="100%" height="{WAVEFORM_HEIGHT}" y="{POSITION_SLIDER_HEIGHT}" waveFormState="{waveFormState}"/>
+			<waveform:WaveFormHyperLinks id="hyper" width="100%" height="{WAVEFORM_HEIGHT + 18}" y="{POSITION_SLIDER_HEIGHT}" visible="{showHyperlinks.selected}" waveFormState="{waveFormState}"/>
+			<waveform:WaveFormPosition id="position" width="100%" height="{WAVEFORM_HEIGHT + POSITION_SLIDER_HEIGHT}" y="0" waveFormState="{waveFormState}" playerControl="{player}"/>
+			<waveform:WaveFormBlocks id="blocks" width="100%" height="{WAVEFORM_HEIGHT}" y="{POSITION_SLIDER_HEIGHT}" visible="{showBlocks.selected}" waveFormState="{waveFormState}"/>
 		</mx:Canvas>
-		<mx:Spacer width="100%" height="10"/>
 	 	<mx:HScrollBar id="scrollBar" width="100%" scrollPosition="{offset}" enabled="true" scroll="draw()"/>
 	</mx:VBox>
 </mx:Panel>

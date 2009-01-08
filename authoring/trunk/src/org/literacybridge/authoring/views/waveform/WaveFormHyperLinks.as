@@ -1,13 +1,9 @@
 package org.literacybridge.authoring.views.waveform
 {
-import flash.display.Graphics;
-
-import mx.collections.ArrayCollection;
-
 import org.literacybridge.authoring.audio.AudioSpectrum;
-import org.literacybridge.authoring.schema.Hyperlink;
+import org.literacybridge.authoring.schema.ContainerTimeSpan;
     
-    public class WaveFormHyperLinks extends VisualizerBase
+    public class WaveFormHyperLinks extends WaveFormTimeSpan
     {
         public var color1:uint = 0x00FF00;
         public var color2:uint = 0x03880c;
@@ -20,58 +16,54 @@ import org.literacybridge.authoring.schema.Hyperlink;
         
         public var scale:Number = 1;
         public var spectrum:AudioSpectrum;
-        public var hyperlinks:ArrayCollection;
+        private var factor:Number;
         
         override protected function updateDisplayList(w:Number, h:Number):void {
             super.updateDisplayList(w, h);
             hInterval = w/gap;
-            vInterval = Math.floor( h/2 );
-           
-            
+            vInterval = Math.floor( WaveFormView.WAVEFORM_HEIGHT/2 );
         }
+
+		override public function draw():void {
+			if (spectrum == null) return;
+			factor = vInterval / Math.max(Math.abs(spectrum.max), Math.abs(spectrum.min));
+			super.draw();
+		}
         
-        override public function draw() : void {
-        	if (spectrum == null || hyperlinks == null) return;
-            var g : Graphics = this.graphics;
-            g.clear();
-            vInterval = Math.floor( this.height/2 );
-                          
-        	var factor:Number = vInterval / Math.max(Math.abs(spectrum.max), Math.abs(spectrum.min));
-        	
-        	for (var i:int = 0; i < hyperlinks.length; i++) {
-        		var hyperlink:Hyperlink = hyperlinks.getItemAt(i) as Hyperlink;
-        		if (waveFormState.isInDisplayRange(hyperlink.start, hyperlink.end)) {
-	        		var x_start:int = waveFormState.getPixel(hyperlink.start);
-	        		var x_end:int = waveFormState.getPixel(hyperlink.end);
-					
-					g.lineStyle( 3, color2, 1);
-					if (x_start >= 0) {
-			        	g.moveTo(x_start, this.height + 7);
-		        		g.lineTo(x_start, this.height + 13);
-		   			} else {
-		   				x_start = 0;
-		   			}
-					
-					if (x_end >= 0) {
-			        	g.moveTo(x_end, this.height + 7);
-		        		g.lineTo(x_end, this.height + 13);						
-					} else {
-						x_end = 0;
-					}
-					
-		        	g.moveTo(x_start, this.height + 10);
-		        	g.lineTo(x_end, this.height + 10);
-	
-	        		
-	        		g.lineStyle( 1, color1, 1);
-	        		g.moveTo(x_start, vInterval);
-		        	for (; x_start < x_end && x_start < spectrum.data.length; x_start++) {
-		        		var index:int = waveFormState.getMilliseconds(x_start) / spectrum.precision / 1000;
-	        			drawDataPoint(x_start, spectrum.data[index] * factor + vInterval);
-		        	}
-		        }
-	        	
-        	}
+		override protected function drawSpan(span:ContainerTimeSpan, selected:Boolean):void {
+    		if (waveFormState.isInDisplayRange(span.start, span.end)) {
+        		var x_start:int = waveFormState.getPixel(span.start);
+        		var x_end:int = waveFormState.getPixel(span.end);
+				if (selected) {
+					this.graphics.lineStyle( 3, color1, 1);
+				} else {
+					this.graphics.lineStyle( 3, color2, 1);
+				}
+				if (x_start >= 0) {
+		        	this.graphics.moveTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 7);
+	        		this.graphics.lineTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 13);
+	   			} else {
+	   				x_start = 0;
+	   			}
+				
+				if (x_end >= 0) {
+		        	this.graphics.moveTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 7);
+	        		this.graphics.lineTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 13);						
+				} else {
+					x_end = 0;
+				}
+				
+	        	this.graphics.moveTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 10);
+	        	this.graphics.lineTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 10);
+
+        		
+        		this.graphics.lineStyle( 1, color1, 1);
+        		this.graphics.moveTo(x_start, vInterval);
+	        	for (; x_start < x_end && x_start < spectrum.data.length; x_start++) {
+	        		var index:int = waveFormState.getMilliseconds(x_start) / spectrum.precision / 1000;
+        			drawDataPoint(x_start, spectrum.data[index] * factor + vInterval);
+	        	}
+	        }
         }
                 
         
