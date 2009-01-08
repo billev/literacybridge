@@ -195,7 +195,7 @@
 					if (eventGrid.selectedIndex != -1) {
 						removeEventButton.enabled = true; // remove only seleted
 						// add action always possible if an event is selected						
-						var addButton:Button = addbuttonPanel.getButton();
+						addButton = addbuttonPanel.getButton();
 						if (addButton != null) {	// JTBD
 							addButton.enabled = true;
 						} 	
