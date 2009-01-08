@@ -4,6 +4,7 @@
 	initialize="init()">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.SchemaUpdateEvent;
 			import org.literacybridge.authoring.schema.actions.CallBlockAction;
 			import com.asfusion.mate.actions.CallBack;
 			import org.literacybridge.authoring.schema.helper.HyperlinkUtil;
@@ -129,6 +130,7 @@
                 if (hyperlink.action is CallBlockAction) {
                 	(hyperlink.action as CallBlockAction).returnRewindSeconds = parseInt(newData) as int;
                 } 
+                dispatchEvent(new SchemaUpdateEvent());
 			}
 			
 			
