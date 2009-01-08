@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package name="system" precision="128" version="0000">
   <file name="aos2">
-    <block name="xxx" start="1000" end="10000" class="#all"/>
+    <block name="xxx" start="24680" end="33680" class="#all"/>
+    <hyperlink start="7000" end="10000">
+      <goto containerName="test"/>
+    </hyperlink>
   </file>
 </package>
