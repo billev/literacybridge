@@ -2,6 +2,7 @@
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.SchemaUpdateEvent;
 			import org.literacybridge.authoring.schema.ContentBlock;
 			
 			[Bindable] public var block:ContentBlock;		
@@ -11,6 +12,7 @@
 				block.start = Number(blockStart.text);
 				block.end = Number(blockEnd.text);
 				block.className = blockClass.text;
+				dispatchEvent(new SchemaUpdateEvent());
 			}
 				
 		]]>
@@ -21,13 +23,13 @@
 			<mx:TextInput id="blockName" editable="true" text="{block.label}" change="onChange()"/>
 		</mx:FormItem>
 		<mx:FormItem label="Start:">
-			<mx:TextInput id="blockStart" editable="true" text="{block.start}"/>
+			<mx:TextInput id="blockStart" editable="true" text="{block.start}" change="onChange()"/>
 		</mx:FormItem>
 		<mx:FormItem label="End:">
-			<mx:TextInput id="blockEnd" editable="true" text="{block.end}"/>
+			<mx:TextInput id="blockEnd" editable="true" text="{block.end}" change="onChange()"/>
 		</mx:FormItem>
 		<mx:FormItem label="Class:">
-			<mx:ComboBox id="blockClass" editable="true" text="{block.className}"/>
+			<mx:ComboBox id="blockClass" editable="true" text="{block.className}" change="onChange()"/>
 		</mx:FormItem>		
 	</mx:Form>
 </mx:HBox>
