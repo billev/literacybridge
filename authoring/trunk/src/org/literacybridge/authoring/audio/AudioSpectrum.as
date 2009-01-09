@@ -57,10 +57,12 @@ package org.literacybridge.authoring.audio {
 				pos += toLoad;
 				numSoundSamples -= toLoad;
 				var end:int = toLoad * 8;
-				var incr:int = interval * 8 - 4;
+				var incr:int = (interval - 1) * 8;
 				
 				for (buffer.position = 0; buffer.position < end; buffer.position += incr) {
-					var v:Number = buffer.readFloat();
+					var left:Number = buffer.readFloat();
+					var right:Number = buffer.readFloat();
+					var v:Number = Math.pow(Math.max(Math.abs(left), Math.abs(right)), 0.5);
 					max = Math.max(max, v);
 					min = Math.min(min, v);
 					data.push(v);

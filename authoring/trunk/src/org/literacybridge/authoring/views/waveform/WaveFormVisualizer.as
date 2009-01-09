@@ -31,10 +31,16 @@ import org.literacybridge.authoring.audio.AudioSpectrum;
             g.lineStyle( 1, lColor, 1);
         	var factor:Number = vInterval / Math.max(Math.abs(spectrum.max), Math.abs(spectrum.min));
 			var x:int = 0;
-        	        		
+        	trace("f=" + factor);        		
         	for (var millis:int = waveFormState.start; millis < waveFormState.end; millis += waveFormState.interval) {
         		var index:int = millis / spectrum.precision / 1000;
-        		drawDataPoint(x++, spectrum.data[index] * factor + vInterval);
+        		var y:Number = spectrum.data[index] * factor;
+        		
+    			g.moveTo(x, vInterval);
+    			g.lineTo(x, y + vInterval);
+    			g.moveTo(x, vInterval);
+    			g.lineTo(x, -y + vInterval);
+				x++;
         	}
 
         }
