@@ -61,10 +61,17 @@
 					// block
 					} else if (item is ContentBlock) {
 						var contextContentBlockMenu:ContextMenu = new ContextMenu();
-						var add_ContentBlockmenuItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('resources', 'REMOVE_BLOCK'));
-						add_ContentBlockmenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onDeleteBlock);
+						
+						var add_ContentBlockmenuItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('resources', 'ADD_NEW_SUBBLOCK'));
+						add_ContentBlockmenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onAddNewBlock);
 						add_ContentBlockmenuItem.data = item as ContentBlock;
+						
+						var remove_ContentBlockmenuItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('resources', 'REMOVE_BLOCK'));
+						remove_ContentBlockmenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onDeleteBlock);
+						remove_ContentBlockmenuItem.data = item as ContentBlock;
+						
 						contextContentBlockMenu.addItem(add_ContentBlockmenuItem);
+						contextContentBlockMenu.addItem(remove_ContentBlockmenuItem);
 						contextContentBlockMenu.display(this.stage, event.stageX, event.stageY);
 					}
 				}					
