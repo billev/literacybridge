@@ -61,7 +61,12 @@ import org.literacybridge.authoring.schema.ContainerTimeSpan;
         		this.graphics.moveTo(x_start, vInterval);
 	        	for (; x_start < x_end && x_start < spectrum.data.length; x_start++) {
 	        		var index:int = waveFormState.getMilliseconds(x_start) / spectrum.precision / 1000;
-        			drawDataPoint(x_start, spectrum.data[index] * factor + vInterval);
+	        		var y:Number = spectrum.data[index] * factor;
+        		
+	    			this.graphics.moveTo(x_start, vInterval);
+	    			this.graphics.lineTo(x_start, y + vInterval);
+	    			this.graphics.moveTo(x_start, vInterval);
+	    			this.graphics.lineTo(x_start, -y + vInterval);
 	        	}
 	        }
         }
