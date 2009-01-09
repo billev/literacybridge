@@ -25,6 +25,7 @@
 				b.start = parseInt(blockStart.text);
 				b.end = parseInt(blockEnd.text);
 				parentContainer.appendSubBlock(b);
+				b.parent = parentContainer as ContentContainer;
 				dispatchEvent(new SchemaUpdateEvent(SchemaUpdateEvent.UPDATE));
 				close();
 			}

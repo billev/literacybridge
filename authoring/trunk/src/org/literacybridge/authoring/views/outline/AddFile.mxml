@@ -25,6 +25,7 @@
 				var f:ContentFile = new ContentFile();
 				f.label = fileName.text;
 				parentContainer.addFile(f);
+				f.parent = parentContainer; // child must know it parent
                 var dir:File = parentContainer.packageFile.parent;
                 var files:ArrayCollection = new ArrayCollection();
                 files.addItem(f);
