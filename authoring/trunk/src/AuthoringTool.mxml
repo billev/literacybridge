@@ -15,6 +15,9 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.ContainerTimeSpan;
+			import org.literacybridge.authoring.schema.Hyperlink;
+			import org.literacybridge.authoring.schema.ContentBlock;
 			import org.literacybridge.authoring.schema.ContentFile;
 			import org.literacybridge.authoring.schema.ContentContainer;
 			import org.literacybridge.authoring.audio.SynchronousFileLoader;
@@ -47,6 +50,23 @@
 				return instance;
 			}
 			
+			public function selectContainer(container:ContentContainer):void {
+				if (container is Hyperlink) {
+					outline.outlineTree.selectedItem=container.parent;
+					properties.update(container.parent);
+					properties.fileProps.hyperlinkDataGrid.selectedItem = container;
+					waveform.hyper.selectSpan(container as ContainerTimeSpan);
+					waveform.blocks.selectSpan(null);
+					waveform.draw();
+				} else {
+					outline.outlineTree.selectedItem=container;
+					properties.update(container);
+					waveform.hyper.selectSpan(null);
+				}
+				
+			}
+
+			
 			public function schemaUpdated():void {
 				waveform.draw();
 			}
@@ -59,8 +79,18 @@
 				var tree:Tree;
 				tree = Tree(event.target);
 			
+				var container:ContentContainer = tree.selectedItem as ContentContainer;
 				properties.update(tree.selectedItem);
 				actions.update(tree.selectedItem);
+
+				if (container is ContentBlock) {
+					waveform.blocks.selectSpan(container as ContentBlock);
+				} else {
+					waveform.blocks.selectSpan(null);
+				}
+				
+				waveform.hyper.selectSpan(null);
+				
                 var file:ContentContainer = tree.selectedItem as ContentContainer;
                 while (file != null && !(file is ContentFile)) {
                     file = file.parent;
@@ -68,6 +98,8 @@
                 if (file != null) {
                     waveform.file = file as ContentFile;
                     waveform.update();
+                } else {
+                	waveform.draw();
                 }
 			}
 		
