@@ -19,6 +19,15 @@
 			import mx.collections.ArrayCollection;
 			import org.literacybridge.authoring.schema.ContentPackage;
 			
+            // Embed icons.
+   	      	[Embed(source="/../assets/block_icon.png")] 
+         	public var blockIcon:Class; 
+   	      	[Embed(source="/../assets/package_icon.png")] 
+         	public var packageIcon:Class; 
+   	      	[Embed(source="/../assets/file_icon.png")] 
+         	public var fileIcon:Class; 
+
+			
 			[Bindable]
 			public var contents:ArrayCollection = new ArrayCollection();
 			
@@ -169,11 +178,19 @@
 				cmi.removeEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onDeleteFile);					
 			}
 			
+			private function iconFunction(item:Object):Class {
+				if (item is ContentPackage) {
+					return packageIcon;
+				} else if (item is ContentBlock) {
+					return blockIcon;
+				}
+				return fileIcon;
+			}
 		]]>
 	</mx:Script>
 	
 	<mx:VBox width="100%" height="100%">
 		<mx:Tree id="outlineTree" dataProvider="{contents}" width="100%" alpha="1.0" height="100%"
-			rightClick="onRightClick(event)"/>
+			rightClick="onRightClick(event)" iconFunction="iconFunction"/>
 	</mx:VBox>
 </mx:Panel>
