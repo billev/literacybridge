@@ -47,6 +47,9 @@
 					case resourceManager.getString("resources", "CONTROLBAR_MENU_NEW"):
 						dispatch(event, ExtendedMenuEvent.MENU_NEW);
 					break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_UPDATE"):
+						dispatch(event, ExtendedMenuEvent.MENU_UPDATE);
+					break;
 
 
 				}
@@ -79,6 +82,7 @@
 			</menuitem>
 		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_HELP')}">
 				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_ABOUT')}"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_UPDATE')}"/>
 			</menuitem>
 		</mx:XMLList>
 	</mx:MenuBar>

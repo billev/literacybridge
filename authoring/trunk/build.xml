@@ -10,6 +10,7 @@
   <property name="src.dir"  value="src"/>
   <property name="app.name" value="AuthoringTool"/>
   <property name="desc.name" value="AuthoringTool-app"/>
+  <property name="update.xml" value="updateConfig.xml"/>
 
   <property name="store.type" value="pkcs12" />
   <property name="cert.type" value="1024-RSA" />
@@ -69,6 +70,7 @@
         <arg line="-include-libraries libs/Mate_08_5.swc"/>
       </exec>
       <copy file="${src.dir}/${app.name}-app.xml" tofile="${dist.dir}/${app.name}-app.xml"/>
+      <copy file="${src.dir}/updateConfig.xml" tofile="${dist.dir}/updateConfig.xml"/>
     </sequential>
   </target> 
 
@@ -91,6 +93,7 @@
       <arg value="${app.name}.air" />
       <arg value="${desc.name}.xml" />
       <arg value="${app.name}.swf" />
+      <arg value="${update.xml}" />
     </java>
   </target>
   
