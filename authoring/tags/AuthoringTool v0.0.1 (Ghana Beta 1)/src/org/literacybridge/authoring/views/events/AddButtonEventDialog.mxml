@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:vd="org.literacybridge.authoring.virtualdevice.*"
+	layout="vertical" width="420" height="550"
+	title="Add Event" close="close()" showCloseButton="true">
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.virtualdevice.VirtualDeviceButtonEvent;
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			import mx.collections.ArrayCollection;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			
+			[Bindable] private var buttonList:ArrayCollection = ButtonEventHandler.getButtonList();
+			[Bindable] private var buttonActionList:ArrayCollection = ButtonEventHandler.getButtonActionList();
+			public var eventHandlers:ArrayCollection;
+						
+			private function onAddEvent():void {
+				var handler:ButtonEventHandler = new ButtonEventHandler();
+				handler.button = buttonBox.selectedItem as int;
+				handler.buttonAction = buttonActionBox.selectedItem as int;
+				eventHandlers.addItem(handler);
+				close();
+			}
+			
+			private function onVirtualDeviceButtonEvent(event:VirtualDeviceButtonEvent):void {
+				buttonBox.selectedItem = event.button;
+				buttonActionBox.selectedItem = event.action; 
+			}
+			
+			private function close():void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function getButtonDisplayText(item:Object):String {
+				return ActionDisplayTextGenerator.getButtonDisplayText(item as int);
+			}
+
+			private function getButtonActionDisplayText(item:Object):String {
+				return ActionDisplayTextGenerator.getButtonActionDisplayText(item as int);
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:HBox>
+		<mx:Form>
+			<mx:FormItem label="Button">
+				<mx:ComboBox id="buttonBox" dataProvider="{buttonList}" labelFunction="getButtonDisplayText"/>
+			</mx:FormItem>
+			<mx:FormItem label="Action">
+				<mx:ComboBox id="buttonActionBox" dataProvider="{buttonActionList}" labelFunction="getButtonActionDisplayText"/>
+			</mx:FormItem>
+		</mx:Form>
+
+		<mx:HBox width="100%" height="100%" verticalAlign="middle">
+			<mx:Button label="Add" click="onAddEvent()"/>
+			<mx:Button label="Cancel" click="close()"/>
+		</mx:HBox>
+
+	</mx:HBox>
+	
+ 	<vd:VirtualDevice virtualDeviceButtonEvent="onVirtualDeviceButtonEvent(event)"/>
+	
+</mx:TitleWindow>
