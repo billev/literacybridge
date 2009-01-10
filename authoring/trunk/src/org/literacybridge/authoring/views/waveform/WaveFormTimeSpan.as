@@ -9,6 +9,7 @@ package org.literacybridge.authoring.views.waveform {
 	import mx.core.IToolTip;
 	import mx.managers.ToolTipManager;
 	
+	import org.literacybridge.authoring.events.SelectContainerEvent;
 	import org.literacybridge.authoring.schema.ContainerTimeSpan;
 	
 	public class WaveFormTimeSpan extends VisualizerBase {
@@ -43,6 +44,14 @@ package org.literacybridge.authoring.views.waveform {
 			this.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
 			this.addEventListener(MouseEvent.MOUSE_UP, mouseUp);
 			autoScrollTimer.addEventListener(TimerEvent.TIMER, autoScroll);
+		}
+		
+		public function selectSpan(span:ContainerTimeSpan):void {
+			this.selectedSpan = span;
+			if (span != null) {
+				this.selectedSpanStart = span.start;
+				this.selectedSpanEnd = span.end;
+			}
 		}
 		
 		public function mouseDown(event:MouseEvent):void {
@@ -80,7 +89,10 @@ package org.literacybridge.authoring.views.waveform {
 				updateToolTip();
 			}
 			
-			if (selectedSpan != null) draw();
+			if (selectedSpan != null) {
+				dispatchEvent(new SelectContainerEvent(SelectContainerEvent.SELECT, selectedSpan));
+				draw();
+			}
 		}
 
 		public function mouseOut(event:MouseEvent):void {

@@ -4,6 +4,7 @@
 	initialize="init()">
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.events.SelectContainerEvent;
 			import org.literacybridge.authoring.events.SchemaUpdateEvent;
 			import org.literacybridge.authoring.schema.actions.CallBlockAction;
 			import com.asfusion.mate.actions.CallBack;
@@ -133,6 +134,10 @@
                 dispatchEvent(new SchemaUpdateEvent());
 			}
 			
+			private function onClick(event:Event):void {
+				dispatchEvent(new SelectContainerEvent(SelectContainerEvent.SELECT, hyperlinkDataGrid.selectedItem as Hyperlink));
+			}
+			
 			
 		]]>
 	</mx:Script>
@@ -151,7 +156,8 @@
 						editable="true"
 						dataTipFunction="buildToolTip"
 						itemEditBeginning="disableEditing(event)"
-						itemEditEnd="itemEditEnd(event)">
+						itemEditEnd="itemEditEnd(event)"
+						click="onClick(event)">
 			<mx:columns>
 				<mx:DataGridColumn id="typeCol" sortable="false" showDataTips="true" editable="false" headerText="Type" labelFunction="displayTypeName"/>
 				<mx:DataGridColumn id="nameCol" sortable="false" showDataTips="true" editable="false" headerText="Name" labelFunction="displayActionName"/>

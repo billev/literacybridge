@@ -5,5 +5,8 @@
     <hyperlink start="7000" end="10000">
       <goto containerName="test"/>
     </hyperlink>
+    <hyperlink start="50000" end="70000">
+      <goto containerName="dsads"/>
+    </hyperlink>
   </file>
 </package>

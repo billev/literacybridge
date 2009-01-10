@@ -4,6 +4,8 @@
    xmlns="http://mate.asfusion.com/">
     <mx:Script>
     	<![CDATA[
+    		import org.literacybridge.authoring.events.SelectContainerEvent;
+    		import org.literacybridge.authoring.events.SelectContainerEvent;
     		import org.literacybridge.authoring.views.waveform.WaveFormView;
     		import org.literacybridge.authoring.events.SchemaUpdateEvent;
 
@@ -15,4 +17,8 @@
 	<EventHandlers type="{SchemaUpdateEvent.UPDATE}" debug="true">
 		<CommandInvoker generator="org.literacybridge.authoring.events.SchemaUpdateCommand"/>
 	</EventHandlers>
+	<EventHandlers type="{SelectContainerEvent.SELECT}" debug="true">
+		<CommandInvoker generator="org.literacybridge.authoring.events.SelectContainerCommand"/>
+	</EventHandlers>
+
 </EventMap>
