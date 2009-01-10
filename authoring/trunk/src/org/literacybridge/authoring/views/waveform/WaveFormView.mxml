@@ -57,7 +57,7 @@
 				scrollBar.minScrollPosition = 0;
 				scrollBar.maxScrollPosition = waveFormState.length - blocks.width * waveFormState.interval;
 
-				
+				position.draw();
 				blocks.draw();
 				waveForm.draw();
 				hyper.draw();				

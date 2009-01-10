@@ -11,7 +11,7 @@ package org.literacybridge.authoring.views.waveform
 	import org.literacybridge.authoring.views.PlayerControl;
 	
 	public class WaveFormPosition extends VisualizerBase {
-		[Bindable] public var pos:int = 0; 
+		[Bindable] public var pos:int = -1; 
 		public var playerControl:PlayerControl;
 		private var positionToolTip:IToolTip = null;
 		private var mouseButtonDown:Boolean = false;
