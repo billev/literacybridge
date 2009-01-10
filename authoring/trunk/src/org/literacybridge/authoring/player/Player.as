@@ -55,7 +55,7 @@ package org.literacybridge.authoring.player
 		{
 			if (channel != null) 
 			{
-				position = channel.position;
+				//position = channel.position;
 				channel.stop();
 				setNewState(PlayerStates.PLAYER_PAUSING); 
 			}
