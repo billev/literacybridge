@@ -49,7 +49,6 @@ package org.literacybridge.authoring.audio {
 		
 		private function onLoadingComplete(event:Event):void {
 			file.spectrum = AudioSpectrum.load(sound);
-			
 			sound.removeEventListener(Event.COMPLETE, onLoadingComplete);
 			index++;
 			var fileName:String = null;

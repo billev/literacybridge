@@ -39,7 +39,7 @@
 			import mx.resources.ResourceManager;
 			
 			private var win:ApplicationSettingsScreen;
-			private var welcome:Wizard;
+			//private var welcome:Wizard;
 			private var loadingPackage:ContentPackage = null;
 			
 			private var file:File;
@@ -108,9 +108,9 @@
 				stage.nativeWindow.addEventListener(Event.CLOSING, windowClosingHandler);
 				loadAndApplySettings();
 				if (Settings.getInstance().showWizard) {
-					welcome = Wizard(PopUpManager.createPopUp(this, Wizard, true));
-					welcome.x=50;
-					welcome.y=50;
+//					welcome = Wizard(PopUpManager.createPopUp(this, Wizard, true));
+//					welcome.x=50;
+//					welcome.y=50;
 				} else {
 			/*		
 					var openedFile:File = Settings.getInstance().lastOpenFile;
