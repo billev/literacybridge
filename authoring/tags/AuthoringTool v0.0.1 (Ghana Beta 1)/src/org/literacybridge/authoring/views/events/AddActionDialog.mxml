@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  xmlns:ac="org.literacybridge.authoring.views.events.actions.*"
+	      borderStyle="solid" borderColor="#646464" borderThickness="1"
+	      showCloseButton="true"
+	      title="Add Action" fontSize="12"
+	      initialize="init()" xmlns:events="org.literacybridge.authoring.views.events.*">
+	
+	
+	<mx:states>
+	
+		<!-- only for Volume -->
+		<mx:State name="VolumeState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox id="volumnBox" width="100%" height="100%">
+					<mx:Label id="newVolumeValueLabel" text="{resourceManager.getString('resources', 'NEW_VALUE')}" textAlign="left" />
+					<mx:ComboBox id="volumeComboBox" labelFunction="getVolumeLabel" dataProvider="{volumeList}" width="100%" />	
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
+		</mx:State>
+	
+		<!-- only for Speed --> 
+		<mx:State name="SpeedState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox id="speedBox" width="100%" height="100%">
+					<mx:Label id="newSpeedValueLabel" text="{resourceManager.getString('resources', 'NEW_VALUE')}" textAlign="left" />
+					<mx:ComboBox id="speedComboBox" labelFunction="getSpeedLabel" dataProvider="{speedList}" />	
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
+		</mx:State>
+		
+		<!-- CallBlock -->	
+		<mx:State name="CallBlockState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:VBox id="callBlockBox" width="100%" height="100%">		
+					<mx:HBox width="100%" height="100%" id="callBlockBlockNameVBox">
+						<mx:Label id="newBlockNameLabel" text="{resourceManager.getString('resources', 'BLOCK_NAME')}" textAlign="left" />
+						<mx:TextInput id="callBlockTI"  width="100%" />
+					</mx:HBox>
+					<mx:HBox width="100%" height="100%" id="callBlockRewindVBox">
+						<mx:Label id="newReturnRewindSecondsLabel" text="{resourceManager.getString('resources', 'RETURN_REWIND_SECONDS')}" textAlign="left"/>
+						<mx:TextInput id="newReturnRewindSecondsTextfield"  width="100%" restrict="0123456789"/>			
+					</mx:HBox>		
+				</mx:VBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>	
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>	
+		</mx:State>	
+
+		<!-- Goto -->	
+		<mx:State name="GotoState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="gotoVBox">
+					<mx:Label id="newGotoLabel" text="{resourceManager.getString('resources', 'BLOCK_NAME')}" textAlign="left" />
+					<mx:TextInput id="gotoTI"  width="100%" />
+				</mx:HBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
+		</mx:State>		
+
+
+		<!-- Next Block -->
+		<mx:State name="NextBlockState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="nextBlockVBox">
+					<mx:Label id="newNextBlockLabel" text="{resourceManager.getString('resources', 'CLASS_NAME')}" textAlign="left" />
+					<mx:TextInput id="nextBlockTI" width="100%" />
+				</mx:HBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
+		</mx:State>		
+
+
+		<!-- Prev Block -->
+		<mx:State name="PrevBlockState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="prevBlockVBox">
+					<mx:Label id="newPrevBlockLabel" text="{resourceManager.getString('resources', 'CLASS_NAME')}" textAlign="left" />
+					<mx:TextInput id="prevBlockTI" width="100%" />
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>
+		</mx:State>
+				
+				
+		<!-- Relative Time Jump -->				
+		<mx:State name="RelTimeJumpState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:HBox width="100%" height="100%" id="relTimeJumpVBox">
+					<mx:Label id="newRelTimeJumpLabel" text="{resourceManager.getString('resources', 'JUMP_MILLI_SECONDS')}" textAlign="left" />
+					<mx:TextInput id="newRelTimeJumpTextfield"  width="100%" restrict="0123456789"/>			
+				</mx:HBox>	
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>	
+		</mx:State>	
+	
+	
+		<!-- Set Light -->
+		<mx:State name="LightState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:VBox width="100%" height="100%" id="setLightBox">
+					<mx:HBox width="100%" height="100%" id="lightStateBox">
+						<mx:Label id="newLightStateLabel" text="{resourceManager.getString('resources', 'LIGHT_STATE')}" textAlign="left" />
+						<mx:ComboBox id="newLightStateComboBox"  labelFunction="getLightStateLabel" dataProvider="{lightStateList}" width="100%" />
+					</mx:HBox>		
+					<mx:HBox width="100%" height="100%" id="lightColorBox">
+						<mx:Label id="newLightColorLabel" text="{resourceManager.getString('resources', 'LIGHT_COLOR')}" textAlign="left" />
+						<mx:ComboBox id="newLightColorComboBox" labelFunction="getLightColorLabel" dataProvider="{lightColorList}" width="100%" />
+					</mx:HBox>									
+				</mx:VBox>		
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>		
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>					
+		</mx:State>		
+				
+				
+		<!-- USB mode -->
+		<mx:State name="USBState">
+			<mx:AddChild position="after" relativeTo="{actionComboBox}" creationPolicy="all">		
+				<mx:VBox width="100%" height="100%" id="usbBox">
+					<mx:HBox width="100%" height="100%" id="usbModeBox">
+						<mx:Label id="newUSBDeviceLabel" text="{resourceManager.getString('resources', 'USB_MODE')}" textAlign="left" />
+						<mx:ComboBox id="newUSBDeviceComboBox"  labelFunction="getUSBModeLabel" dataProvider="{usbModeList}" width="100%" />
+					</mx:HBox>		
+					<mx:HBox width="100%" height="100%" id="usbActiveBox">
+						<mx:Label id="newUSBActiveLabel" text="{resourceManager.getString('resources', 'USB_ACTIVE')}" textAlign="left" />
+						<mx:ComboBox id="newUSBActiveComboBox" labelFunction="getUSBActiveLabel" dataProvider="{[0,1]}" width="100%" />
+					</mx:HBox>									
+				</mx:VBox>
+			</mx:AddChild>
+			<mx:SetProperty name="height" value="100%"/>	
+			<mx:SetProperty target="{mainBox}" name="height" value="100%"/>								
+		</mx:State>					
+	</mx:states>
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.actions.SetUSBModeAction;
+			import org.literacybridge.authoring.schema.actions.SetLightAction;
+			import org.literacybridge.authoring.schema.actions.RelativeTimeJumpAction;
+			import org.literacybridge.authoring.schema.actions.NextPreviousBlockAction;
+			import org.literacybridge.authoring.schema.actions.GotoAction;
+			import org.literacybridge.authoring.schema.actions.CallBlockAction;
+			import org.literacybridge.authoring.schema.actions.SimpleAction;
+			import mx.events.CloseEvent;
+			import org.literacybridge.authoring.schema.actions.AdjustSpeedVolumeAction;
+			import mx.collections.ArrayCollection;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			import org.literacybridge.authoring.schema.actions.Action;
+			import org.literacybridge.authoring.schema.ContentBlock;
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import org.literacybridge.authoring.schema.SubBlockAppendable;
+			import mx.managers.PopUpManager;
+			
+			// collection of already existing actions (must not be empty)
+			public var actions:ArrayCollection;
+			
+			// if action == null we are in 'new' mode; otherwise we are in edit mode
+			private var action:Action = null; 
+			
+			
+			[Bindable] private static var actionList:ArrayCollection = Action.getActionList();
+			[Bindable] private static var volumeList:ArrayCollection = AdjustSpeedVolumeAction.getVolumeList();	// volumn
+			[Bindable] private static var speedList:ArrayCollection = AdjustSpeedVolumeAction.getSpeedList();	// speed	
+			[Bindable] private static var lightStateList:ArrayCollection = SetLightAction.getStateList();
+			[Bindable] private static var lightColorList:ArrayCollection = SetLightAction.getColorList();
+			[Bindable] private static var usbModeList:ArrayCollection = SetUSBModeAction.getModeList();
+			
+			
+			
+			private function init():void {
+				
+			}
+						
+			private function applyAction():void {
+				var curSel:int = actionComboBox.selectedItem as int;
+				var editAction:Boolean = (action != null);	// true if we had edited a parameter of an existing action
+				switch (curSel) {
+					
+					// SimpleActions ... - these action can only be created, NOT edited
+					
+					case Action.Stop: // Stop
+						actions.addItem(new SimpleAction(SimpleAction.Stop));
+					break;
+					case Action.Pause: // Pause
+						actions.addItem(new SimpleAction(SimpleAction.Pause));
+					break;
+					case Action.Return: // Return
+						actions.addItem(new SimpleAction(SimpleAction.Return));
+					break;
+					case Action.PlayPause: // PlayPause
+						actions.addItem(new SimpleAction(SimpleAction.PlayPause));
+					break;
+					
+					// 'Parameter' actions ...
+									
+					// Volume
+					case Action.SetVolume:
+						var newVolumeValue:int = volumeComboBox.selectedItem as int;
+						if (!editAction) { 
+							var newVolumeAction:AdjustSpeedVolumeAction = new AdjustSpeedVolumeAction(AdjustSpeedVolumeAction.Volume);
+							newVolumeAction.relative = newVolumeValue;
+							actions.addItem(newVolumeAction);
+						} else {
+							(action as AdjustSpeedVolumeAction).relative = newVolumeValue;
+						}
+					break;
+					//Speed
+					case Action.SetSpeed:
+						var newSpeedValue:int = speedComboBox.selectedItem as int;
+						if (!editAction) {
+							var newSpeedAction:AdjustSpeedVolumeAction = new AdjustSpeedVolumeAction(AdjustSpeedVolumeAction.Speed);
+							newSpeedAction.relative = newSpeedValue;
+							actions.addItem(newSpeedAction);
+						} else {
+							(action as AdjustSpeedVolumeAction).relative = newSpeedValue;
+						}
+					break;
+					// CallBlock
+					case Action.CallBlock:
+						var newBlockName:String = callBlockTI.text;
+						var newReturnRewindSecondsValue:int = parseInt(newReturnRewindSecondsTextfield.text) as int;
+						if (!editAction) {
+							var newCallBlock:CallBlockAction = new CallBlockAction();
+							newCallBlock.blockName = newBlockName;
+							newCallBlock.returnRewindSeconds = newReturnRewindSecondsValue;
+							actions.addItem(newCallBlock);
+						} else {
+							(action as CallBlockAction).blockName = newBlockName;
+							(action as CallBlockAction).returnRewindSeconds = newReturnRewindSecondsValue;
+						}						
+					break;
+					// Goto
+					case Action.Goto:
+						var newGotoContainerName:String = gotoTI.text;
+						if (!editAction) {
+							var newGotoAction:GotoAction = new GotoAction();
+							newGotoAction.containerName = newGotoContainerName;
+							actions.addItem(newGotoAction);
+						} else {
+							(action as GotoAction).containerName = newGotoContainerName;
+						}						
+					break;	
+					// Next Block
+					case Action.NextBlock:
+						var newNextContainerName:String = nextBlockTI.text;
+						if (!editAction) {
+							var newNextBlockAction:NextPreviousBlockAction = new NextPreviousBlockAction(NextPreviousBlockAction.Next);
+							newNextBlockAction.className = newNextContainerName;
+							actions.addItem(newNextBlockAction);
+						} else {
+							(action as NextPreviousBlockAction).className = newNextContainerName;
+						}						
+					break;	
+					// Prev. Block
+					case Action.PrevBlock:
+						var newPrevContainerName:String = prevBlockTI.text;
+						if (!editAction) {
+							var newPrevBlockAction:NextPreviousBlockAction = new NextPreviousBlockAction(NextPreviousBlockAction.Previous);
+							newPrevBlockAction.className = newPrevContainerName;
+							actions.addItem(newPrevBlockAction);
+						} else {
+							(action as NextPreviousBlockAction).className = newPrevContainerName;
+						}						
+					break;	
+					// Relative Time Jump
+					case Action.RelTimeJump:
+						var newReativeTimeJumpTime:int = parseInt(newRelTimeJumpTextfield.text) as int;
+						if (!editAction) {
+							var newRelTimeJump:RelativeTimeJumpAction = new RelativeTimeJumpAction();
+							newRelTimeJump.relatveTime= newReativeTimeJumpTime;
+							actions.addItem(newRelTimeJump);
+						} else {
+							(action as RelativeTimeJumpAction).relatveTime = newReativeTimeJumpTime;
+						}						
+					break;						
+					// Light
+					case Action.SetLight:
+						var newLightState:int = newLightStateComboBox.selectedItem as int;
+						var newLightColor:int = newLightColorComboBox.selectedItem as int;
+						if (!editAction) {
+							var newLightAction:SetLightAction = new SetLightAction();
+							newLightAction.mode = newLightState;
+							newLightAction.color = newLightColor;
+							actions.addItem(newLightAction);
+						} else {
+							(action as SetLightAction).mode = newLightState;
+							(action as SetLightAction).color = newLightColor;
+						}						
+					break;						
+					// USB
+					case Action.SetUSBMode:
+						var newUsbMode:int = newUSBDeviceComboBox.selectedItem as int;
+						var isActive:Boolean = ((newUSBActiveComboBox.selectedItem as int) == 1);
+						if (!editAction) {
+							var newUSBAction:SetUSBModeAction = new SetUSBModeAction();
+							newUSBAction.mode = newUsbMode;
+							newUSBAction.active = isActive;
+							actions.addItem(newUSBAction);
+						} else {
+							(action as SetUSBModeAction).mode = newUsbMode;
+							(action as SetUSBModeAction).active = isActive;
+						}						
+					break;	
+					
+					default:
+						// Should never be reached
+				}
+				close();
+			}
+			
+			private function close():void {
+				this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+			}
+			
+			private function getActionLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case Action.Stop 				: return resourceManager.getString('resources', 'ACTION_STOP');
+					case Action.Pause				: return resourceManager.getString('resources', 'ACTION_PAUSE');
+					case Action.Return				: return resourceManager.getString('resources', 'ACTION_RETURN');
+					case Action.PlayPause			: return resourceManager.getString('resources', 'ACTION_PLAYPAUSE');
+					
+					case Action.SetSpeed			: return resourceManager.getString('resources', 'ACTION_SETSPEED');
+					case Action.SetVolume			: return resourceManager.getString('resources', 'ACTION_SETVOLUMN');
+					case Action.CallBlock			: return resourceManager.getString('resources', 'ACTION_CALLBLOCK');
+					case Action.Goto				: return resourceManager.getString('resources', 'ACTION_GOTO');
+					case Action.NextBlock			: return resourceManager.getString('resources', 'ACTION_NEXTBLOCK');
+					case Action.PrevBlock			: return resourceManager.getString('resources', 'ACTION_PREVBLOCK');
+					case Action.RelTimeJump			: return resourceManager.getString('resources', 'ACTION_RELTIMEJUMP');
+					case Action.SetLight			: return resourceManager.getString('resources', 'ACTION_SETLIGHT');
+					case Action.SetUSBMode			: return resourceManager.getString('resources', 'ACTION_SETUSBMODE');
+
+					default : return "";
+				}
+			}
+			
+			// Volume
+			private function getVolumeLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case AdjustSpeedVolumeAction.Up		: return resourceManager.getString('resources', 'VOLUME_UP'); 
+					case AdjustSpeedVolumeAction.Down	: return resourceManager.getString('resources', 'VOLUME_DOWN');
+					case AdjustSpeedVolumeAction.Normal : return resourceManager.getString('resources', 'VOLUME_NORMAL');
+					
+					default : return "";
+				}
+			}
+			
+			// Speed			
+			private function getSpeedLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case AdjustSpeedVolumeAction.Up		: return resourceManager.getString('resources', 'SPEED_UP'); 
+					case AdjustSpeedVolumeAction.Down	: return resourceManager.getString('resources', 'SPEED_DOWN');
+					case AdjustSpeedVolumeAction.Normal : return resourceManager.getString('resources', 'SPEED_NORMAL');
+					
+					default : return "";
+				}
+			} 
+
+
+			// Light State
+			private function getLightStateLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case SetLightAction.On		: return resourceManager.getString('resources', 'LIGHT_STATE_ON');
+					case SetLightAction.Off 	: return resourceManager.getString('resources', 'LIGHT_STATE_OFF');
+					
+					default : return "";
+				}
+			}
+			
+			// Light Color
+			private function getLightColorLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case SetLightAction.Red		: return resourceManager.getString('resources', 'LIGHT_COLOR_RED');
+					case SetLightAction.Green 	: return resourceManager.getString('resources', 'LIGHT_COLOR_GREEN');
+					
+					default : return "";
+				}
+			}
+			
+			// USB mode
+			private function getUSBModeLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case SetUSBModeAction.Host		: return resourceManager.getString('resources', 'USB_MODE_HOST');
+					case SetUSBModeAction.Device	: return resourceManager.getString('resources', 'USB_MODE_DEVICE');
+					
+					default : return "";
+				}				
+			}
+
+			// USB active
+			private function getUSBActiveLabel(item:Object):String {
+				var a:int = item as int;
+				switch (a) {
+					case 0	: return resourceManager.getString('resources', 'NO');
+					case 1	: return resourceManager.getString('resources', 'YES');
+					
+					default : return "";
+				}				
+			}
+	
+			public function setAction(action:Action=null):void {
+				this.action = action; 
+				if (action == null) {	// if we have no action, we want to create one
+					addEditBtn.label = resourceManager.getString('resources', 'ADD');
+					title = resourceManager.getString('resources', 'ADD_ACTION');
+					actionComboBox.enabled = true;
+				} else {	// we have action, so let's edit it				
+					addEditBtn.label = resourceManager.getString('resources', 'EDIT');
+					title = resourceManager.getString('resources', 'EDIT_ACTION'); 
+					actionComboBox.enabled = false;
+
+					// pre selected the type of the existing action
+					actionComboBox.selectedItem = Action.getActionConstant(action);
+					// open corresponding state
+					switchState(Action.getActionConstant(action));
+					// if there are parameter input fields, init them now; there must be some!!
+					initParameterInputComponents(action);	
+				}
+			}
+			
+			private function initParameterInputComponents(action:Action):void {
+				// CallBlock
+				if (action is CallBlockAction) {
+					callBlockTI.text = (action as CallBlockAction).blockName;
+					newReturnRewindSecondsTextfield.text = String((action as CallBlockAction).returnRewindSeconds);
+				}
+				// Goto
+				else if (action is GotoAction) {
+					gotoTI.text = (action as GotoAction).containerName;	
+				}
+				// Next + Previous Block
+				else if (action is NextPreviousBlockAction) {
+					if ((action as NextPreviousBlockAction).mode == NextPreviousBlockAction.Next) {
+						nextBlockTI.text = (action as NextPreviousBlockAction).className;	
+					} else {
+						prevBlockTI.text = (action as NextPreviousBlockAction).className;
+					}
+				}
+				// Relative Time Jump
+				else if (action is RelativeTimeJumpAction) {
+					newRelTimeJumpTextfield.text = String((action as RelativeTimeJumpAction).relatveTime);
+				}
+				// Light state+color
+				else if (action is SetLightAction) {
+					newLightStateComboBox.selectedItem = (action as SetLightAction).mode;
+					newLightColorComboBox.selectedItem = (action as SetLightAction).color;
+				}
+				// usb
+				else if (action is SetUSBModeAction) {
+					newUSBDeviceComboBox.selectedItem = (action as SetUSBModeAction).mode
+					if ((action as SetUSBModeAction).active == true) {
+						newUSBActiveComboBox.selectedItem = 1;	
+					} else {
+						newUSBActiveComboBox.selectedItem = 0;
+					}
+						
+				}
+				
+				else {
+					// should never be reached...
+				}
+			}
+			
+			private function onActionChanged(event:Event):void {
+				var curSel:int = event.currentTarget.selectedItem as int;
+				switchState(curSel);	
+			}
+			
+			private function switchState(state:int):void {
+				this.currentState = ''; // HACK: force a switch to the default state (showing nothing); there must be a better way
+				switch (state) {
+					case Action.SetVolume:
+						this.currentState = 'VolumeState';
+					break;
+					case Action.SetSpeed:
+						this.currentState = 'SpeedState';
+					break;
+					case Action.CallBlock:
+						this.currentState = 'CallBlockState';
+					break;
+					case Action.Goto:
+						this currentState = 'GotoState';
+					break;
+					case Action.NextBlock:
+						this currentState = 'NextBlockState';
+					break;	
+					case Action.PrevBlock:
+						this.currentState = 'PrevBlockState';
+					break;		
+					case Action.RelTimeJump:
+						this.currentState = 'RelTimeJumpState';
+					break;			
+					case Action.SetLight:
+						this.currentState = 'LightState';
+					break;
+					case Action.SetUSBMode:
+						this.currentState = 'USBState';
+					break;
+					default:
+						this.currentState = ''; 
+				}	
+			}
+		]]>
+	</mx:Script>
+	      
+	<mx:VBox fontSize="12" id="mainBox" height="100%">
+		<!-- Actions ComboBox -->
+		<mx:ComboBox id="actionComboBox" labelFunction="getActionLabel"	dataProvider="{actionList}" 
+						width="100%" rowCount="13"	change="onActionChanged(event)" />
+		<!-- Add/Edit/Cancel -->	
+		<mx:HBox width="100%" height="25">		
+			<mx:Button label="{resourceManager.getString('resources', 'ADD')}" click="applyAction()" id="addEditBtn"/>
+			<mx:Button label="{resourceManager.getString('resources', 'CANCEL')}" click="close()"/>
+		</mx:HBox>
+	</mx:VBox>
+</mx:TitleWindow>
+
+
+
+
+
+
+
+

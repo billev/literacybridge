@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	      borderStyle="solid" borderColor="#646464" borderThickness="1"
+	      showCloseButton="true"
+	      title="Add File" fontSize="12"
+	      close="close()">
+	      
+  	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
+			import mx.collections.ArrayCollection;
+			import org.literacybridge.authoring.schema.ContentFile;
+			import org.literacybridge.authoring.schema.ContentPackage;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] public var parentContainer:ContentPackage;
+			
+			private var file:File;
+			
+			private function close():void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function addFile():void {
+				var f:ContentFile = new ContentFile();
+				f.label = fileName.text;
+				parentContainer.addFile(f);
+				f.parent = parentContainer; // child must know it parent
+                var dir:File = parentContainer.packageFile.parent;
+                var files:ArrayCollection = new ArrayCollection();
+                files.addItem(f);
+                var loader: SynchronousFileLoader = new SynchronousFileLoader(files, dir.url);
+                loader.addEventListener(Event.COMPLETE, fileLoadingComplete);
+                loader.load();
+            }
+
+            private function fileLoadingComplete(event:Event):void {
+				close();
+            }
+			
+			private function fileBrowse():void {
+	            file = new File();  
+				var mp3Filter:FileFilter = new FileFilter("MP3", "*.mp3")		
+				file.addEventListener(Event.SELECT, onFileSelect);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForOpen(dialogTitle, ([mp3Filter]));	
+				} 
+				catch (err:Error) {
+					trace("Something went wrong browsing for a file");
+				}
+			}
+
+			private function onFileSelect(event:Event):void {
+				file.removeEventListener(Event.SELECT, onFileSelect);
+	         	var openedFile:File = event.target as File;
+	         	fileName.text=openedFile.name.substr(0, openedFile.name.length - openedFile.extension.length - 1);
+	        }
+		]]>
+	</mx:Script>
+
+	      
+	<mx:VBox fontSize="10">
+		<mx:Form>
+			<mx:FormItem label="Parent:">
+				<mx:Label text="{parentContainer.label}"/>
+			</mx:FormItem>
+			<mx:FormItem label="File Name:">
+				<mx:HBox>
+					<mx:TextInput id="fileName"/>
+					<mx:Button label="Browse..." click="fileBrowse()"/>	
+				</mx:HBox>
+			</mx:FormItem>
+		</mx:Form>
+		<mx:HBox width="100%">		
+			<mx:Button label="Add" click="addFile()"/>
+			<mx:Button label="Cancel" click="close()"/>
+		</mx:HBox>
+	</mx:VBox>
+</mx:TitleWindow>
