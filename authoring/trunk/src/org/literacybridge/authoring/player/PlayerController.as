@@ -33,11 +33,7 @@ package org.literacybridge.authoring.player
 		{
 			if (player.isInitialized())
 			{
-				if (player.state == PlayerStates.PLAYER_PAUSING)
-				{
-					player.start();
-				}
-				else if (!player.playFromPosition(startPosition))
+				if (!player.playFromPosition(startPosition))
 				{
 					player.start();	
 				}
