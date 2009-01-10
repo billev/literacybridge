@@ -54,9 +54,21 @@ package org.literacybridge.authoring.views.waveform
 				curveLeft = Math.max(0, Math.min(x1 + curveSize, curveSize));
 				x1 = 0;
 			}
+			
+			if (x2 <= this.width) {
+				drawRightLine = true;
+			} else {
+				drawRightLine = false;
+				curveRight = Math.max(0, Math.min(this.width - x2 + curveSize, curveSize));
+				x2 = this.width;
+			}
 
 			if (x2 - curveRight < 0) {
 				curveRight = x2;
+			}
+
+			if (x1 + curveLeft > this.width) {
+				curveLeft = this.width - x1;
 			}
 
 			// draw round block clockwise
@@ -82,8 +94,19 @@ package org.literacybridge.authoring.views.waveform
             this.graphics.lineTo(x2 - curveRight, 0);
             // top-right curve
             this.graphics.curveTo(x2, 0, x2, curveRight);
-            // right line
-            this.graphics.lineTo(x2, this.height - curveRight);
+			if (drawRightLine) {
+	            // right line
+	            this.graphics.lineTo(x2, this.height - curveRight);				
+			} else {
+				this.graphics.lineStyle( 1 , 0, 0.2);
+				this.graphics.lineTo(x2, this.height - curveRight);
+				if (selected) {
+					this.graphics.lineStyle( 2, 0xff0000 );
+				} else {
+					this.graphics.lineStyle( 2, 0x1d02be );
+				}
+			}
+            
             // lower-right curve
             this.graphics.curveTo(x2, this.height, x2-curveRight, this.height);
             // lower line
