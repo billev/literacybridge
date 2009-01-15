@@ -56,6 +56,7 @@
 				if (container is Hyperlink) {
 					outline.outlineTree.selectedItem=container.parent;
 					properties.update(container.parent);
+					actions.update(container.parent);
 					properties.fileProps.hyperlinkDataGrid.selectedItem = container;
 					waveform.hyper.selectSpan(container as ContainerTimeSpan);
 					waveform.blocks.selectSpan(null);
@@ -63,6 +64,7 @@
 				} else {
 					outline.outlineTree.selectedItem=container;
 					properties.update(container);
+					actions.update(container);
 					waveform.hyper.selectSpan(null);
 				}
 				

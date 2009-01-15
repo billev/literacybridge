@@ -4,18 +4,22 @@
 	
 	<mx:Script>
 		<![CDATA[
+			[Bindable] private var text:String = ""; 
+		
 			public function setProgress(file:String, p:int, numFiles:int):void {
 				if (p < numFiles) {
-					textBox.htmlText="Loading file " +file + " <b>(" + (p + 1) + " of " + numFiles + ")</b>";
+					text="Loading file " +file + " <b>(" + (p + 1) + " of " + numFiles + ")</b>";
 				}
-				progress.setProgress(p, numFiles);
+				if (progress != null) {
+					progress.setProgress(p, numFiles);
+				}
 			}
 		]]>
 	</mx:Script>
 	
 	<mx:VBox>
 		<mx:ProgressBar width="100%" label="" id="progress" mode="manual"/>	
-		<mx:Text id="textBox"/>	
+		<mx:Text id="textBox" htmlText="{text}"/>	
 	</mx:VBox>
 	
 </mx:TitleWindow>

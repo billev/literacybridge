@@ -40,15 +40,23 @@ import org.literacybridge.authoring.schema.ContainerTimeSpan;
 					this.graphics.lineStyle( 3, color2, 1);
 				}
 				if (x_start >= 0) {
-		        	this.graphics.moveTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 7);
-	        		this.graphics.lineTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 13);
+					if (x_start <= this.width) {
+			        	this.graphics.moveTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 7);
+		        		this.graphics.lineTo(x_start, WaveFormView.WAVEFORM_HEIGHT + 13);
+		   			} else {
+		   				x_start = this.width;
+		   			}
 	   			} else {
 	   				x_start = 0;
 	   			}
 				
 				if (x_end >= 0) {
-		        	this.graphics.moveTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 7);
-	        		this.graphics.lineTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 13);						
+					if (x_end <= this.width) {
+			        	this.graphics.moveTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 7);
+		        		this.graphics.lineTo(x_end, WaveFormView.WAVEFORM_HEIGHT + 13);
+	   				} else {
+	   					x_end = this.width;
+	   				}						
 				} else {
 					x_end = 0;
 				}
