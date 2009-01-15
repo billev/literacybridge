@@ -32,6 +32,8 @@
 				zoomSlider.minimum=128;
 				zoomSlider.snapInterval=128;
 				zoomSlider.maximum = 1024;
+				scrollBar.pageScrollSize = 5000;
+				scrollBar.lineScrollSize = 500;
 			}
 			
 			public function update():void {
