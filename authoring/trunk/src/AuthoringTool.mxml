@@ -15,6 +15,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.views.AboutScreen;
 			import air.update.ApplicationUpdaterUI;
 			import org.literacybridge.authoring.schema.ContainerTimeSpan;
 			import org.literacybridge.authoring.schema.Hyperlink;
@@ -47,6 +48,9 @@
 			
 			private static var instance:AuthoringTool;
 			private var appUpdater:ApplicationUpdaterUI
+			
+			public static var appVersion:String;
+			public static var appName:String;
 			
 			public static function getInstance():AuthoringTool {
 				return instance;
@@ -112,6 +116,10 @@
 				appUpdater = new ApplicationUpdaterUI();
 				appUpdater.configurationFile = new File("app:/updateConfig.xml"); 
 				appUpdater.initialize();
+				var appXML:XML = NativeApplication.nativeApplication.applicationDescriptor;
+				var ns:Namespace = appXML.namespace();
+				appVersion = appXML.ns::version;
+				appName = appXML.ns::name;
 
 				stage.nativeWindow.addEventListener(Event.CLOSING, windowClosingHandler);
 				loadAndApplySettings();
@@ -166,6 +174,9 @@
 					case ExtendedMenuEvent.MENU_UPDATE :
 						showUpdateScreen();
 						break;
+					case ExtendedMenuEvent.MENU_ABOUT :
+						showAboutScreen();
+						break;
 
 				}
 			}
@@ -176,6 +187,11 @@
 
 			private function showSettingsScreen() : void {
 				win = ApplicationSettingsScreen(PopUpManager.createPopUp(this, ApplicationSettingsScreen, true));
+			}
+
+			private function showAboutScreen() : void {
+				var about:AboutScreen = AboutScreen(PopUpManager.createPopUp(this, AboutScreen, true));
+				PopUpManager.centerPopUp(about);
 			}
 
 			private function showVirtualDevice() : void {
