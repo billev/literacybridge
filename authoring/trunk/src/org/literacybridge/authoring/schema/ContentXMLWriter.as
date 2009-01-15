@@ -20,9 +20,12 @@ package org.literacybridge.authoring.schema {
 		}
 		
 		private function createXMLData(content:ContentPackage):XML {
-			var data : XML;			
+			var data : XML;		
 			
-			data = <{SchemaConstants.Package}/>
+			data = <{SchemaConstants.Package}
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 					xsi:schemaLocation="http://www.literacybridge.org/2008/book file:/lbsvn/talkingbook/schemas/trunk/TalkingBook.xsd"
+			/>
 			appendContainerAttributes(data, content);
 
 			data.@[SchemaConstants.Package_Att_Precision] = content.precision;
