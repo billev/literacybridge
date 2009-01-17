@@ -243,10 +243,10 @@ package org.literacybridge.authoring.views.waveform {
 		}
 
 		override public function draw():void {
-			if (spans == null) return; // nothing to do
-
             this.graphics.clear();
 			this.displayedSpans.removeAll();
+
+			if (spans == null) return; // nothing to do
 			
 			for (var i:int = 0; i < spans.length; i++) {
 				var b:ContainerTimeSpan = spans.getItemAt(i) as ContainerTimeSpan;
