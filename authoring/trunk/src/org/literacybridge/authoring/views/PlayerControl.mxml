@@ -59,7 +59,7 @@
 				}
 			}
 			
-			private function stop():void 
+			public function stop():void 
 			{
 				if (playerController != null)	
 				{

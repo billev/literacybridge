@@ -17,6 +17,7 @@
 			[Bindable]
 			public var offset:int;
 			
+			public var prevFile:ContentFile;
 			public var file:ContentFile;
 			[Bindable]
 			public var waveFormState:WaveFormState = new WaveFormState(this as WaveFormView);
@@ -37,16 +38,22 @@
 			}
 			
 			public function update():void {
+				if (player != null) {
+					if (file != prevFile) {
+						player.stop();
+						player.init(file.spectrum.audio);
+					}
+				}
 				waveFormState.length = file.spectrum.audio.length;
 				waveFormState.autoZoom(blocks.width);
 				zoomSlider.value = waveFormState.interval;
 				waveForm.spectrum=file.spectrum;
 				hyper.spectrum = file.spectrum;
-				player.init(file.spectrum.audio);
 				position.init();
 				blocks.init();
 				hyper.init();
 				draw();
+				prevFile = file;
 			}
 			
 			public function draw():void {
