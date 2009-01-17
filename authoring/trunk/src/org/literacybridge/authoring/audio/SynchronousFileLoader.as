@@ -25,7 +25,8 @@ package org.literacybridge.authoring.audio {
 		}
 	
 		public function load():void {
-			progress = ProgressIndicator(PopUpManager.createPopUp(SystemManager.getSWFRoot(this), ProgressIndicator, true));
+			progress = ProgressIndicator(PopUpManager.createPopUp(AuthoringTool.getInstance(), ProgressIndicator, true));
+			PopUpManager.bringToFront(progress);
 			PopUpManager.centerPopUp(progress);
 			index = 0;
 			var fileName:String = (files.getItemAt(index) as ContentFile).label;

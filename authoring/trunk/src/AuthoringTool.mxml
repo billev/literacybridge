@@ -255,14 +255,7 @@
 				var parser:ContentXMLParser = new ContentXMLParser();
                 loadingPackage = parser.parse(openedFile);
                 var dir:File = openedFile.parent;
-                var loader: SynchronousFileLoader = new SynchronousFileLoader(loadingPackage.children, dir.url);
-                loader.addEventListener(Event.COMPLETE, packageLoadingComplete);
-                loader.load();
-            }
-
-            private function packageLoadingComplete(event:Event):void {
                 outline.contents.addItem(loadingPackage);
-                loadingPackage = null;
             }
 	        
 	        private function onQuit():void {

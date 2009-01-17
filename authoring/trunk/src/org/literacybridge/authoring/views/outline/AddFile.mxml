@@ -23,25 +23,16 @@
 			}
 			
 			private function addFile():void {
-                var files:ArrayCollection = new ArrayCollection();
 				for (var i:int = 0; i < fileNames.length; i++) {
 					var f:ContentFile = new ContentFile();
 					f.label = fileNames.getItemAt(i) as String;
 					parentContainer.addFile(f);
 					f.parent = parentContainer; // child must know it parent
 	                var dir:File = parentContainer.packageFile.parent;
-	                files.addItem(f);
+	                close();
 	   			}
-                var loader: SynchronousFileLoader = new SynchronousFileLoader(files, dir.url);
-                loader.addEventListener(Event.COMPLETE, fileLoadingComplete);
-                loader.load();
-
             }
 
-            private function fileLoadingComplete(event:Event):void {
-				close();
-            }
-			
 			private function fileBrowse():void {
 	            file = new File();  
 				var mp3Filter:FileFilter = new FileFilter("MP3", "*.mp3")		

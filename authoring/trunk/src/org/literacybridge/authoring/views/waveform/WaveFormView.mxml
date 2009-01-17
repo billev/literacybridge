@@ -7,6 +7,9 @@
 
 	<mx:Script>
 		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentPackage;
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
+			import mx.collections.ArrayCollection;
 			import mx.binding.utils.BindingUtils;
 			import org.literacybridge.authoring.schema.ContentFile;
 			import org.literacybridge.authoring.audio.AudioSpectrum;
@@ -37,23 +40,36 @@
 				scrollBar.lineScrollSize = 500;
 			}
 			
+			private function complete(event:Event):void {
+				update();
+			}
+			
 			public function update():void {
-				if (player != null) {
-					if (file != prevFile) {
-						player.stop();
-						player.init(file.spectrum.audio);
+				if (file != prevFile) {
+					if (file.spectrum == null) {
+						// lazily load spectrum
+						var files:ArrayCollection = new ArrayCollection();
+		                files.addItem(file);
+
+		                var loader: SynchronousFileLoader = new SynchronousFileLoader(files, (file.parent as ContentPackage).packageFile.parent.url);
+                        loader.addEventListener(Event.COMPLETE, complete);
+		                loader.load();
+		                return;
 					}
+					player.stop();
+					player.init(file.spectrum.audio);
+					waveFormState.length = file.spectrum.audio.length;
+					waveFormState.autoZoom(blocks.width);
+					zoomSlider.value = waveFormState.interval;
+					waveForm.spectrum=file.spectrum;
+					hyper.spectrum = file.spectrum;
+					position.init();
+					blocks.init();
+					hyper.init();
+					prevFile = file;
 				}
-				waveFormState.length = file.spectrum.audio.length;
-				waveFormState.autoZoom(blocks.width);
-				zoomSlider.value = waveFormState.interval;
-				waveForm.spectrum=file.spectrum;
-				hyper.spectrum = file.spectrum;
-				position.init();
-				blocks.init();
-				hyper.init();
 				draw();
-				prevFile = file;
+	
 			}
 			
 			public function draw():void {
