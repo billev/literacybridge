@@ -6,13 +6,13 @@
 		<![CDATA[
 			[Bindable] private var text:String = ""; 
 		
+			public var loader:SynchronousFileLoader;
+		
 			public function setProgress(file:String, p:int, numFiles:int):void {
 				if (p < numFiles) {
 					text="Loading file " +file + " <b>(" + (p + 1) + " of " + numFiles + ")</b>";
 				}
-				if (progress != null) {
-					progress.setProgress(p, numFiles);
-				}
+				progress.setProgress(p, numFiles);
 			}
 		]]>
 	</mx:Script>
