@@ -22,10 +22,7 @@ package org.literacybridge.authoring.schema {
 		private function createXMLData(content:ContentPackage):XML {
 			var data : XML;		
 			
-			data = <{SchemaConstants.Package}
-					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- 					xsi:schemaLocation="http://www.literacybridge.org/2008/book file:/lbsvn/talkingbook/schemas/trunk/TalkingBook.xsd"
-			/>
+			data = <{SchemaConstants.Package}/>
 			appendContainerAttributes(data, content);
 
 			data.@[SchemaConstants.Package_Att_Precision] = content.precision;
@@ -68,8 +65,12 @@ package org.literacybridge.authoring.schema {
 				blockData = <{SchemaConstants.Block}/>
 				appendContainerAttributes(blockData, block);
 				
-				blockData.@[SchemaConstants.Block_Att_Start] = block.start;
-				blockData.@[SchemaConstants.Block_Att_End] = block.end;
+				if (block.start != -1) {
+					blockData.@[SchemaConstants.Block_Att_Start] = block.start;
+				}
+				if (block.end != -1) {
+					blockData.@[SchemaConstants.Block_Att_End] = block.end;
+				}
 				blockData.@[SchemaConstants.Block_Att_Class] = block.className;
 				
 				if (block.eventHandlers != null) {
@@ -88,8 +89,12 @@ package org.literacybridge.authoring.schema {
 				var hyperlinkData:XML;
 				hyperlinkData = <{SchemaConstants.Hyperlink}/>
 				
-				hyperlinkData.@[SchemaConstants.Hyperlink_Att_Start] = hyperlink.start;
-				hyperlinkData.@[SchemaConstants.Hyperlink_Att_End] = hyperlink.end;
+				if (hyperlink.start != -1) {
+					hyperlinkData.@[SchemaConstants.Hyperlink_Att_Start] = hyperlink.start;
+				}
+				if (hyperlink.end != -1) {
+					hyperlinkData.@[SchemaConstants.Hyperlink_Att_End] = hyperlink.end;
+				}
 
 				appendAction(hyperlinkData, hyperlink.action);
 				data.appendChild(hyperlinkData);
@@ -145,8 +150,13 @@ package org.literacybridge.authoring.schema {
 			}
 
 			buttonEvent.@[SchemaConstants.ButtonEvent_Att_Button] = determineButtonName(eventHandler.button);
-			buttonEvent.@[SchemaConstants.ButtonEvent_Att_InsertSoundBlock] = eventHandler.insertSoundBlock;
-			buttonEvent.@[SchemaConstants.ButtonEvent_Att_SetSpeed] = determineRelativeValue(eventHandler.setSpeed);
+			if (eventHandler.insertSoundBlock != null && eventHandler.insertSoundBlock != "") {
+				buttonEvent.@[SchemaConstants.ButtonEvent_Att_InsertSoundBlock] = eventHandler.insertSoundBlock;
+			}
+			var val:String = determineRelativeValue(eventHandler.setSpeed);
+			if (val != "") {
+				buttonEvent.@[SchemaConstants.ButtonEvent_Att_SetSpeed] = val;
+			}
 			
 			appendActions(buttonEvent, eventHandler.actions);
 			data.appendChild(buttonEvent);			
