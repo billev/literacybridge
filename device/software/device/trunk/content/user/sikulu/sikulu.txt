@@ -1,0 +1,7 @@
+VERSION:0000
+TIME-PRECISION:128
+---
+P:sikulu
+  A!:[start]
+  F:sikulu
+   B:0- [start]

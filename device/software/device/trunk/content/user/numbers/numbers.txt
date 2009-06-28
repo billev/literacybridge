@@ -1,0 +1,9 @@
+VERSION:0000
+TIME-PRECISION:128
+---
+P:numbers                                                               
+  F:counting                                                                
+    B:0- [start]
+      A$:[poem]
+  F:count-poem
+    B:0- [poem]
