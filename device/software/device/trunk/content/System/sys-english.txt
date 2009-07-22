@@ -15,7 +15,7 @@ P:sys-english
       A<:I[bip] T-10000
       A>:I[bip] T+10000
       A*:Em
-      Ao:[star-confirm-home-keep]
+      Ao:[context-menu]
       Ao|:<#sys-dagaare>
   F:ding
     B:0- [ding]
@@ -144,6 +144,20 @@ P:sys-english
       A<:[star-record]
       Ao:~
       A*:~
+  F:en-context
+    B:0- [context-menu]
+      A>:[context-copy]
+      A<:[context-delete]
+  F:en-context-copy
+    B:0- [context-copy]
+      A>:[context-delete]
+      A<:[context-menu]
+      Ao:C{[title-list]} [subject-list]
+  F:en-context-delete
+    B:0- [context-delete]
+      A<:[context-copy]
+      A>:[context-menu]
+      Ao:[star-confirm-home-keep]
   F:en-X
     B:0- [star-confirm-home-keep]
       Ah:<#>
