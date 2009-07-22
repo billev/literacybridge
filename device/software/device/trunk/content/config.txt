@@ -23,6 +23,7 @@ BOOT_PACKAGE:sys-english
 SYSTEM_PATH:a:\\system\
 USER_PATH:a:\\user\
 LIST_PATH:a:\\lists\
+INBOX_PATH:a:\\inbox\
 LOG_FILE:a:\\log\log.txt
 MAX_PWR_CYCLES_IN_LOG:20
 LOG_CARRYOVER_BYTES:500
@@ -56,3 +57,4 @@ CONTROL_TEMPLATE:a:\\system\package-template.txt
 VOLTAGE_SAMPLE_FREQ_SEC:30000
 LOG_WARNINGS:1
 LOG_KEYS:1
+//CLOCK_RATE:16
