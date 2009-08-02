@@ -1,2 +1,2 @@
-harvesting
-livestock
+harvesting#AGRIC
+livestock#AGRIC
