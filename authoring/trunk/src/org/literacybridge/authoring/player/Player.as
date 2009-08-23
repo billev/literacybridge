@@ -42,7 +42,7 @@ package org.literacybridge.authoring.player
 
 		public function start():void 
 		{
-			if (channel != null) // JTDB
+			if (channel != null) // JTBD
 			{
 				channel.stop();
 			}
