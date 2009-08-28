@@ -145,16 +145,28 @@ P:sys-english
       Ao:~
       A*:~
   F:en-context
-    B:0- [context-menu]
+    B:0- [context-menu] V+ / VN
       A>:[context-copy]
       A<:[context-delete]
   F:en-context-copy
-    B:0- [context-copy]
+    B:0- [context-copy] V+ / VN
+      A$:[OR-right]
       A>:[context-delete]
       A<:[context-menu]
       Ao:C{[title-list]} [subject-list]
   F:en-context-delete
-    B:0- [context-delete]
+    B:0- [context-delete] V+ / VN
+      A$:[en-house]
+      A<:[context-copy]
+      A>:[context-menu]
+      Ao:[star-confirm-home-keep]
+  F:OR-right
+    B:0- [OR-right] V+ / VN
+      A>:[context-delete]
+      A<:[context-menu]
+      Ao:C{[title-list]} [subject-list]
+  F:en-house
+    B:0- [en-house] V+ / VN
       A<:[context-copy]
       A>:[context-menu]
       Ao:[star-confirm-home-keep]
