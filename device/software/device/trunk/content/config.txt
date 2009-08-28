@@ -23,10 +23,12 @@ BOOT_PACKAGE:sys-english
 SYSTEM_PATH:a:\\system\
 USER_PATH:a:\\user\
 LIST_PATH:a:\\lists\
-INBOX_PATH:a:\\inbox\
+INBOX_PATH:a:\\inbox\add\
+UPDATE_PATH:a:\\inbox\update\
+FIRMWARE_PATH:a:\\system\
 OUTBOX_PATH:a:\\outbox\
 LOG_FILE:a:\\log\log.txt
-MAX_PWR_CYCLES_IN_LOG:20
+MAX_PWR_CYCLES_IN_LOG:30
 LOG_CARRYOVER_BYTES:500
 SYSTEM_VARIABLE_FILE:a:\\sys-write\system-vars
 LIST_MASTER:a:\\lists\master-list.txt
@@ -56,6 +58,7 @@ MIC_GAIN_HEADPHONE:4
 CONTROL_TEMPLATE:a:\\system\package-template.txt
 //MACRO_FILE:a:\\macro.txt
 VOLTAGE_SAMPLE_FREQ_SEC:30000
+USB_CLIENT_POLL_INTERVAL:5
 LOG_WARNINGS:1
 LOG_KEYS:1
-CLOCK_RATE:16
+CLOCK_RATE:32
