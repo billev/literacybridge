@@ -4,7 +4,7 @@ LANGUAGE:EN
 ---
 P:sys-english
       A!:[welcome]
-      Ah:<#>
+      Ah:<%>
       A+|:I[faster] S+
       A-|:I[slower] S-
       A+:I[louder] V+
@@ -16,7 +16,7 @@ P:sys-english
       A>:I[bip] T+10000
       A*:Em
       Ao:[context-menu]
-      Ao|:<#sys-dagaare>
+      Ao|:<%sys-dagaare>
   F:ding
     B:0- [ding]
   F:en-record-prompt
@@ -43,7 +43,7 @@ P:sys-english
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-dagaare>
+      Ao:<%sys-dagaare>
       A*:~
   F:en-L
     B:0- [home-help-OR]
@@ -53,7 +53,7 @@ P:sys-english
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-dagaare>
+      Ao:<%sys-dagaare>
       A*:~
   F:en-H
     B:0- [right-subjects]
@@ -63,7 +63,7 @@ P:sys-english
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-dagaare>
+      Ao:<%sys-dagaare>
       A*:~
   F:en-rec-long
     B:0- [intro-record] 
@@ -72,11 +72,11 @@ P:sys-english
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-dagaare>
+      Ao:<%sys-dagaare>
       A*:~
   L:L/master-list [subject-list]
      A$:I[up-down]
-     Ah:<#>
+     Ah:<%>
      A>:L-[subject-list]
      A<:L+[subject-list]
      Ao:~
@@ -172,7 +172,7 @@ P:sys-english
       Ao:[star-confirm-home-keep]
   F:en-X
     B:0- [star-confirm-home-keep]
-      Ah:<#>
+      Ah:<%>
       A*:D{[title-list]} [subject-list]
 
   F:en-A
