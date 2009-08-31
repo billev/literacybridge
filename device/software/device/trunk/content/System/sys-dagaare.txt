@@ -4,7 +4,7 @@ LANGUAGE:DG
 ---
 P:sys-dagaare
       A!:[welcome]
-      Ah:<#>
+      Ah:<%>
       A+|:I[faster] S+
       A-|:I[slower] S-
       A+:I[louder] V+
@@ -16,7 +16,7 @@ P:sys-dagaare
       A>:I[bip] T+10000
       A*:Em
       Ao:[context-menu]
-      Ao|:<#sys-english>
+      Ao|:<%sys-english>
   F:ding
     B:0- [ding]
   F:record-prompt
@@ -43,7 +43,7 @@ P:sys-dagaare
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-english>
+      Ao:<%sys-english>
       A*:~
   F:L
     B:500- [home-help-OR]
@@ -53,7 +53,7 @@ P:sys-dagaare
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-english>
+      Ao:<%sys-english>
       A*:~
   F:H
     B:500-6750. [right-subjects]
@@ -63,7 +63,7 @@ P:sys-dagaare
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-english>
+      Ao:<%sys-english>
       A*:~
   F:rec-short
     B:0- [intro-record] 
@@ -72,11 +72,11 @@ P:sys-dagaare
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<#sys-english>
+      Ao:<%sys-english>
       A*:~
   L:L/master-list [subject-list]
      A$:I[up-down]
-     Ah:<#>
+     Ah:<%>
      A>:L-[subject-list]
      A<:L+[subject-list]
      Ao:~
@@ -160,7 +160,7 @@ P:sys-dagaare
       Ao:[star-confirm-home-keep]
   F:X
     B:1000- [star-confirm-home-keep]
-      Ah:<#>
+      Ah:<%>
       A*:D{[title-list]} [subject-list]
 
   F:A
