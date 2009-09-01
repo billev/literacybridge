@@ -1,4 +1,4 @@
-VERSION:1.33
+VERSION:1.35
 TIME-PRECISION:128
 LANGUAGE:EN
 ---
@@ -35,6 +35,10 @@ P:sys-english
    B:0- [empty-list]
   F:en-deleted
    B:0- [file now deleted]
+  F:en-copying
+   B:0- [file is copying]
+  F:en-copied
+   B:0- [file now copied]
   F:en-E
     B:0- [welcome]
       A$:[home-help-OR]
@@ -93,7 +97,7 @@ P:sys-english
     B:0- [right-new help]
       A^:Ud+[welcome]
       A>:[home-beginning]
-      A<:[minus-quieter]
+      A<:[black-copy-del]
       Ao:~
       A*:~
   F:en-S
@@ -134,12 +138,12 @@ P:sys-english
       A*:~
   F:en-rec-long
     B:0- [star-record]
-      A>:[black-delete]
+      A>:[black-copy-del]
       A<:[ff-rw]
       Ao:~
       A*:~
-  F:en-todelete
-    B:0- [black-delete]
+  F:en-tocopydelete
+    B:0- [black-copy-del] V+ / VN
       A>:[home-beginning]
       A<:[star-record]
       Ao:~
@@ -150,9 +154,14 @@ P:sys-english
       A<:[context-delete]
   F:en-context-copy
     B:0- [context-copy] V+ / VN
-      A$:[OR-right]
       A>:[context-delete]
       A<:[context-menu]
+      Ao:[copy1]
+  F:en-copy1  
+    B:0- [copy1] V+ / VN
+      Ao:[copy2]
+  F:en-copy2  
+    B:0- [copy2] V+ / VN
       Ao:C{[title-list]} [subject-list]
   F:en-context-delete
     B:0- [context-delete] V+ / VN
