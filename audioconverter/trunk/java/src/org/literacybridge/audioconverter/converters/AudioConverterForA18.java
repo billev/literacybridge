@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 
 public class AudioConverterForA18 implements IAudioConverter {
 
+	final String ID = "A18toWAV";
+	
 	private String converterPath = null;
 	// extracted conversion result
 	private Pattern pattern = Pattern.compile("^Decode\\s'([^']*)'.*");
@@ -103,5 +105,20 @@ public class AudioConverterForA18 implements IAudioConverter {
 
 	public String getResult() {
 		return resultString;
+	}
+
+
+	public String getID() {
+		return ID;
+	}
+
+
+	public String getShortDescription() {
+		return "Convert *.a18 to WAV audio files";
+	}
+
+
+	public String getSourceFileExtension() {
+		return "a18";
 	}
 }
