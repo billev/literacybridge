@@ -12,8 +12,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -22,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -33,8 +36,10 @@ import javax.swing.filechooser.FileFilter;
 
 import org.literacybridge.audioconverter.converters.AudioConverterForA18;
 import org.literacybridge.audioconverter.converters.IAudioConverter;
-import org.literacybridge.audioconverter.gui.fileFilters.A18FileFilter;
 import org.literacybridge.audioconverter.gui.fileFilters.WavFileFilter;
+import org.literacybridge.audioconverter.gui.fileView.DataModel;
+import org.literacybridge.audioconverter.gui.fileView.FileTableModel;
+import org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
 
 public class AudioConverter extends JFrame implements ActionListener,
 		DocumentListener {
@@ -43,12 +48,16 @@ public class AudioConverter extends JFrame implements ActionListener,
 	private static final long serialVersionUID = -1515229785484369683L;
 
 	// buttons
-	JButton sourceButton, targetButton, convertButton, detailsButton;
+	JButton sourceButton, targetButton, convertButton, detailsButton, checkAllButton, uncheckAllButton;
 	// text fields
 	JTextField sourceDir, targetDir;
+	// File table
+	FileTableModel fileTableModel;
+	JTable sourceFileTable;
+	// path to the directories
 	String sourceDirPath, targetDirPath;
 	// labels
-	JLabel sourceLabel, targetLabel, titleLabel;
+	JLabel sourceLabel, targetLabel, titleLabel, converionDirectionLabel;
 	// panels
 	JComponent mainPanel, detailsPanel;
 	// progress bar
@@ -58,12 +67,15 @@ public class AudioConverter extends JFrame implements ActionListener,
 	// result text fields
 	JTextArea okFilesTF, badFilesTF;
 	JScrollPane okScrollPane, badScrollPane;
-	
+	// define the conversion direction
+	JComboBox convertCB;
+	// buffer proceeded file names
 	StringBuffer okFilesBuffer, badFilesBuffer;
 
-	// convertion
-	File[] files2Convert = null;
+	// conversion
+	DataModel fileModel = null;
 	IAudioConverter currentConverter = null;
+	FileTableModel fileTableMode = null;
 	
 	// converters
 	AudioConverterForA18 a18Converter = null;
@@ -111,7 +123,8 @@ public class AudioConverter extends JFrame implements ActionListener,
 		// globals
 		int row 	= 0; // current row number
 
-		gbc.insets 	= new Insets(2, 2, 2, 2); // padding
+		Insets ins  = new Insets(2, 2, 2, 2); // padding
+		gbc.insets 	= ins;
 		gbc.fill 	= GridBagConstraints.BOTH; // resize only horizontal
 		gbc.gridy 	= row;
 			
@@ -138,6 +151,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 		mainPanel.add(sourceLabel, gbc);
 
 		sourceDir = new JTextField();
+		sourceDir.setEditable(false);
 		gbc.gridx 	= 1;
 		gbc.gridwidth = 3;
 		sourceDir.setPreferredSize(new Dimension(300, sourceDir.getHeight()));		 
@@ -155,6 +169,54 @@ public class AudioConverter extends JFrame implements ActionListener,
 		gbc.gridy = ++row;
 		
 		/*
+		 * controls for the conversion direction
+		 */
+		converionDirectionLabel = new JLabel("Format: ");
+		gbc.gridx 	= 0;
+		gbc.gridwidth = 1;
+		mainPanel.add(converionDirectionLabel, gbc);
+
+		convertCB = createFormatComboBox();
+		convertCB.addActionListener(this);
+		gbc.gridx 	= 1;
+		gbc.gridwidth = 3;
+		gbc.insets 	= new Insets(2, 0, 2, 0);
+		mainPanel.add(convertCB, gbc);
+		gbc.insets 	= ins;
+		
+		gbc.gridy = ++row;		
+		
+		/*
+		 * grid for source files
+		 */		
+		sourceFileTable = createFileTable();	// create customized table
+		JScrollPane tmp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		tmp.getViewport().setView(sourceFileTable);
+		tmp.setPreferredSize(new Dimension(375, 200));
+		gbc.gridx 	 = 0;
+		gbc.gridwidth  = 4;
+		int height = 4;
+		gbc.gridheight = height;
+		mainPanel.add(tmp, gbc);
+		// All button
+		checkAllButton = new JButton("All");
+		checkAllButton.addActionListener(this);
+		gbc.gridx 	 = 4;
+		gbc.gridwidth  = 1;
+		gbc.gridheight = 1;
+		mainPanel.add(checkAllButton, gbc);
+		// All button
+		uncheckAllButton = new JButton("None");
+		uncheckAllButton.addActionListener(this);
+		gbc.gridx = 4;
+		gbc.gridy = row+1;
+		gbc.gridwidth  = 1;
+		mainPanel.add(uncheckAllButton, gbc);
+		
+		row += height;
+		gbc.gridy = ++row;
+		
+		/*
 		 * controls of target directory
 		 */
 		targetLabel = new JLabel("Target dir: ");
@@ -164,6 +226,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 
 		targetDir = new JTextField();
 		targetDir.setPreferredSize(new Dimension(200, 10));
+		targetDir.setEditable(false);
 		gbc.gridx 		= 1;
 		gbc.gridwidth	= 3;		
 		mainPanel.add(targetDir, gbc);
@@ -243,6 +306,32 @@ public class AudioConverter extends JFrame implements ActionListener,
 		pack();	
 	}
 	
+	private JTable createFileTable() {
+	    fileTableMode = new FileTableModel();
+		JTable table = new JTable(fileTableMode);
+		// most space for the file names
+		table.getColumnModel().getColumn(0).setMaxWidth(60);
+		table.getColumnModel().getColumn(2).setMaxWidth(60);
+		table.getColumnModel().getColumn(3).setMaxWidth(60);
+		return table;
+	}
+	
+	private JComboBox createFormatComboBox() {
+		JComboBox tmp = new JComboBox();
+		// add empty item as default
+		tmp.addItem(makeObj("Select conversion direction"));
+		if (a18Converter != null) {
+			tmp.addItem(makeObj(a18Converter.getShortDescription()));
+		}
+		
+		tmp.setSelectedIndex(0); // default
+		return tmp;
+	}
+	
+	private Object makeObj(final String item)  {
+		return new Object() { public String toString() { return item; } };
+	}	
+	
 	private void buildDetailsPanel() {
 		detailsPanel = new JPanel(new GridBagLayout());
 		detailsPanel.setBorder(new TitledBorder("Conversion Status"));
@@ -261,7 +350,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 		
 		++row;
 		
-		okFilesTF	= new JTextArea(10, 10);
+		okFilesTF	= new JTextArea(5, 10);
 		okFilesTF.setEditable(false);
 		gbc.gridy 	= row;
 		okScrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -279,7 +368,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 		
 		++row;
 		
-		badFilesTF	= new JTextArea(10, 10);
+		badFilesTF	= new JTextArea(5, 10);
 		badFilesTF.setEditable(false);
 		gbc.gridy = row;
 		badScrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -290,7 +379,6 @@ public class AudioConverter extends JFrame implements ActionListener,
 		}
 	}
 	
-	
 	public void actionPerformed(ActionEvent e) {
 
 		// Handle open button action.
@@ -300,22 +388,16 @@ public class AudioConverter extends JFrame implements ActionListener,
 			else if (this.sourceDir.getText().length() != 0) fc = new JFileChooser(this.sourceDir.getText());
 			else fc = new JFileChooser();
 			
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fc.setMultiSelectionEnabled(true);
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			fc.setDialogTitle("Select source directory...");
-			// file filter
-			FileFilter a18 = new A18FileFilter(true);
-			fc.addChoosableFileFilter(a18);
-			fc.setFileFilter(a18);
-			
-			
 			int returnVal = fc.showOpenDialog(AudioConverter.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				files2Convert = fc.getSelectedFiles();
-				sourceDirPath = files2Convert[0].getParent();
-				this.sourceDir.setText(sourceDirPath); 
-			}
-	
+				File file = fc.getSelectedFile();
+				sourceDirPath = file.getAbsolutePath();
+				this.sourceDir.setText(sourceDirPath);
+				fileModel = new DataModel(file);
+				fileTableMode.setFileInfoList(fileModel);
+			}	
 		} else if (e.getSource() == targetButton) {
 			JFileChooser fc = null;
 			if (targetDirPath != null) fc = new JFileChooser(targetDirPath);
@@ -335,10 +417,6 @@ public class AudioConverter extends JFrame implements ActionListener,
 				File file = fc.getSelectedFile();
 				targetDirPath = file.getAbsolutePath();
 				this.targetDir.setText(targetDirPath);
-				FileFilter ff = fc.getFileFilter();
-				if (ff instanceof WavFileFilter) {
-					currentConverter = a18Converter;				
-				}
 			}
 		} else if (e.getSource() == detailsButton) {
 				
@@ -348,16 +426,39 @@ public class AudioConverter extends JFrame implements ActionListener,
 			} else {
 				detailsVisible = true;
 				buildControls(true);
-			}
+			}		
+		} else if (e.getSource() == convertCB) {
+			String currSelStr = convertCB.getSelectedItem().toString();
 			
+			if (fileModel != null && fileTableMode != null) {
+				if (currSelStr.equalsIgnoreCase(a18Converter.getShortDescription())) { // A18 converter
+					currentConverter = a18Converter;
+					fileModel.showOnlyFilesWithExtension(currentConverter.getSourceFileExtension());
+					fileTableMode.updateTable();
+				} else if (convertCB.getSelectedIndex() == 0) { //default
+					currentConverter = null;
+					fileModel.showOnlyFilesWithExtension(null);
+					fileTableMode.updateTable();				
+				}
+			}
+		} else if (e.getSource() == checkAllButton) {
+			if (fileModel != null && fileTableMode != null) {
+				fileModel.checkAll(true);
+				fileTableMode.updateTable();
+			}
+		} else if (e.getSource() == uncheckAllButton) {
+			if (fileModel != null && fileTableMode != null) {
+				fileModel.checkAll(false);
+				fileTableMode.updateTable();				
+			}
 		} else if (e.getSource() == convertButton) {
 			
 			// Check if convert is there
-			if (currentConverter != null && files2Convert.length > 0) {
+			if (currentConverter != null && fileModel != null) {
 					
 				//  progress bar
 				progressBar.setStringPainted(true);
-				progressBar.setMaximum(files2Convert.length);
+				progressBar.setMaximum(fileModel.getNumFilesToConvert());
 				progressBar.setValue(0);
 				
 				if (detailsVisible) {
@@ -370,12 +471,16 @@ public class AudioConverter extends JFrame implements ActionListener,
 				
 				final File targetDirPath = new File(targetDir.getText());
 
-				// run conversion in separate thread to avoid that the GUI
-				// freezes
+				// run conversion in separate thread to avoid 
+				//that the GUI freezes
 				Runnable runnable = new Runnable() {
 					public void run() {
-						for (int i = 0; i < files2Convert.length; ++i) {
-							File currFile = files2Convert[i];
+						Enumeration fileEnumeration = fileModel.getFileInfoList().elements();
+						for (int i=0; fileEnumeration.hasMoreElements(); ++i) {
+							FileInfo fileInfo = (FileInfo) fileEnumeration.nextElement();
+							if (!fileInfo.doConvert()) continue;
+							
+							File currFile = fileInfo.getFileRef();
 							try {
 								if (currentConverter.doConvertFile(currFile, targetDirPath)) {
 									if (detailsVisible) {
@@ -404,7 +509,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(this, "Internal Error: No converter set",
+				JOptionPane.showMessageDialog(this, "Please choose a target format for the conversion",
 				"Converter Error", JOptionPane.ERROR_MESSAGE,
 				null);
 				return;
