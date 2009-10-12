@@ -32,11 +32,9 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.filechooser.FileFilter;
 
 import org.literacybridge.audioconverter.converters.AudioConverterForA18;
 import org.literacybridge.audioconverter.converters.IAudioConverter;
-import org.literacybridge.audioconverter.gui.fileFilters.WavFileFilter;
 import org.literacybridge.audioconverter.gui.fileView.DataModel;
 import org.literacybridge.audioconverter.gui.fileView.FileTableModel;
 import org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
@@ -96,7 +94,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 	
 	private int loadConverters() {
 		int numberOfAvailableConverters = 0;
-		
+
 		if (a18Converter == null) {
 			a18Converter = new AudioConverterForA18();
 			if (a18Converter.getConverterEXEPath() == null) {
@@ -105,6 +103,10 @@ public class AudioConverter extends JFrame implements ActionListener,
 						"Converter could not be loaded for unkown reason!",
 						"A18 Converter problem",
 						JOptionPane.ERROR_MESSAGE, null);
+			}
+			else
+			{
+				numberOfAvailableConverters++;;
 			}
 		}
 		

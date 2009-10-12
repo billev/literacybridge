@@ -10,12 +10,6 @@ public class DataModel {
 	// inner class to store some info of the files.
 	public class FileInfo {
 		
-		public Object clone() throws CloneNotSupportedException {
-			FileInfo clone = new FileInfo(fileName, fileExtension, fileSize, fileRef, false);
-			clone.setValid(false);
-			return clone;
-		}
-
 		private String fileName;
 		private String fileExtension;
 		private String fileSize;
@@ -62,6 +56,12 @@ public class DataModel {
 
 		public void setValid(boolean valid) {
 			this.valid = valid;
+		}
+		
+		public Object clone() throws CloneNotSupportedException {
+			FileInfo clone = new FileInfo(fileName, fileExtension, fileSize, fileRef, false);
+			clone.setValid(false);
+			return clone;
 		}
 	}
 	
