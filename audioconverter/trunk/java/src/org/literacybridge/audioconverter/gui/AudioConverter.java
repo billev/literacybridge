@@ -132,7 +132,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 		/*
 		 *  title message
 		 */
-		titleLabel = new JLabel("Please enter valid directories.");
+		titleLabel = new JLabel("Please choose directories and conversion format:");
 		titleLabel.setHorizontalTextPosition(JLabel.CENTER);
 		titleLabel.setForeground(Color.RED);
 		gbc.gridx 	= 0;
@@ -176,11 +176,12 @@ public class AudioConverter extends JFrame implements ActionListener,
 		gbc.gridwidth = 1;
 		mainPanel.add(converionDirectionLabel, gbc);
 
-		convertCB = createFormatComboBox();
-		convertCB.addActionListener(this);
+		if (convertCB == null) {
+			convertCB = createFormatComboBox();
+			convertCB.addActionListener(this);		
+		}
 		gbc.gridx 	= 1;
 		gbc.gridwidth = 3;
-		gbc.insets 	= new Insets(2, 0, 2, 0);
 		mainPanel.add(convertCB, gbc);
 		gbc.insets 	= ins;
 		
@@ -189,7 +190,9 @@ public class AudioConverter extends JFrame implements ActionListener,
 		/*
 		 * grid for source files
 		 */		
-		sourceFileTable = createFileTable();	// create customized table
+		if (sourceFileTable == null) {
+			sourceFileTable = createFileTable();	// create customized table
+		}
 		JScrollPane tmp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tmp.getViewport().setView(sourceFileTable);
 		tmp.setPreferredSize(new Dimension(375, 200));
@@ -281,6 +284,8 @@ public class AudioConverter extends JFrame implements ActionListener,
 					
 		// add Panels to parent frame
 		organizePanels();
+		// enable children after everything is initialized
+		enableChildren();
 	}
 	
 	private void organizePanels() {
@@ -393,10 +398,10 @@ public class AudioConverter extends JFrame implements ActionListener,
 			int returnVal = fc.showOpenDialog(AudioConverter.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
-				sourceDirPath = file.getAbsolutePath();
-				this.sourceDir.setText(sourceDirPath);
 				fileModel = new DataModel(file);
 				fileTableMode.setFileInfoList(fileModel);
+				sourceDirPath = file.getAbsolutePath();
+				this.sourceDir.setText(sourceDirPath);
 			}	
 		} else if (e.getSource() == targetButton) {
 			JFileChooser fc = null;
@@ -406,11 +411,6 @@ public class AudioConverter extends JFrame implements ActionListener,
 
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			fc.setDialogTitle("Select target directory...");
-			// file filter
-			FileFilter wav = new WavFileFilter(false);
-			fc.addChoosableFileFilter(wav);
-			fc.setFileFilter(wav);
-			fc.setAcceptAllFileFilterUsed(false);
 			
 			int returnVal = fc.showSaveDialog(AudioConverter.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -515,57 +515,29 @@ public class AudioConverter extends JFrame implements ActionListener,
 				return;
 			}
 		}
-
-		validateDirs();
 	}
-
-	private void validateDirs() {
-		if (sourceDir.getText().trim().length() == 0 && targetDir.getText().trim().length() == 0) {
-			message("Please enter valid directories.");
-			return;
-		} else {
-			message("");
-		}
-
-		boolean e = false;
-		File source = new File(sourceDir.getText());
-		if (!source.exists()) {
-			message("Source does not exist.");
-		} else if (!source.isDirectory()) {
-			message("Source is not a directory.");
-		} else if (targetDir.getText().trim().length() == 0) {
-			message("Please enter a valid target directory");
-		} else {
-			File target = new File(targetDir.getText());
-			if (!target.exists()) {
-				message("Target does not exist.");
-			} else if (!target.isDirectory()) {
-				message("Target ist not a directory.");
-			} else {
-				e = true;
-			}
-		}
-
-		convertButton.setEnabled(e);
-	}
-
-	private void message(String text) {
-		this.titleLabel.setText(text);
-	}
-
 
 	public void changedUpdate(DocumentEvent e) {
 		// NOOP
 	}
 
 	public void insertUpdate(DocumentEvent e) {
-		validateDirs();
+		enableChildren();
 	}
 
 	public void removeUpdate(DocumentEvent e) {
-		validateDirs();
+		enableChildren();
 	}
 
+	protected void enableChildren() {
+		boolean enableConversion = sourceDirPath != null && targetDirPath != null 
+									&& sourceDirPath.length() > 0 && targetDirPath.length() > 0;
+		convertButton.setEnabled(enableConversion);
+		boolean enableFormatCB = fileModel != null && fileTableMode != null;
+		convertCB.setEnabled(enableFormatCB);
+		 
+	}
+	
 	public static void main(String[] args) {
 		// Schedule a job for the event dispatch thread:
 		// creating and showing this application's GUI.

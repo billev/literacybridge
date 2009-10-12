@@ -8,7 +8,6 @@ import org.literacybridge.audioconverter.gui.fileFilters.Utils;
 public class DataModel {	
 	
 	// inner class to store some info of the files.
-	// can later be used the table model
 	public class FileInfo {
 		
 		public Object clone() throws CloneNotSupportedException {
