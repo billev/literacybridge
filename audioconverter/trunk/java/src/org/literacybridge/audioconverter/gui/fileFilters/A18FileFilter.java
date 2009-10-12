@@ -1,6 +1,7 @@
 package org.literacybridge.audioconverter.gui.fileFilters;
 
 import java.io.File;
+
 import javax.swing.filechooser.FileFilter;
 
 public class A18FileFilter extends FileFilter {

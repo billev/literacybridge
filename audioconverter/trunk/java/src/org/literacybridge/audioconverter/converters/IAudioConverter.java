@@ -5,6 +5,15 @@ import java.io.IOException;
 
 public interface IAudioConverter {
 	
+	// @return string for identification (must be unique)
+	String getID();
+	
+	// @return short description for the format comboBox, e.g. ".a18 to .wav format"
+	String getShortDescription();
+	
+	// @return get source file extension, e.g. a18
+	String getSourceFileExtension();
+	
 	// @return path to the converter executable 
 	String getConverterEXEPath(); 
 
