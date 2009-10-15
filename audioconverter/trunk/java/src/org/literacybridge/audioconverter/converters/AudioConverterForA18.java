@@ -21,13 +21,9 @@ public class AudioConverterForA18 implements IAudioConverter {
 	private String resultString;
 	
 	public String getConverterEXEPath() {
-		// converter is stored as an internal resource
-		final URL urlConverterExe = getClass().getResource(
-				"/converters/a18/AudioBatchConverter.exe");
-		if (urlConverterExe == null)
-			return null;
-
-		return urlConverterExe.getPath();
+		// as we assume our converter directory located in the same
+		// directory as we are, get out location
+		return System.getProperty("user.dir") + "/converters/a18/AudioBatchConverter.exe";
 	}
 	
 	
@@ -69,6 +65,8 @@ public class AudioConverterForA18 implements IAudioConverter {
 		boolean success = false;
 		resultString 	= null;
 
+		System.out.println("Path to converter: " + getConverterEXEPath());
+		
 		String cmd = getConverterEXEPath() 
 						+ " -d "
 						+ "-s 16000 " 
