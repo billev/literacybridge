@@ -96,6 +96,7 @@ P:sys-dagaare
   F:R
     B:700-9750. [right-new help]
       A^:Ud+[welcome]
+      Av:Z
       A>:[home-beginning]
       A<:[black-delete]
       Ao:~

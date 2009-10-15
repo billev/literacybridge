@@ -96,6 +96,7 @@ P:sys-english
   F:en-R
     B:0- [right-new help]
       A^:Ud+[welcome]
+      Av:Z
       A>:[home-beginning]
       A<:[black-copy-del]
       Ao:~
