@@ -1,6 +1,7 @@
 package org.literacybridge.audioconverter.gui.fileView;
 
 import java.io.File;
+import java.util.Set;
 import java.util.Vector;
 
 import org.literacybridge.audioconverter.gui.fileFilters.Utils;
@@ -99,7 +100,7 @@ public class DataModel {
 				
 				if (!currFile.isDirectory()) {
 					String fileName = currFile.getName();
-					String fileExtension = Utils.getExtension(currFile);
+					String fileExtension = Utils.getExtension(currFile).toLowerCase();
 					String fileSize = new Long(currFile.length()).toString();
 					
 					if (fileName != null && fileExtension != null && fileSize != null) {
@@ -122,13 +123,13 @@ public class DataModel {
 		}
 	}
 	
-	public void showOnlyFilesWithExtension(String fileExtension) {
+	public void showOnlyFilesWithExtension(Set<String> fileExtensions) {
 		// only files with the passed extension shall be shown
 		fileInfoList.clear();
 		for(int i=0; i<orgFileInfoList.size(); ++i) {
 			FileInfo info = (FileInfo) orgFileInfoList.get(i);
-			if (fileExtension == null // show all
-			|| info.fileExtension.equalsIgnoreCase(fileExtension)) {
+			if (fileExtensions == null // show all
+					|| fileExtensions.contains(info.fileExtension)) {
 				try {
 					fileInfoList.add( info.clone());
 				} catch (CloneNotSupportedException e) {

@@ -2,8 +2,10 @@ package org.literacybridge.audioconverter.converters;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 
 public abstract class BaseAudioConverter {
 	protected final String targetFormatExtension;
@@ -39,7 +41,7 @@ public abstract class BaseAudioConverter {
 	public abstract String getShortDescription();
 	
 	// @return get source file extension, e.g. a18
-	public abstract String getSourceFileExtension();
+	public abstract Set<String> getSourceFileExtensions();
 	
 	public abstract void validateConverter() throws AudioConverterInitializationException;
 	
@@ -62,7 +64,7 @@ public abstract class BaseAudioConverter {
 				responseBuilder.append(line);
 				responseBuilder.append('\n');
 			}
-		
+			
 			// check for converter error
 			success = (proc.waitFor() == 0);
 		} catch (Exception e) {
@@ -74,6 +76,15 @@ public abstract class BaseAudioConverter {
 		}
 			
 		return responseBuilder.toString();
+	}
+	
+	static void consumeProcessOutput(Process proc, boolean listenToStdErr) throws IOException {
+		InputStream stderr = listenToStdErr ? proc.getErrorStream() : proc.getInputStream(); 
+		InputStreamReader isr = new InputStreamReader(stderr);
+		BufferedReader br = new BufferedReader(isr);
+		String line = null;
+	
+		while ((line = br.readLine()) != null);
 	}
 
 	static void validateConverterExecutable(String exePath, boolean listenToStdErr, String outputPrefix) throws AudioConverterInitializationException {

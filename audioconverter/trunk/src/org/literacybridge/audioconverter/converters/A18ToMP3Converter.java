@@ -1,7 +1,8 @@
 package org.literacybridge.audioconverter.converters;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class A18ToMP3Converter extends BaseAudioConverter {
 	private FFMpegConverter ffmpegConverter = new FFMpegConverter();
@@ -34,9 +35,14 @@ public class A18ToMP3Converter extends BaseAudioConverter {
 		return "Convert .a18 audio file to .mp3";
 	}
 
+	private static final Set<String> EXTENSIONS = new HashSet<String>();
+	static {
+		EXTENSIONS.add("a18");
+	}
+	
 	@Override
-	public String getSourceFileExtension() {
-		return "a18";
+	public Set<String> getSourceFileExtensions() {
+		return EXTENSIONS;
 	}
 
 	@Override

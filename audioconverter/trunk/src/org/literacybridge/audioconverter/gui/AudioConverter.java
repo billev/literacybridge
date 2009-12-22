@@ -536,7 +536,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 				fileTableMode.updateTable();				
 			} else {
 				currentConverter = converters.get(curSel - 1);
-				fileModel.showOnlyFilesWithExtension(currentConverter.getSourceFileExtension());
+				fileModel.showOnlyFilesWithExtension(currentConverter.getSourceFileExtensions());
 				fileTableMode.updateTable();
 			}
 		}

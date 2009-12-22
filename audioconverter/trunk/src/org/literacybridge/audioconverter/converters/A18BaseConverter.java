@@ -1,6 +1,8 @@
 package org.literacybridge.audioconverter.converters;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +53,13 @@ public abstract class A18BaseConverter extends BaseAudioConverter {
 		return "Convert *.a18 to WAV audio files";
 	}
 
+	private static final Set<String> EXTENSIONS = new HashSet<String>();
+	static {
+		EXTENSIONS.add("a18");
+	}
+	
 	@Override
-	public String getSourceFileExtension() {
-		return "a18";
+	public Set<String> getSourceFileExtensions() {
+		return EXTENSIONS;
 	}
 }

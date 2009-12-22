@@ -2,6 +2,7 @@ package org.literacybridge.audioconverter.converters;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 public class AnyToA18Converter extends BaseAudioConverter {
 	public AnyToA18Converter() throws AudioConverterInitializationException {
@@ -38,8 +39,8 @@ public class AnyToA18Converter extends BaseAudioConverter {
 	}
 	
 	@Override
-	public String getSourceFileExtension() {
-		return null; // show all
+	public Set<String> getSourceFileExtensions() {
+		return this.ffmpegConverter.getSourceFileExtensions();
 	}
 	
 	@Override
