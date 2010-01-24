@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 public class FFMpegConverter extends BaseAudioConverter {
 	final static String TARGET_EXTENSION = ".wav";
@@ -18,7 +19,7 @@ public class FFMpegConverter extends BaseAudioConverter {
 	}
 	
 	@Override
-	public ConversionResult doConvertFile(File audioFile, File targetDir, File targetFile)
+	public ConversionResult doConvertFile(File audioFile, File targetDir, File targetFile, Map<String, String> parameters)
 			throws ConversionException {
 		String cmd = getConverterEXEPath()
 						+ " -i \"" + audioFile.getAbsolutePath() + "\""

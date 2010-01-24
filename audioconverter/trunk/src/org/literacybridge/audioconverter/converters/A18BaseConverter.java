@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 public abstract class A18BaseConverter extends BaseAudioConverter {
 
@@ -27,12 +28,12 @@ public abstract class A18BaseConverter extends BaseAudioConverter {
 		BaseAudioConverter.validateConverterExecutable(getConverterEXEPath(), false, "Generalplus Audio Batch Converter Tool");
 	}
 	
-	protected abstract String getCommand(File audioFile, File targetFile);
+	protected abstract String getCommand(File audioFile, File targetFile, Map<String, String> parameters);
 	
 	@Override
-	public ConversionResult doConvertFile(File audioFile, File targetDir, File targetFile) throws ConversionException {
+	public ConversionResult doConvertFile(File audioFile, File targetDir, File targetFile, Map<String, String> parameters) throws ConversionException {
 	
-		String cmd = getCommand(audioFile, targetDir);
+		String cmd = getCommand(audioFile, targetDir, parameters);
 		ConversionResult result = new ConversionResult();
 		result.outputFile = new File(targetDir, audioFile.getName() + targetFormatExtension);
 		result.response = BaseAudioConverter.executeConversionCommand(cmd,
