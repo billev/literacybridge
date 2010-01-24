@@ -2,6 +2,7 @@ package org.literacybridge.audioconverter.converters;
 
 import java.io.File;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 public class A18ToWavConverter extends A18BaseConverter {
 	public A18ToWavConverter() throws AudioConverterInitializationException {
@@ -14,11 +15,20 @@ public class A18ToWavConverter extends A18BaseConverter {
 	}
 
 	@Override
-	protected String getCommand(File audioFile, File targetFile) {
-		return getConverterEXEPath() 
-		+ " -d "
-		+ "-s 16000 " 
-		+ "-o \"" + targetFile.getAbsolutePath()+ "\" "   
-		+ "\"" + audioFile.getAbsolutePath() + "\"";
+	protected String getCommand(File audioFile, File targetFile, Map<String, String> parameters) {
+		StringBuffer command = new StringBuffer();
+		command.append(getConverterEXEPath());
+		
+		for (String key : parameters.keySet()) {
+			if (key.equals(A18BaseConverter.BIT_RATE)) {
+				command.append(" -b " + parameters.get(key));
+			} else if (key.equals(A18BaseConverter.SAMPLE_RATE)) {
+				command.append(" -s " + parameters.get(key));
+			}
+		}		
+		command.append(" -o \"" + targetFile.getAbsolutePath()+ "\"");
+		command.append(" \"" + audioFile.getAbsolutePath() + "\"");		
+		
+		return command.toString();
 	}
 }

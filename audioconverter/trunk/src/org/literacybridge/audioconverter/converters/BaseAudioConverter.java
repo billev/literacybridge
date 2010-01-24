@@ -5,16 +5,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class BaseAudioConverter {
+	
+	public static final String SAMPLE_RATE = "sampleRate";
+	public static final String BIT_RATE = "bitRate";
+	
 	protected final String targetFormatExtension;
 	
 	public BaseAudioConverter(String targetFormatExtension) {
 		this.targetFormatExtension = targetFormatExtension;
 	}
 	
-	public String convertFile(File inputFile, File targetDir, boolean overwrite) throws ConversionException {
+	public String convertFile(File inputFile, File targetDir, boolean overwrite, Map<String, String> parameters) throws ConversionException {
 		File outputFile = new File(targetDir, getFileNameWithoutExtension(inputFile.getName()) + targetFormatExtension);
 		if (outputFile.exists())
 			if (!overwrite) {
@@ -25,7 +30,7 @@ public abstract class BaseAudioConverter {
 					throw new ConversionException("Unable to overwrite output file.");
 				}
 		}
-		ConversionResult result = doConvertFile(inputFile, targetDir, outputFile);
+		ConversionResult result = doConvertFile(inputFile, targetDir, outputFile, parameters);
 		if (!result.outputFile.getAbsolutePath().equals(outputFile.getAbsolutePath())) {
 			// TODO: we should probably have some retry logic here, and fail after 5 attempts or so
 			if (!result.outputFile.renameTo(outputFile)) {
@@ -35,7 +40,7 @@ public abstract class BaseAudioConverter {
 		return result.response;
 	}
 	
-	public abstract ConversionResult doConvertFile(File inputFile, File targetDir, File targetFile) throws ConversionException;
+	public abstract ConversionResult doConvertFile(File inputFile, File targetDir, File targetFile, Map<String, String> parameters) throws ConversionException;
 	
 	// @return short description for the format comboBox, e.g. ".a18 to .wav format"
 	public abstract String getShortDescription();
