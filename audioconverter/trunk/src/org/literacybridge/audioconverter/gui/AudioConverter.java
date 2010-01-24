@@ -4,8 +4,11 @@ package org.literacybridge.audioconverter.gui;
 // - Entry point for the java wrapper
 // org.literacybridge.audioconverter.gui.AudioConverter
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -53,8 +57,11 @@ public class AudioConverter extends JFrame implements ActionListener,
 	// serial number
 	private static final long serialVersionUID = -1515229785484369683L;
 
+	// options dialog
+	OptionsDialog mOptionsDialog;
+	
 	// buttons
-	JButton sourceButton, targetButton, convertButton, detailsButton, checkAllButton, uncheckAllButton;
+	JButton sourceButton, targetButton, convertButton, optionsButton, detailsButton, checkAllButton, uncheckAllButton;
 	// text fields
 	JTextField sourceDir, targetDir;
 	// File table
@@ -289,21 +296,32 @@ public class AudioConverter extends JFrame implements ActionListener,
 		/*
 		 * buttons 
 		 */
-		
+	
 		detailsButton = new JButton("Details");
 		detailsButton.setEnabled(true);
+		detailsButton.addActionListener(this);
+		JPanel detailsPanel = new JPanel();	
+		detailsPanel.add(detailsButton);
 		gbc.gridx 	= 0;
 		gbc.gridwidth = 1;
-		mainPanel.add(detailsButton, gbc);
+		mainPanel.add(detailsPanel, gbc);
 		
-		detailsButton.addActionListener(this);
 		
+		optionsButton = new JButton("Options");
+		optionsButton.setEnabled(true);
+		optionsButton.addActionListener(this);
+				
 		convertButton = new JButton("Convert");
 		convertButton.addActionListener(this);
 		convertButton.setEnabled(false);
-		gbc.gridx 	= 4;
-		gbc.gridwidth = 1;
-		mainPanel.add(convertButton, gbc);
+
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING)); 		
+		buttonPanel.add(optionsButton);
+		buttonPanel.add(convertButton);		
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));		
+		gbc.gridx 	= 1;
+		gbc.gridwidth = 4;				
+		mainPanel.add(buttonPanel, gbc);
 
 		
 		// Show details at bottom of JFrame
@@ -467,6 +485,12 @@ public class AudioConverter extends JFrame implements ActionListener,
 				fileModel.checkAll(false);
 				fileTableMode.updateTable();				
 			}
+		} else if (e.getSource() == optionsButton) {
+			boolean encodeToA18 = false;
+			if (currentConverter instanceof AnyToA18Converter) {
+				encodeToA18 = true;
+			}
+			getOptionsDialog().show(encodeToA18);
 		} else if (e.getSource() == convertButton) {
 			
 			// Check if convert is there
@@ -499,7 +523,8 @@ public class AudioConverter extends JFrame implements ActionListener,
 							File currFile = fileInfo.getFileRef();
 							try {
 								try {
-									currentConverter.convertFile(currFile, targetDirPath, overwriteCheckBox.isSelected());
+									currentConverter.convertFile(currFile, targetDirPath, 
+											overwriteCheckBox.isSelected(), getOptionsDialog().getParameterList());
 									if (detailsVisible) {
 										okFilesTF.append(currFile.getName() + "\n");
 									}
@@ -571,6 +596,13 @@ public class AudioConverter extends JFrame implements ActionListener,
 		boolean enableFormatCB = fileModel != null && fileTableMode != null;
 		convertCB.setEnabled(enableFormatCB);
 		 
+	}
+	
+	private OptionsDialog getOptionsDialog() {
+		if (mOptionsDialog == null) {
+			mOptionsDialog = new OptionsDialog(this);
+		}
+		return mOptionsDialog;
 	}
 	
 	public static void main(String[] args) {
