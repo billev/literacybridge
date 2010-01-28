@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Metadata>
+		[Event(name="virtualDeviceButtonEvent", type="org.literacybridge.authoring.virtualdevice.VirtualDeviceButtonEvent")] 
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.views.events.ActionDisplayTextGenerator;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			private static const HoldTime:Number = 1000;
+			private var mouseDownTimer:Timer = new Timer(HoldTime);
+			private var buttonDown:int;
+			private var actionType:int;
+			private var dispatchOnMouseUp:Boolean;
+			
+			private function onMouseDown(button:int):void {
+				buttonDown = button;
+			    actionType = ButtonEventHandler.ClickAction; 
+				mouseDownTimer.addEventListener(TimerEvent.TIMER, setButtonActionToHold);
+				dispatchOnMouseUp = true;
+				mouseDownTimer.start();
+			}
+			
+			private function onMouseUp():void {
+				mouseDownTimer.stop();
+				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);
+				if (dispatchOnMouseUp) {	
+					dispatchEvent(new VirtualDeviceButtonEvent(VirtualDeviceButtonEvent.TYPE, buttonDown, actionType));
+				}
+			}
+			
+			private function setButtonActionToHold(event:TimerEvent):void {
+				actionType = ButtonEventHandler.HoldAction;
+				mouseDownTimer.stop();
+				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);	
+				dispatchOnMouseUp = false;
+				dispatchEvent(new VirtualDeviceButtonEvent(VirtualDeviceButtonEvent.TYPE, buttonDown, actionType));
+			}
+			
+			private function onMouseOut():void {
+				mouseDownTimer.stop();
+				mouseDownTimer.removeEventListener(TimerEvent.TIMER, setButtonActionToHold);					
+			}
+			
+			private function getButtonDisplayText(item:Object):String {
+				return ActionDisplayTextGenerator.getButtonDisplayText(item as int);
+			}
+
+
+		]]>
+	</mx:Script>
+
+
+	<mx:Image autoLoad="true" source="@Embed(source='/../assets/device-front-400.png')"/>
+	<mx:Box id="starButton" x="100" y="114" width="45" height="42" 
+		toolTip="{getButtonDisplayText(ButtonEventHandler.StarButton)}" 
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.StarButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="plusButton" x="258" y="119" width="45" height="42" 
+		toolTip="{getButtonDisplayText(ButtonEventHandler.PlusButton)}"
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.PlusButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="minusButton" x="294" y="166" width="36" height="35" 
+		toolTip="{getButtonDisplayText(ButtonEventHandler.MinusButton)}"
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.MinusButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="homeButton" x="71" y="163" width="36" height="36" 
+		toolTip="{getButtonDisplayText(ButtonEventHandler.HomeButton)}"
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.HomeButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="selectButton" x="69" y="281" width="36" height="36" 
+		toolTip="{getButtonDisplayText(ButtonEventHandler.SelectButton)}"
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.SelectButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="upButton" x="155" y="152" width="93" height="45"
+		toolTip="{getButtonDisplayText(ButtonEventHandler.UpButton)}" 
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.UpButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="downButton" x="155" y="274" width="93" height="45"
+		toolTip="{getButtonDisplayText(ButtonEventHandler.DownButton)}" 
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.DownButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="leftButton" x="82" y="198" width="70" height="73" 
+		toolTip="{getButtonDisplayText(ButtonEventHandler.LeftButton)}"
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.LeftButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="rightButton" x="250" y="200" width="70" height="73"
+		toolTip="{getButtonDisplayText(ButtonEventHandler.RightButton)}" 
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.RightButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+	<mx:Box id="playPauseButton" x="155" y="199" width="93" height="71"
+		toolTip="{getButtonDisplayText(ButtonEventHandler.PlayPauseButton)}" 
+		useHandCursor="true" buttonMode="true" mouseDown="onMouseDown(ButtonEventHandler.PlayPauseButton)" 
+		mouseUp="onMouseUp()" mouseOut="onMouseOut()"/>
+</mx:Canvas>

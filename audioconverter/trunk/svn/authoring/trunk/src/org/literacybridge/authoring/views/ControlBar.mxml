@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Metadata>
+		[Event(name="mainMenuEvent", type="org.literacybridge.authoring.events.ExtendedMenuEvent")] 
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.events.ExtendedMenuEvent;
+			import mx.utils.StringUtil;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			import flash.net.FileReference;
+			import mx.resources.ResourceManager;
+			
+			private var file:File;
+			
+			private function onOpen(event:Event) :void {
+				var fileRef:FileReference = new FileReference();
+				var xmlFilter:FileFilter = new FileFilter("XML", "*.xml");
+				fileRef.browse([xmlFilter]);	
+			}
+			
+			private function onMenuItemClick(event:MenuEvent):void {
+				switch (event.label) {
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_PREFERENCES") :
+						dispatch(event, ExtendedMenuEvent.MENU_PREFERENCES);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_SHOW_VIRTUAL_DEVICE") :
+						dispatch(event, ExtendedMenuEvent.MENU_SHOW_VIRTUAL_PLAYER);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_OPEN") :
+						dispatch(event, ExtendedMenuEvent.MENU_OPEN);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_SAVE") :
+						dispatch(event, ExtendedMenuEvent.MENU_SAVE);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_SAVE_AS") :
+						dispatch(event, ExtendedMenuEvent.MENU_SAVE_AS);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_ABOUT") :
+						dispatch(event, ExtendedMenuEvent.MENU_ABOUT);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_QUIT") :
+						dispatch(event, ExtendedMenuEvent.MENU_QUIT);
+						break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_NEW"):
+						dispatch(event, ExtendedMenuEvent.MENU_NEW);
+					break;
+					case resourceManager.getString("resources", "CONTROLBAR_MENU_UPDATE"):
+						dispatch(event, ExtendedMenuEvent.MENU_UPDATE);
+					break;
+
+
+				}
+			}
+			
+			private function dispatch(event:MenuEvent, id:int):void {
+				dispatchEvent(new ExtendedMenuEvent(id, "mainMenuEvent", event.bubbles, event.cancelable, event.menuBar,
+									event.menu, event.item, event.itemRenderer, event.label, event.index));
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:MenuBar id="menuBar" width="100%" 
+		labelField="@label" itemClick="onMenuItemClick(event)">
+		<mx:XMLList>
+		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_FILE')}">
+   				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_NEW')}"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_OPEN')}"/>
+				<menuitem type="separator"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SAVE')}"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SAVE_AS')}"/>
+				<menuitem type="separator"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_QUIT')}"/>
+			</menuitem>
+		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_WINDOW')}">
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_PREFERENCES')}"/>
+				<menuitem type="separator"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_SHOW_VIRTUAL_DEVICE')}"/>
+			</menuitem>
+		    <menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_HELP')}">
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_ABOUT')}"/>
+				<menuitem label="{resourceManager.getString('resources', 'CONTROLBAR_MENU_UPDATE')}"/>
+			</menuitem>
+		</mx:XMLList>
+	</mx:MenuBar>
+
+
+</mx:Canvas>

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns="http://www.literacybridge.org/2008/book">
+
+  <!-- Default Device Actions -->
+  <OnButton Button="PlayPause" Action="Release">
+    <Choose>
+      <When>
+        <GetValue Name="#isPlaying"/>
+        <Play/>
+        <SetLight Light="Green" Mode="On"/>
+      </When>
+      <Otherwise>
+        <Pause/>
+        <SetLight Light="Green" Mode="Off"/>
+      </Otherwise>
+    </Choose>
+  </OnButton>
+  <OnButton Button="Right" Action="Release">
+      <Goto>
+        <Location Target="Next"/>
+      </Goto>
+  </OnButton>
+  <OnButton Button="Left" Action="Release">
+    <Choose>
+      <When>
+        <Lt>
+          <GetValue Name="#offset"/>
+          <Literal>2000</Literal>
+        </Lt>
+        <Goto>
+          <Location Target="Previous"/>
+        </Goto>
+      </When>
+      <Otherwise>
+        <Goto>
+          <Location Target="Beginning"/>
+        </Goto>
+      </Otherwise>
+    </Choose>
+  </OnButton>
+  <OnButton Button="VolumeUp" Action="Press">
+    <SetValue Name="#volume">
+      <Add>
+        <GetValue Name="#volume"/>
+        <Literal>10</Literal>
+      </Add>
+    </SetValue>
+  </OnButton>
+  <OnButton Button="VolumeDown" Action="Press">
+    <SetValue Name="#volume">
+      <Sub>
+        <GetValue Name="#volume"/>
+        <Literal>10</Literal>
+      </Sub>
+    </SetValue>
+  </OnButton>
+  <OnButton Button="Up" Action="Release">
+      <Goto>
+        <Location Offset ="15000"/>
+      </Goto>
+  </OnButton>
+  <OnButton Button="Down" Action="Release">
+      <Goto>
+        <Location Offset ="-5000"/>
+      </Goto>
+  </OnButton>
+  <OnFinish>
+    <Goto>
+       <Location Target="Next"/>
+    </Goto>
+  </OnFinish>
+
+</Device>
+

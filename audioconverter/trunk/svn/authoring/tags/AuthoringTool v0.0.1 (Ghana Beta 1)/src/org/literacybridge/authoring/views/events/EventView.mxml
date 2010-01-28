@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+		xmlns:ev="org.literacybridge.authoring.views.events.*"
+		xmlns:util="org.literacybridge.authoring.util.*"
+		width="100%" height="100%" title="Events" backgroundAlpha="0.5" 
+		borderStyle="solid" borderThickness="1" borderColor="#646464" fontSize="12" layout="vertical"
+		themeColor="#009DFF" initialize="initControl()">
+
+	<mx:Style>
+	    .alignLeftPopUpStyle {
+    	   textAlign: left;
+    	}
+	</mx:Style>
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.events.RemoveActionEvent;
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.events.MenuEvent;
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayCollection;
+			import org.literacybridge.authoring.schema.actions.Action;
+			import org.literacybridge.authoring.schema.ButtonEventHandler;
+			import org.literacybridge.authoring.schema.ContentEventHandler;
+			import org.literacybridge.authoring.schema.EventHandler;
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import mx.managers.PopUpManager;
+			import mx.collections.ArrayCollection;
+			
+			[Bindable] private var eventHandlers:ArrayCollection = null;
+			[Bindable] private var addEventList:ArrayCollection = new ArrayCollection();
+		
+			private var addActionDialog:AddActionDialog = null;
+		
+			private static const AddButtonEventLabel:String = "Button Event...";
+			private static const AddButtonEventId:int = -1;
+		
+			private function initAddEventButton():void {
+				var contentEvents:ArrayCollection = ContentEventHandler.getEventList();
+				for (var i:int = 0; i < contentEvents.length; i++) {
+					addEventList.addItem(contentEvents.getItemAt(i));
+				}
+				addEventList.addItem(AddButtonEventId);
+				var menu:Menu = new Menu();
+				menu.dataProvider = addEventList;
+				menu.addEventListener("itemClick", onAddEvent);
+				menu.labelFunction=getAddEventMenuDisplayText;
+				addEventBtn.popUp = menu;
+			}
+			
+			private function getAddEventMenuDisplayText(item:Object):String {
+				var event:int = item as int;
+				if (event == AddButtonEventId) {
+					return AddButtonEventLabel;
+				}
+				
+				return ActionDisplayTextGenerator.getContentEventDisplayText(event);
+			}
+
+			public function update(data:Object):void {
+				eventHandlers = (data as ContentContainer).eventHandlers;
+				if (eventHandlers.length > 0) {
+					eventGrid.selectedIndex = 0;
+				}
+				actionRepeater.dataProvider = null;
+				enableControls();
+			}
+			
+			private function onAddEvent(event:MenuEvent):void {
+				if (event.item == AddButtonEventId) {
+						var addEvent:AddButtonEventDialog = AddButtonEventDialog(PopUpManager.createPopUp(this, AddButtonEventDialog, true));
+						addEvent.x = 200;
+						addEvent.y = 100;
+						addEvent.eventHandlers = eventHandlers;
+						
+				} else {
+					// check if event was already added
+					var alreadyExists:Boolean = false;
+					for (var i:int=0; i<eventHandlers.length; ++i) {
+						if (eventHandlers.getItemAt(i) is ContentEventHandler) {
+							var content:ContentEventHandler = eventHandlers.getItemAt(i) as ContentEventHandler;		
+							if (event.item as int == content.event) {
+								alreadyExists = true;
+								break;
+							}
+						}
+					}
+					
+					if (alreadyExists) {
+	                	Alert.show("This event already exists!", "Warning", Alert.OK, this);										
+					} else {
+						eventHandlers.addItem(new ContentEventHandler(event.item as int));
+						eventGrid.selectedIndex = eventHandlers.length-1;					
+					}
+				}
+				enableControls();
+			}
+			
+			private function onAddAction(event:Event):void {
+				addActionDialog = AddActionDialog(PopUpManager.createPopUp(this, AddActionDialog, true));
+				addActionDialog.setAction(null);	// null == we want to add a new action
+				addActionDialog.actions = (eventGrid.selectedItem as EventHandler).actions;
+				addActionDialog.x = mouseX;
+				addActionDialog.y = mouseY; 
+				addActionDialog.addEventListener(CloseEvent.CLOSE, popupClosing);
+			}
+			
+			private function popupClosing(e:Event):void {
+				addActionDialog.removeEventListener(CloseEvent.CLOSE, popupClosing);
+				PopUpManager.removePopUp(addActionDialog);
+			}
+			
+			
+			private function getDisplayText(item:Object, column:DataGridColumn):String {
+				if (item is ContentEventHandler) {
+					return getDisplayTextFromContentEventHandler(item as ContentEventHandler);
+				} else {
+					return getDisplayTextFromButtonEventHandler(item as ButtonEventHandler);
+				}
+			}
+			
+			private function getDisplayTextFromContentEventHandler(handler:ContentEventHandler):String {
+				if (handler.event == ContentEventHandler.Start) {
+					return resourceManager.getString('resources', 'EVENT_START');
+				}
+				if (handler.event == ContentEventHandler.End) {
+					return resourceManager.getString('resources', 'EVENT_END');
+				}
+				if (handler.event == ContentEventHandler.Enter) {
+					return resourceManager.getString('resources', 'EVENT_ENTER');
+				}
+				if (handler.event == ContentEventHandler.Exit) {
+					return resourceManager.getString('resources', 'EVENT_EXIT');
+				}
+
+				// TODO: throw exception
+				return "Noop";
+			}
+				
+			
+			private function getDisplayTextFromButtonEventHandler(handler:ButtonEventHandler):String {
+				return ActionDisplayTextGenerator.getButtonDisplayText(handler.button)
+							+ " " + ActionDisplayTextGenerator.getButtonActionDisplayText(handler.buttonAction);
+			}
+			
+			private function onSelectEvent(event:Event):void {
+				enableControls();
+			}
+
+			private function removeEventFromList():void {
+				// remove selected item
+				if (eventGrid.selectedItem != null) {
+					var actionList:ArrayCollection = (eventGrid.selectedItem as EventHandler).actions;
+					var text:String;
+					if (actionList == null || actionList.length == 0) {
+						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "'?";
+					} else if (actionList.length == 1) {
+						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "' and its action?";
+					} else {
+						text = "Do you really want to remove event '" + getDisplayText(eventGrid.selectedItem, null) + "' and its " + actionList.length + " actions?"
+					}
+                	Alert.show(text, "Remove Event", Alert.YES + Alert.NO, this, removeEventHandler, null, Alert.NO);					
+				}
+				enableControls();
+			}
+			
+            private function removeEventHandler(event:CloseEvent):void {
+                if (event.detail==Alert.YES) {
+					var curSel:int = eventGrid.selectedIndex;
+					eventHandlers.removeItemAt(eventGrid.selectedIndex);
+					if (curSel != 0) {
+						eventGrid.selectedIndex = curSel-1;
+					}
+					enableControls();
+                }
+            }
+			
+			private function enableControls():void {
+				// disable all as default
+				addEventBtn.enabled = false;
+				removeEventButton.enabled = false;
+				var addButton:Button = addbuttonPanel.getButton();
+				if (addButton != null) {	// JTBD
+					addButton.enabled = false;
+				} 
+				actionRepeater.dataProvider = null;
+				
+
+				// we have an event handler
+				if (eventHandlers != null) {	
+					addEventBtn.enabled = true;   // adding always possible
+		
+					if (eventGrid.selectedIndex != -1) {
+						removeEventButton.enabled = true; // remove only seleted
+						// add action always possible if an event is selected						
+						addButton = addbuttonPanel.getButton();
+						if (addButton != null) {	// JTBD
+							addButton.enabled = true;
+						} 	
+						// show actions of selected event
+						actionRepeater.dataProvider = (eventGrid.selectedItem as EventHandler).actions;			
+					}
+				}
+			}
+			
+			private function initControl():void {
+				enableControls();
+			} 
+			
+			private function removeAction(event:RemoveActionEvent):void {
+				if (eventGrid.selectedIndex != -1) {
+					var actionList:ArrayCollection = (eventGrid.selectedItem as EventHandler).actions;
+					var index:int = actionList.getItemIndex(event.action);
+					actionList.removeItemAt(index);			
+				}
+				enableControls();
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox width="100%" height="100%" borderStyle="solid" borderColor="#646464" horizontalGap="0">
+				<mx:DataGrid id="eventGrid"
+					horizontalGridLines="false" rowHeight="25" fontSize="12" dataProvider="{eventHandlers}" 
+					width="120" showHeaders="false" height="100%" 
+					borderStyle="none" backgroundAlpha="1.0" alternatingItemColors="[#FFFFFF, #FFFFFF]"
+					selectionColor="#97cffa" change="onSelectEvent(event)">
+		            <mx:columns>
+		                <mx:DataGridColumn paddingLeft="5" paddingRight="0" 
+		                	labelFunction="getDisplayText"/>
+		            </mx:columns>            
+			    </mx:DataGrid>				
+			<mx:VBox width="100%" height="100%" backgroundColor="#97cffa" backgroundAlpha="1.0">
+				<util:ButtonPanel title="Actions" width="100%" height="100%" borderAlpha="0.0" id="addbuttonPanel" 
+									buttonClick="onAddAction(event)" buttonLabel="Add" buttonPadding="10">
+					<mx:Repeater id="actionRepeater">
+					    <ev:ActionElement width="100%" action="{actionRepeater.currentItem as Action}" removeActionEvent="removeAction(event)"/> 
+  					</mx:Repeater>
+				</util:ButtonPanel>							
+			</mx:VBox>
+		</mx:HBox>
+		<mx:HBox>
+			<mx:PopUpButton label="Add Event" id="addEventBtn" preinitialize="initAddEventButton()" 
+				openAlways="true" popUpStyleName="alignLeftPopUpStyle"/>
+			<mx:Button label="Remove Event" id="removeEventButton" click="removeEventFromList()"/>
+		</mx:HBox>
+	</mx:VBox>
+</mx:Panel>
