@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	      borderStyle="solid" borderColor="#646464" borderThickness="1"
+	      showCloseButton="true"
+	      title="Add File" fontSize="12"
+	      close="close()">
+	      
+  	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
+			import mx.collections.ArrayCollection;
+			import org.literacybridge.authoring.schema.ContentFile;
+			import org.literacybridge.authoring.schema.ContentPackage;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] public var parentContainer:ContentPackage;
+			
+			private var file:File;
+			[Bindable] private var fileNames:ArrayCollection;
+			
+			private function close():void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function addFile():void {
+				for (var i:int = 0; i < fileNames.length; i++) {
+					var f:ContentFile = new ContentFile();
+					f.label = fileNames.getItemAt(i) as String;
+					parentContainer.addFile(f);
+					f.parent = parentContainer; // child must know it parent
+	                var dir:File = parentContainer.packageFile.parent;
+	                close();
+	   			}
+            }
+
+			private function fileBrowse():void {
+	            file = new File();  
+				var mp3Filter:FileFilter = new FileFilter("MP3", "*.mp3")		
+				file.addEventListener(FileListEvent.SELECT_MULTIPLE, onFileSelect);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForOpenMultiple(dialogTitle, ([mp3Filter]));	
+				} 
+				catch (err:Error) {
+					trace("Something went wrong browsing for a file");
+				}
+			}
+
+			private function onFileSelect(event:FileListEvent):void {
+				file.removeEventListener(FileListEvent.SELECT_MULTIPLE, onFileSelect);
+				fileNames = new ArrayCollection();
+				for (var i:int = 0; i < event.files.length; i++) {
+		         	var openedFile:File = event.files[i] as File;
+		         	fileNames.addItem(openedFile.name.substr(0, openedFile.name.length - openedFile.extension.length - 1));
+				}
+				addBtn.enabled = (fileNames.length > 0);
+	        }
+		]]>
+	</mx:Script>
+
+	      
+	<mx:VBox fontSize="10">
+		<mx:Form>
+			<mx:FormItem label="Parent:">
+				<mx:Label text="{parentContainer.label}"/>
+			</mx:FormItem>
+			<mx:FormItem label="File Names:">
+				<mx:HBox>
+					<mx:List dataProvider="{fileNames}"/>
+					<mx:Button label="Browse..." click="fileBrowse()"/>	
+				</mx:HBox>
+			</mx:FormItem>
+		</mx:Form>
+		<mx:HBox width="100%">		
+			<mx:Button id="addBtn" label="Add" click="addFile()" enabled="false"/>
+			<mx:Button label="Cancel" click="close()"/>
+		</mx:HBox>
+	</mx:VBox>
+</mx:TitleWindow>

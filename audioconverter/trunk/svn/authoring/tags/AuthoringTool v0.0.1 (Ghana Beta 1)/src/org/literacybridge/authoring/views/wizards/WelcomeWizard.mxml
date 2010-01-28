@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.config.Settings;
+			
+			private function onChange():void {
+				Settings.getInstance().showWizard=showWizardBox.selected;
+			}
+		]]>
+	</mx:Script>
+	
+	
+	<mx:VBox left="20">
+		<mx:Label text="What would you like to do?" fontSize="34" color="#111FDA"/>
+		<mx:Spacer height="10"/>
+		<mx:LinkButton label="Make a book and devide it into chapters, pages, etc." fontSize="14" color="#3743E9"/>	
+		<mx:LinkButton label="Add audio hyperlinks to an existing project." fontSize="14" color="#3743E9"/>
+		<mx:LinkButton label="Translate an existing project." fontSize="14" color="#3743E9"/>
+	</mx:VBox>
+	<mx:CheckBox label="Show wizard on startup" bottom="0" left="10" id="showWizardBox"
+				 change="onChange()" selected="{Settings.getInstance().showWizard}"/>	
+</mx:Canvas>

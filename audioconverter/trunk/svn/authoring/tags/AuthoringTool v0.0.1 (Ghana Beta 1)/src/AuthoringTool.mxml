@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:views="org.literacybridge.authoring.views.*"
+	xmlns:ev="org.literacybridge.authoring.views.events.*"
+	xmlns:props="org.literacybridge.authoring.views.properties.*"
+	xmlns:ol="org.literacybridge.authoring.views.outline.*"
+	xmlns:maps="org.literacybridge.authoring.maps.*"
+	layout="absolute"
+	applicationComplete="onApplicationComplete()"
+	initialize="onInit()"
+	showStatusBar="true"
+	borderColor="#C8C8C8" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#D2D2D2, #E6E6E6]" xmlns:waveform="org.literacybridge.authoring.views.waveform.*">
+
+	<maps:MainEventMap/>
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.ContainerTimeSpan;
+			import org.literacybridge.authoring.schema.Hyperlink;
+			import org.literacybridge.authoring.schema.ContentBlock;
+			import org.literacybridge.authoring.schema.ContentFile;
+			import org.literacybridge.authoring.schema.ContentContainer;
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
+			import org.literacybridge.authoring.views.dialogs.NewPackageDialog;
+			import org.literacybridge.authoring.virtualdevice.VirtualDevice;
+			import org.literacybridge.authoring.views.wizards.Wizard;
+			import org.literacybridge.authoring.views.wizards.WelcomeWizard;
+			import org.literacybridge.authoring.schema.ContentPackage;
+			import org.literacybridge.authoring.schema.ContentXMLWriter;
+			import org.literacybridge.authoring.schema.ContentXMLParser;
+			import mx.managers.PopUpManager;
+			import org.literacybridge.authoring.views.ApplicationSettingsScreen;
+			import org.literacybridge.authoring.events.ExtendedMenuEvent;
+			import mx.controls.Tree;
+			import mx.events.ListEvent;
+			import mx.events.TreeEvent;
+			import mx.events.CollectionEvent;
+			import org.literacybridge.authoring.config.Settings;
+			import mx.resources.ResourceManager;
+			
+			private var win:ApplicationSettingsScreen;
+			//private var welcome:Wizard;
+			private var loadingPackage:ContentPackage = null;
+			
+			private var file:File;
+			
+			private static var instance:AuthoringTool;
+			
+			public static function getInstance():AuthoringTool {
+				return instance;
+			}
+			
+			public function selectContainer(container:ContentContainer):void {
+				if (container is Hyperlink) {
+					outline.outlineTree.selectedItem=container.parent;
+					properties.update(container.parent);
+					properties.fileProps.hyperlinkDataGrid.selectedItem = container;
+					waveform.hyper.selectSpan(container as ContainerTimeSpan);
+					waveform.blocks.selectSpan(null);
+					waveform.draw();
+				} else {
+					outline.outlineTree.selectedItem=container;
+					properties.update(container);
+					waveform.hyper.selectSpan(null);
+				}
+				
+			}
+
+			
+			public function schemaUpdated():void {
+				waveform.draw();
+			}
+		
+			private function onInit() : void {
+				outline.outlineTree.addEventListener(ListEvent.CHANGE, updateProperties);
+			}
+			
+			private function updateProperties(event:Event) : void {
+				var tree:Tree;
+				tree = Tree(event.target);
+			
+				var container:ContentContainer = tree.selectedItem as ContentContainer;
+				properties.update(tree.selectedItem);
+				actions.update(tree.selectedItem);
+
+				if (container is ContentBlock) {
+					waveform.blocks.selectSpan(container as ContentBlock);
+				} else {
+					waveform.blocks.selectSpan(null);
+				}
+				
+				waveform.hyper.selectSpan(null);
+				
+                var file:ContentContainer = tree.selectedItem as ContentContainer;
+                while (file != null && !(file is ContentFile)) {
+                    file = file.parent;
+                }
+                if (file != null) {
+                    waveform.file = file as ContentFile;
+                    waveform.update();
+                } else {
+                	waveform.draw();
+                }
+			}
+		
+			private function onApplicationComplete() : void {
+				instance=this;
+				stage.nativeWindow.addEventListener(Event.CLOSING, windowClosingHandler);
+				loadAndApplySettings();
+				if (Settings.getInstance().showWizard) {
+//					welcome = Wizard(PopUpManager.createPopUp(this, Wizard, true));
+//					welcome.x=50;
+//					welcome.y=50;
+				} else {
+			/*		
+					var openedFile:File = Settings.getInstance().lastOpenFile;
+					if (openedFile != null && openedFile.exists) {
+						var parser:ContentXMLParser = new ContentXMLParser();
+						outline.contents.addItem(parser.parse(openedFile));
+					}
+				*/	
+				}
+			}
+			
+			private function windowClosingHandler(event:Event):void {
+				Settings.getInstance().saveSettings();
+			}
+			
+			private function loadAndApplySettings():void {
+				var settings:Settings = Settings.getInstance();
+				settings.loadSettings();
+				ResourceManager.getInstance().localeChain = [settings.locale];
+			}
+			
+			private function onMainMenuEvent(event:ExtendedMenuEvent):void {
+				switch (event.id) {
+					case ExtendedMenuEvent.MENU_PREFERENCES :
+						showSettingsScreen();
+						break;
+					case ExtendedMenuEvent.MENU_NEW:
+						createPackage();
+						break;
+					case ExtendedMenuEvent.MENU_OPEN :
+						openFileBrowserOpen();
+						break;
+					case ExtendedMenuEvent.MENU_SAVE :
+						save();
+						break;
+					case ExtendedMenuEvent.MENU_SAVE_AS :
+						openFileBrowserSaveAs();
+						break;
+					case ExtendedMenuEvent.MENU_QUIT :
+						onQuit();
+						break;
+					case ExtendedMenuEvent.MENU_SHOW_VIRTUAL_PLAYER :
+						showVirtualDevice();
+						break;
+
+				}
+			}
+
+			private function showSettingsScreen() : void {
+				win = ApplicationSettingsScreen(PopUpManager.createPopUp(this, ApplicationSettingsScreen, true));
+			}
+
+			private function showVirtualDevice() : void {
+				var device:VirtualDevice = VirtualDevice(PopUpManager.createPopUp(this, VirtualDevice, true));
+			}
+
+			private function createPackage():void {
+				var newPackageDlg:NewPackageDialog = NewPackageDialog(PopUpManager.createPopUp(this, NewPackageDialog, true));
+				newPackageDlg.contents = outline.contents;
+				PopUpManager.centerPopUp(newPackageDlg);
+			}
+
+			private function save():void {
+				var writer:ContentXMLWriter = new ContentXMLWriter();
+				writer.write(outline.contents.getItemAt(0) as ContentPackage);
+			}
+
+			private function openFileBrowserSaveAs():void {
+				// (outline.contents.getItemAt(0) as ContentPackage).label
+				// 					var fileName:String = (outline.contents.getItemAt(0) as ContentPackage).label + ".xml";		
+
+				
+	            file = new File();  
+				file.addEventListener(Event.SELECT, onFileSelectSaveAs);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForSave(dialogTitle);	
+				} catch (err:Error)	{
+					trace("Something went wrong browsing for a file");
+					// do s.th. useful
+				}					
+			}
+
+			private function onFileSelectSaveAs(event:Event):void {
+	         	var openedFile:File = event.target as File;
+	         	file.removeEventListener(Event.COMPLETE, onFileSelectSaveAs);
+				var writer:ContentXMLWriter = new ContentXMLWriter();
+				var content:ContentPackage = outline.contents.getItemAt(0) as ContentPackage;
+				content.packageFile=openedFile;
+				writer.write(content);
+	        }
+
+
+			private function openFileBrowserOpen():void {
+	            file = new File();  
+				var xmlFilter:FileFilter = new FileFilter("XML", "*.xml")		
+				file.addEventListener(Event.SELECT, onFileSelectOpen);
+				var dialogTitle:String = resourceManager.getString('resources', 'PLAYERCONTROL_FILE_BROWSER_TITLE');
+				try {
+					file.browseForOpen(dialogTitle, ([xmlFilter]));	
+				} catch (err:Error)	{
+					trace("Something went wrong browsing for a file");
+					// do s.th. useful
+				}
+			}
+
+			private function onFileSelectOpen(event:Event):void {
+	         	var openedFile:File = event.target as File;
+	         	file.removeEventListener(Event.COMPLETE, onFileSelectOpen);
+	         	Settings.getInstance().lastOpenFile=openedFile;
+				var parser:ContentXMLParser = new ContentXMLParser();
+                loadingPackage = parser.parse(openedFile);
+                var dir:File = openedFile.parent;
+                var loader: SynchronousFileLoader = new SynchronousFileLoader(loadingPackage.children, dir.url);
+                loader.addEventListener(Event.COMPLETE, packageLoadingComplete);
+                loader.load();
+            }
+
+            private function packageLoadingComplete(event:Event):void {
+                outline.contents.addItem(loadingPackage);
+                loadingPackage = null;
+            }
+	        
+	        private function onQuit():void {
+	        	close();
+	        }
+
+			
+		]]>
+	</mx:Script>
+
+	<mx:Metadata>
+        [ResourceBundle("resources")]
+    </mx:Metadata>
+
+	<mx:VBox width="100%" height="100%">
+		<views:ControlBar width="100%"
+			mainMenuEvent="onMainMenuEvent(event)"/>
+
+		<mx:Canvas width="100%" height="100%">
+			<mx:HDividedBox width="100%" height="100%"
+				left="10" top="5" right="10" bottom="10">
+				<ol:OutlineView id="outline" width="30%"/>
+
+				<mx:VDividedBox width="100%" height="100%">
+					<mx:VBox height="100%" width="100%">
+						<waveform:WaveFormView id="waveform"/>		
+					</mx:VBox>
+		
+					<mx:HDividedBox width="100%" height="100%" >
+						<props:PropertiesView id="properties" width="40%"/>
+						<ev:EventView id="actions" width="60%"/>
+					</mx:HDividedBox>
+				</mx:VDividedBox>
+			</mx:HDividedBox>
+		</mx:Canvas>		
+	</mx:VBox>
+</mx:WindowedApplication>

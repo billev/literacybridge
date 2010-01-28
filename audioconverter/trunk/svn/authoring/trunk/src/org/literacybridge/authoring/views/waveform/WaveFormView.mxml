@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		 xmlns:waveform="org.literacybridge.authoring.views.waveform.*"
+         width="100%" backgroundAlpha="0.5"
+         borderStyle="solid" borderThickness="1" borderColor="#646464" fontSize="12"
+         initialize="init()" xmlns:views="org.literacybridge.authoring.views.*">
+
+	<mx:Script>
+		<![CDATA[
+			import org.literacybridge.authoring.schema.ContentPackage;
+			import org.literacybridge.authoring.audio.SynchronousFileLoader;
+			import mx.collections.ArrayCollection;
+			import mx.binding.utils.BindingUtils;
+			import org.literacybridge.authoring.schema.ContentFile;
+			import org.literacybridge.authoring.audio.AudioSpectrum;
+
+			public static const POSITION_SLIDER_HEIGHT:int = 7;
+			public static const WAVEFORM_HEIGHT:int = 60;
+			
+			[Bindable]
+			public var offset:int;
+			
+			public var prevFile:ContentFile;
+			public var file:ContentFile;
+			[Bindable]
+			public var waveFormState:WaveFormState = new WaveFormState(this as WaveFormView);
+
+
+		
+	        override protected function updateDisplayList(w:Number, h:Number):void {
+	            super.updateDisplayList(w, h);
+    	        draw();
+        	}
+			
+			public function init():void {
+				zoomSlider.minimum=128;
+				zoomSlider.snapInterval=128;
+				zoomSlider.maximum = 1024;
+				scrollBar.pageScrollSize = 5000;
+				scrollBar.lineScrollSize = 500;
+			}
+			
+			private function complete(event:Event):void {
+				update();
+			}
+			
+			public function update():void {
+				if (file != prevFile) {
+					if (file.spectrum == null) {
+						// lazily load spectrum
+						var files:ArrayCollection = new ArrayCollection();
+		                files.addItem(file);
+
+		                var loader: SynchronousFileLoader = new SynchronousFileLoader(files, (file.parent as ContentPackage).packageFile.parent.url);
+                        loader.addEventListener(Event.COMPLETE, complete);
+		                loader.load();
+		                return;
+					}
+					player.stop();
+					player.init(file.spectrum.audio);
+					waveFormState.length = file.spectrum.audio.length;
+					waveFormState.autoZoom(blocks.width);
+					zoomSlider.value = waveFormState.interval;
+					waveForm.spectrum=file.spectrum;
+					hyper.spectrum = file.spectrum;
+					position.init();
+					blocks.init();
+					hyper.init();
+					prevFile = file;
+				}
+				draw();
+	
+			}
+			
+			public function draw():void {
+				if (file == null)  return;
+				blocks.spans = file.children;
+				hyper.spans = file.hyperlinks;
+				waveFormState.interval = zoomSlider.value;
+				waveFormState.start = scrollBar.scrollPosition;
+				waveFormState.end = Math.min(waveFormState.length, waveFormState.start + blocks.width * waveFormState.interval);
+				scrollBar.minScrollPosition = 0;
+				scrollBar.maxScrollPosition = waveFormState.length - blocks.width * waveFormState.interval;
+
+				position.draw();
+				blocks.draw();
+				waveForm.draw();
+				hyper.draw();				
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:VBox width="100%">
+		<mx:HBox width="100%">
+			<mx:Label text="Show:"/>
+			<mx:CheckBox label="Blocks" selected="true" id="showBlocks"/>
+			<mx:CheckBox label="Hyperlinks" selected="true" id="showHyperlinks"/>
+			<mx:Spacer width="20"/>
+			<mx:Label text="Zoom:"/>
+			<mx:HSlider change="draw()" id="zoomSlider" liveDragging="true"/>
+			<views:PlayerControl position="{position}" id="player"/>
+		</mx:HBox>
+		<mx:Spacer width="100%" height="5"/>
+		<mx:Canvas width="100%" height="85">
+			<waveform:WaveFormBackground width="100%" height="{WAVEFORM_HEIGHT}" y="{POSITION_SLIDER_HEIGHT}" borderStyle="solid"/>
+			<waveform:WaveFormVisualizer id="waveForm" width="100%" height="{WAVEFORM_HEIGHT}" y="{POSITION_SLIDER_HEIGHT}" waveFormState="{waveFormState}"/>
+			<waveform:WaveFormHyperLinks id="hyper" width="100%" height="{WAVEFORM_HEIGHT + 18}" y="{POSITION_SLIDER_HEIGHT}" visible="{showHyperlinks.selected}" waveFormState="{waveFormState}"/>
+			<waveform:WaveFormPosition id="position" width="100%" height="{WAVEFORM_HEIGHT + POSITION_SLIDER_HEIGHT}" y="0" waveFormState="{waveFormState}" playerControl="{player}"/>
+			<waveform:WaveFormBlocks id="blocks" width="100%" height="{WAVEFORM_HEIGHT}" y="{POSITION_SLIDER_HEIGHT}" visible="{showBlocks.selected}" waveFormState="{waveFormState}"/>
+		</mx:Canvas>
+	 	<mx:HScrollBar id="scrollBar" width="100%" scrollPosition="{offset}" enabled="true" scroll="draw()"/>
+	</mx:VBox>
+</mx:Panel>
