@@ -18,7 +18,8 @@ public class A18ToWavConverter extends A18BaseConverter {
 	protected String getCommand(File audioFile, File targetFile, Map<String, String> parameters) {
 		StringBuffer command = new StringBuffer();
 		command.append(getConverterEXEPath());
-		
+		command.append(" -d ");
+                
 		for (String key : parameters.keySet()) {
 			if (key.equals(A18BaseConverter.BIT_RATE)) {
 				command.append(" -b " + parameters.get(key));
