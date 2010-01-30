@@ -57,8 +57,8 @@ public class OptionsDialog {
 	private boolean mConvertToA18 = false;
 	
 	public OptionsDialog (Frame owner) {
-		mHeaderIdx = 0;
-		mAlgorithmIdx = 0;
+		mHeaderIdx = 1;
+		mAlgorithmIdx = 1;
 		mBitRate = "16000";
 		mSampleRate = "16000";
 		
@@ -106,10 +106,8 @@ public class OptionsDialog {
 		Map<String, String> parameters = new LinkedHashMap<String, String>();
 		parameters.put(BaseAudioConverter.BIT_RATE, getBitRateValue());
 		parameters.put(BaseAudioConverter.SAMPLE_RATE, getSampleRateValue());
-		if (mConvertToA18) {
-			parameters.put(AnyToA18Converter.USE_HEADER, getHeaderValue());
-			parameters.put(AnyToA18Converter.ALGORITHM, getAlgorithmValue());
-		}
+                parameters.put(AnyToA18Converter.USE_HEADER, getHeaderValue());
+                parameters.put(AnyToA18Converter.ALGORITHM, getAlgorithmValue());
 		return parameters;
 	}
 	
