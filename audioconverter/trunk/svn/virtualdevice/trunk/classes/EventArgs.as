@@ -1,6 +1,0 @@
-class EventArgs {
-
-	function EventArgs() {
-		}
-		
-    }
