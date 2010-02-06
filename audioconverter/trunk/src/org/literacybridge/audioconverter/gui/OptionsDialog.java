@@ -75,7 +75,7 @@ public class OptionsDialog {
 		mConvertToA18 = convertToA18;
 		algorithmList.setEnabled(convertToA18);
 		headerList.setEnabled(convertToA18);
-		algorithmList.setSelectedIndex(mHeaderIdx);
+		algorithmList.setSelectedIndex(mAlgorithmIdx);
 		headerList.setSelectedIndex(mHeaderIdx);
 		bitRateField.setText(mBitRate);
 		sampleRateField.setText(mSampleRate);
