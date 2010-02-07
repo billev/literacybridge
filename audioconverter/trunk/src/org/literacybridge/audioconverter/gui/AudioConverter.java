@@ -498,7 +498,9 @@ public class AudioConverter extends JFrame implements ActionListener,
 					
 				//  progress bar
 				progressBar.setStringPainted(true);
-				progressBar.setMaximum(fileModel.getNumFilesToConvert());
+				if (fileModel.getNumFilesToConvert() != 0) {
+					progressBar.setMaximum(fileModel.getNumFilesToConvert());
+				}
 				progressBar.setValue(0);
 				
 				if (detailsVisible) {
