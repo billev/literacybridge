@@ -33,7 +33,7 @@ public class A18ToMP3Converter extends BaseAudioConverter {
 
 	@Override
 	public String getShortDescription() {
-		return "Convert .a18 audio file to .mp3";
+		return "Convert *.a18 audio file to .mp3";
 	}
 
 	private static final Set<String> EXTENSIONS = new HashSet<String>();
