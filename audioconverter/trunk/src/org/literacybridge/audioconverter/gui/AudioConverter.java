@@ -5,6 +5,7 @@ package org.literacybridge.audioconverter.gui;
 // org.literacybridge.audioconverter.gui.AudioConverter
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -14,11 +15,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -51,12 +57,22 @@ import org.literacybridge.audioconverter.gui.fileView.DataModel;
 import org.literacybridge.audioconverter.gui.fileView.FileTableModel;
 import org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
 
+class WindowEventHandler extends WindowAdapter {
+	  public void windowClosing(WindowEvent evt) {
+		  
+		((AudioConverter) evt.getSource()).saveProgramSettings();
+	    System.exit(0);
+	  }
+	}
+
+
 public class AudioConverter extends JFrame implements ActionListener,
 		DocumentListener {
 
 	// serial number
 	private static final long serialVersionUID = -1515229785484369683L;
-
+	
+	
 	// options dialog
 	OptionsDialog mOptionsDialog;
 	
@@ -92,6 +108,13 @@ public class AudioConverter extends JFrame implements ActionListener,
 	BaseAudioConverter currentConverter = null;
 	FileTableModel fileTableMode = null;
 	
+	// Properties
+	Properties programSettings = new Properties();
+	String SourcePath;
+	String DestinationPath;
+	
+	static final String SettingsFile = "AudioConverter.props";
+	
 	// converters
 	private final List<BaseAudioConverter> converters = new ArrayList<BaseAudioConverter>();
 	
@@ -101,6 +124,8 @@ public class AudioConverter extends JFrame implements ActionListener,
 		ConverterClasses.add(AnyToA18Converter.class);
 		ConverterClasses.add(A18ToMP3Converter.class);
 	}
+	
+
 	
 	public AudioConverter() {
 		try {
@@ -115,11 +140,20 @@ public class AudioConverter extends JFrame implements ActionListener,
 
 		// load available converters
 		loadConverters();
+
 		
 		buildControls(false);
 		setLocation(200, 200);
 		setResizable(false);
 		setVisible(true);
+		
+		// load program Settings from props file
+		loadProgramSettings();
+		
+		this.addWindowListener(new WindowEventHandler());
+		// this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		
+		
 	}
 	
 	private int loadConverters() {
@@ -137,6 +171,62 @@ public class AudioConverter extends JFrame implements ActionListener,
 			}
 		}
 		return this.converters.size();
+	}
+	
+	private void loadProgramSettings(){
+		
+		// Load program settings from AudioConverter.props
+		try
+		{
+			 programSettings.load(new FileInputStream(SettingsFile));
+			 
+		 if (programSettings.getProperty("SourcePath") != null) {
+			 this.sourceDirPath = programSettings.getProperty("SourcePath");
+			 
+			 // Update source text field
+			 sourceDir.setText(this.sourceDirPath);
+			 
+		 }
+		 if (programSettings.getProperty("TargetPath") != null) {
+			 this.targetDirPath = programSettings.getProperty("TargetPath");	
+			 
+			 // Update target text field
+			 targetDir.setText(this.targetDirPath);
+		 }	
+			
+		}
+		catch (Exception e) {
+		      // TODO: Create file if not existing
+		}
+
+	}
+	
+	public void saveProgramSettings(){
+		
+		// Save program settings in AudioConverter.props
+		try
+		{
+			boolean savingRequired = false;
+			
+			if (this.sourceDirPath != null) {
+				programSettings.setProperty("SourcePath", sourceDirPath);
+				savingRequired = true;
+			}
+			if (this.targetDirPath != null) {
+				programSettings.setProperty("TargetPath", targetDirPath);
+				savingRequired = true;
+			}
+		 
+			if (savingRequired){
+			 	FileOutputStream out = new FileOutputStream(SettingsFile);
+				programSettings.store(out, "");
+				out.close(); 
+			}
+		}
+		catch (Exception e) {
+		      // nothing
+		}
+
 	}
 	
 	private void buildControls(boolean bShowDetails) {
@@ -448,6 +538,9 @@ public class AudioConverter extends JFrame implements ActionListener,
 				fileTableMode.setFileInfoList(fileModel);
 				sourceDirPath = file.getAbsolutePath();
 				this.sourceDir.setText(sourceDirPath);
+				programSettings.setProperty("SourcePath", sourceDirPath);
+
+				
 			}	
 		} else if (e.getSource() == targetButton) {
 			JFileChooser fc = null;
@@ -463,6 +556,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 				File file = fc.getSelectedFile();
 				targetDirPath = file.getAbsolutePath();
 				this.targetDir.setText(targetDirPath);
+				programSettings.setProperty("TargetPath", targetDirPath);
 			}
 		} else if (e.getSource() == detailsButton) {
 				

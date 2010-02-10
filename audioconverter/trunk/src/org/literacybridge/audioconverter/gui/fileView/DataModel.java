@@ -131,7 +131,7 @@ public class DataModel {
 			if (fileExtensions == null // show all
 					|| fileExtensions.contains(info.fileExtension)) {
 				try {
-					fileInfoList.add( info.clone());
+					fileInfoList.add(info.clone());
 				} catch (CloneNotSupportedException e) {
 					e.printStackTrace();
 				}
