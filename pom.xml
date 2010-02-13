@@ -99,4 +99,54 @@
       </archive>
     </mailingList>
   </mailingLists>
+  
+  <developers>
+    <developer>
+      <name>Sven Schade</name>
+      <email>sven [at] literacybridge.org</email>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Mathias Koehnke</name>
+      <email>mathias [at] literacybridge.org</email>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Chris Schmid</name>
+      <email>schmid.chris [at] gmail.com</email>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Chaitanya Kamisetty</name>
+      <email>chaitu [at] gmail.com</email>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Cliff Schmidt</name>
+      <email>cliff [at] literacybridge.org</email>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Michael Busch</name>
+      <email>michael [at] literacybridge.org</email>
+      <timezone>-8</timezone>
+    </developer>
+  </developers>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <modules>
+    <module>audioconverter</module>
+  </modules>
 </project>
