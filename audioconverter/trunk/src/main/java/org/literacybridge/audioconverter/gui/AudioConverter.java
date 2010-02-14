@@ -1,4 +1,4 @@
-package org.literacybridge.audioconverter.gui;
+package main.java.org.literacybridge.audioconverter.gui;
 
 //
 // - Entry point for the java wrapper
@@ -48,14 +48,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.literacybridge.audioconverter.converters.A18ToMP3Converter;
-import org.literacybridge.audioconverter.converters.A18ToWavConverter;
-import org.literacybridge.audioconverter.converters.AnyToA18Converter;
-import org.literacybridge.audioconverter.converters.BaseAudioConverter;
-import org.literacybridge.audioconverter.converters.BaseAudioConverter.ConversionException;
-import org.literacybridge.audioconverter.gui.fileView.DataModel;
-import org.literacybridge.audioconverter.gui.fileView.FileTableModel;
-import org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
+import main.java.org.literacybridge.audioconverter.converters.A18ToMP3Converter;
+import main.java.org.literacybridge.audioconverter.converters.A18ToWavConverter;
+import main.java.org.literacybridge.audioconverter.converters.AnyToA18Converter;
+import main.java.org.literacybridge.audioconverter.converters.BaseAudioConverter;
+import main.java.org.literacybridge.audioconverter.converters.BaseAudioConverter.ConversionException;
+import main.java.org.literacybridge.audioconverter.gui.fileView.DataModel;
+import main.java.org.literacybridge.audioconverter.gui.fileView.FileTableModel;
+import main.java.org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
 
 class WindowEventHandler extends WindowAdapter {
 	  public void windowClosing(WindowEvent evt) {
