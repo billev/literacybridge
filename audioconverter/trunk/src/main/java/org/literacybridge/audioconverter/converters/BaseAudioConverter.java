@@ -1,4 +1,4 @@
-package main.java.org.literacybridge.audioconverter.converters;
+package org.literacybridge.audioconverter.converters;
 
 import java.io.BufferedReader;
 import java.io.File;
