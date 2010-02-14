@@ -134,5 +134,6 @@
   
   <modules>
     <module>audioconverter/trunk</module>
+    <module>acm/trunk</module>
   </modules>
 </project>
