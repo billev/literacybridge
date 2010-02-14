@@ -1,4 +1,4 @@
-package main.java.org.literacybridge.audioconverter.gui;
+package org.literacybridge.audioconverter.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,8 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import main.java.org.literacybridge.audioconverter.converters.AnyToA18Converter;
-import main.java.org.literacybridge.audioconverter.converters.BaseAudioConverter;
+import org.literacybridge.audioconverter.converters.AnyToA18Converter;
+import org.literacybridge.audioconverter.converters.BaseAudioConverter;
 
 public class OptionsDialog {
 

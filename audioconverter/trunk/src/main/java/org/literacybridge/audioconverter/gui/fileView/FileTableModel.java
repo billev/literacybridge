@@ -1,10 +1,10 @@
-package main.java.org.literacybridge.audioconverter.gui.fileView;
+package org.literacybridge.audioconverter.gui.fileView;
 
 import java.util.HashMap;
 
 import javax.swing.table.AbstractTableModel;
 
-import main.java.org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
+import org.literacybridge.audioconverter.gui.fileView.DataModel.FileInfo;
 
 public class FileTableModel extends AbstractTableModel {
  
