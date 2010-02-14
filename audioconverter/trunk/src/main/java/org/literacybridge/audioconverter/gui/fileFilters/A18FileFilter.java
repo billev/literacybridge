@@ -1,4 +1,4 @@
-package org.literacybridge.audioconverter.gui.fileFilters;
+package main.java.org.literacybridge.audioconverter.gui.fileFilters;
 
 import java.io.File;
 

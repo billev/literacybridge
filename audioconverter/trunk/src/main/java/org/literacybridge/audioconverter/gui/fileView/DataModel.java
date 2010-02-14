@@ -1,10 +1,10 @@
-package org.literacybridge.audioconverter.gui.fileView;
+package main.java.org.literacybridge.audioconverter.gui.fileView;
 
 import java.io.File;
 import java.util.Set;
 import java.util.Vector;
 
-import org.literacybridge.audioconverter.gui.fileFilters.Utils;
+import main.java.org.literacybridge.audioconverter.gui.fileFilters.Utils;
 
 public class DataModel {	
 	
