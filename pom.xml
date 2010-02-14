@@ -17,6 +17,11 @@
     <url>http://www.literacybridge.org</url>
   </organization>
   
+  <ciManagement>
+    <system>Hudson</system>
+    <url>http://literacybridge.dyndns.org</url>
+  </ciManagement>
+  
   <issueManagement>
     <system>Google Code</system>
     <url>http://code.google.com/p/talkingbook/issues/list</url>
