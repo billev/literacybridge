@@ -17,14 +17,12 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -125,12 +123,6 @@ public class AudioConverter extends JFrame implements ActionListener,
 
 	
 	public AudioConverter() {
-		try {
-			UIManager.setLookAndFeel("org.fife.plaf.Office2003.Office2003LookAndFeel");
-		} catch (Exception e) {
-			// ignore and use default look and feel
-		}
-
 		// initialize JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Literacy Bridge Audio Converter");
@@ -227,8 +219,6 @@ public class AudioConverter extends JFrame implements ActionListener,
 	}
 	
 	private void buildControls(boolean bShowDetails) {
-		ClassLoader cl = getClass().getClassLoader();
-		
 		getContentPane().removeAll();
 		getContentPane().setLayout(new GridBagLayout());
 
@@ -274,8 +264,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 		sourceDir.getDocument().addDocumentListener(this);
 		if (sourceDirPath != null) sourceDir.setText(sourceDirPath);
 
-		URL openIcon = cl.getResource("org/fife/plaf/Office2003/open.gif");
-		sourceButton = new JButton("Select...", new ImageIcon(openIcon));
+		sourceButton = new JButton("Select...");
 		gbc.gridx 	 = 4;
 		gbc.gridwidth  = 1;
 		mainPanel.add(sourceButton, gbc);
@@ -352,7 +341,7 @@ public class AudioConverter extends JFrame implements ActionListener,
 		targetDir.getDocument().addDocumentListener(this);
 		if (targetDirPath != null) targetDir.setText(targetDirPath);
 
-		targetButton = new JButton("Select...", new ImageIcon(openIcon));
+		targetButton = new JButton("Select...");
 		gbc.gridx = 4;
 		gbc.gridwidth = 1;
 		mainPanel.add(targetButton, gbc);
