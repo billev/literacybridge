@@ -133,7 +133,7 @@
   </build>
   
   <modules>
-    <module>audioconverter/trunk</module>
-    <module>acm/trunk</module>
+  	<module>../audioconverter/trunk</module>
+  	<module>../acm/trunk</module>
   </modules>
 </project>

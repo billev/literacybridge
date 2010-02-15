@@ -4,10 +4,7 @@ package org.literacybridge.audioconverter.gui;
 // - Entry point for the java wrapper
 // org.literacybridge.audioconverter.gui.AudioConverter
 
-import java.awt.BorderLayout;
-
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
