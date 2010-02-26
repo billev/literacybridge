@@ -19,14 +19,14 @@ public class A18Format extends AudioConversionFormat{
 	}
 		
 	
-	public A18Format (String BitRate, String SampleRate, AlgorithmList usedAlgo, useHeaderChoice usedHeader){
+	public A18Format (int BitDepth, float SampleRate, int Channels, AlgorithmList usedAlgo, useHeaderChoice usedHeader){
 		
-		this.BitRate = BitRate;
-		this.SampleRate = SampleRate;
+		super(BitDepth, SampleRate, Channels);
+		
 		this.usedAlgo = String.valueOf(usedAlgo);
 		this.usedHeader = String.valueOf(usedHeader);
-		this.FileEnding = "A18";
 		
+		this.setFileEnding("A18");	
 	}
 	
 
