@@ -2,11 +2,11 @@ package org.literacybridge.audioconverter.api;
 
 public class WAVFormat extends AudioConversionFormat {
 
-	public WAVFormat (String BitRate, String SampleRate){
+	public WAVFormat (int BitDepth, float SampleRate, int Channels){
 		
-		this.BitRate = BitRate;
-		this.SampleRate = SampleRate;
-		this.FileEnding = "WAV";
-		
+		super(BitDepth, SampleRate, Channels);
+				
+		this.setFileEnding("WAV");
+				
 	}
 }

@@ -40,19 +40,17 @@ public class ExternalConverter {
 	public void convert(File sourceFile, File targetFile, AudioConversionFormat targetFormat) 
 		throws ConversionException {
 		
-		
-		
-		if (targetFormat.FileEnding == "A18")
+		if (targetFormat.getFileEnding()== "A18")
 		{
 				SetParameters(targetFormat);
 				AnyToA18Conv.convertFile(sourceFile, targetFile, this.override, this.parameters);
 		}
-		if (targetFormat.FileEnding == "WAV")
+		if (targetFormat.getFileEnding() == "WAV")
 		{
 				SetParameters(targetFormat);
 				A18ToWAVConv.convertFile(sourceFile, targetFile, this.override, this.parameters);
 		}
-		if (targetFormat.FileEnding == "MP3")
+		if (targetFormat.getFileEnding() == "MP3")
 		{
 				SetParameters(targetFormat);
 				A18ToMP3Conv.convertFile(sourceFile, targetFile, this.override, this.parameters);
@@ -64,10 +62,10 @@ public class ExternalConverter {
 		
 		parameters.clear();
 		
-		parameters.put(BaseAudioConverter.BIT_RATE, paramFormat.BitRate);
-		parameters.put(BaseAudioConverter.SAMPLE_RATE, paramFormat.SampleRate);
+		parameters.put(BaseAudioConverter.BIT_RATE, String.valueOf(paramFormat.getBitRateString()));
+		parameters.put(BaseAudioConverter.SAMPLE_RATE, String.valueOf(paramFormat.getSampleRateString()));
 		
-		if (paramFormat.FileEnding == "A18")
+		if (paramFormat.getFileEnding() == "A18")
 		{
 
 			parameters.put(AnyToA18Converter.USE_HEADER, ((A18Format)paramFormat).usedHeader);

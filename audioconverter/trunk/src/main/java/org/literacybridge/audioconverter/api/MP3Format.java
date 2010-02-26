@@ -1,14 +1,17 @@
+
 package org.literacybridge.audioconverter.api;
 
 public class MP3Format extends AudioConversionFormat {
 
-		public MP3Format (String BitRate, String SampleRate){
+		public MP3Format (int BitDepth, float SampleRate, int Channels){
 			
-			this.BitRate = BitRate;
-			this.SampleRate = SampleRate;
-			this.FileEnding = "MP3";
-			
+			super(BitDepth, SampleRate, Channels);
+					
+			this.setFileEnding("MP3");
+					
 		}
+		
+		
 	}
 
 	
