@@ -22,9 +22,9 @@ public class WavToA18Converter extends A18BaseConverter {
 				command.append(" -h " + parameters.get(key));
 			} else if (key.equals(AnyToA18Converter.BIT_RATE)) {
 				command.append(" -b " + parameters.get(key));
-			} else if (key.equals(AnyToA18Converter.SAMPLE_RATE)) {
-				command.append(" -s " + parameters.get(key));
-			}
+			}// else if (key.equals(AnyToA18Converter.SAMPLE_RATE)) {
+			//	command.append(" -s " + parameters.get(key));
+			//}
 		}		
 		command.append(" -o \"" + targetFile.getAbsolutePath()+ "\"");
 		command.append(" \"" + audioFile.getAbsolutePath() + "\"");
