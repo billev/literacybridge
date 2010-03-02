@@ -20,9 +20,6 @@ public class ExternalConverter {
 	private AnyToA18Converter AnyToA18Conv;
 	
 	Map<String, String> parameters = new LinkedHashMap<String, String>();
-
-	
-	public boolean override = false;
 	
 	public ExternalConverter() throws ConversionException 
 	{
@@ -40,20 +37,30 @@ public class ExternalConverter {
 	public void convert(File sourceFile, File targetFile, AudioConversionFormat targetFormat) 
 		throws ConversionException {
 		
+		// Default: Don't overwrite
+		
+		this.convert(sourceFile, targetFile, targetFormat, false);
+		
+	}
+	
+	
+	public void convert(File sourceFile, File targetFile, AudioConversionFormat targetFormat, boolean overwrite) 
+		throws ConversionException {
+		
 		if (targetFormat.getFileEnding()== "A18")
 		{
 				SetParameters(targetFormat);
-				AnyToA18Conv.convertFile(sourceFile, targetFile, this.override, this.parameters);
+				AnyToA18Conv.convertFile(sourceFile, targetFile, overwrite, this.parameters);
 		}
 		if (targetFormat.getFileEnding() == "WAV")
 		{
 				SetParameters(targetFormat);
-				A18ToWAVConv.convertFile(sourceFile, targetFile, this.override, this.parameters);
+				A18ToWAVConv.convertFile(sourceFile, targetFile, overwrite, this.parameters);
 		}
 		if (targetFormat.getFileEnding() == "MP3")
 		{
 				SetParameters(targetFormat);
-				A18ToMP3Conv.convertFile(sourceFile, targetFile, this.override, this.parameters);
+				A18ToMP3Conv.convertFile(sourceFile, targetFile, overwrite, this.parameters);
 		}
 	}
 	
