@@ -34,6 +34,18 @@
     </license>
   </licenses>
   
+  <repositories>
+    <repository>
+      <id>java</id>
+      <name>Java Maven Repository</name>
+      <layout>default</layout>
+      <url>http://download.java.net/maven/2/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
   <scm>
     <url>http://talkingbook.googlecode.com/svn/</url>
     <connection>
