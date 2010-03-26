@@ -19,12 +19,4 @@
     <relativePath>../../literacybridge-parent/pom.xml</relativePath>
   </parent>
   <url>http://code.google.com/p/talkingbook/</url>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 </project>
