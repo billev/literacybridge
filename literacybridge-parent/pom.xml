@@ -44,7 +44,11 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-  </repositories>
+    <repository>
+      <id>eclipselink</id>
+      <url>http://mirrors.ibiblio.org/pub/mirrors/eclipse/rt/eclipselink/maven.repo/</url>
+    </repository> 
+ </repositories>
   
   <scm>
     <url>http://talkingbook.googlecode.com/svn/</url>
