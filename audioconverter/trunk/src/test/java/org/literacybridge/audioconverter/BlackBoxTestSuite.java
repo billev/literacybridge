@@ -1,4 +1,4 @@
-package org.literacybridge.audioconverter.junit;
+package org.literacybridge.audioconverter;
 
 import static org.junit.Assert.assertTrue;
 
