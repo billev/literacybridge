@@ -1,2 +1,2 @@
-kolagne(dirge)#STORY
+^pig#STORY
 changes-in-world#STORY
