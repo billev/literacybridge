@@ -1,0 +1,81 @@
+// Copyright 2009,2010 Literacy Bridge
+// CONFIDENTIAL -- Do not share without Literacy Bridge Non-Disclosure Agreement
+// Contact: info@literacybridge.org
+#include "./system/include/system_head.h"
+#include "./driver/include/driver_head.h"
+#include "./component/include/component_head.h"
+#include "./Reprog/USB_Flash_reprog.h"
+#include "./Application\TalkingBook\Include\util.h"
+
+void
+FlashReprogLomem(flash *fp, unsigned int *buf)
+{
+	int i, nbytes, nwords;
+	unsigned int *addr, *saveaddr;
+	long pos;
+	extern void RESET();
+	unsigned int offset;
+
+	pos = lseek(fp->fileHandle, FLASH_APP_ADDR * 2, SEEK_SET);
+			
+	for (addr = FLASH_APP_ADDR, offset = 0; addr < REPROG_HIMEM; addr += FLASH_SD_READ_SIZE) {
+		nbytes = read(fp->fileHandle, (unsigned long)buf<<1, FLASH_SD_READ_SIZE<<1);
+		if(nbytes <= 1)
+			break;
+		
+		nwords = nbytes >> 1;
+		fp->pflash = addr;
+		
+// tmp use 0x70000 as a "flash buffer"
+		
+		if(((unsigned long) addr & FLASH_SD_ERASE_MASK) == 0) { // erase at each NOR page boundary 
+			if(addr != FLASH_APP_ADDR) { // not first time
+				copy70000(fp);
+			}
+			fp->pflash = 0x70000; // erase 0x70000
+			fp->erasesector(fp);
+			offset = 0;
+		}
+	
+		for(i=0; i<nwords; i++) {
+			(*fp->writeword)(fp, 0x70000 + i + offset, buf[i]);
+		}
+		offset += nwords;
+	}
+	
+	fp->pflash = addr;
+	copy70000(fp);
+		
+	addr = 0xf800;
+	pos = lseek(fp->fileHandle, 0x1f000 /*0xf800 * 2*/, SEEK_SET);  // do the low page
+	nbytes = read(fp->fileHandle, (unsigned long)buf<<1, FLASH_LOW_SECTOR_SIZE<<1);
+	if(nbytes > 1) {
+		nwords = nbytes >> 1;
+		fp->pflash = 0xf800;
+		fp->erasesector(fp);
+		for(i=0; i<nwords; i++) {
+			(*fp->writeword)(fp, addr + i, buf[i]);
+		}
+	}
+			
+	RESET();
+}
+static void
+copy70000(flash *fp) {
+	unsigned long i;
+	unsigned int *addr;
+	unsigned int *buf = (unsigned int *) 0x70000;
+	
+	fp->pflash = fp->pflash - (unsigned)FLASH_ERASE_SIZE;
+	if(fp->pflash == 0x70000)
+		return;
+	
+	fp->erasesector(fp);
+	
+	for(i=0, addr = fp->pflash; i < (unsigned)FLASH_ERASE_SIZE; i++) {
+		if(buf[i] == 0xffff)
+			continue;		
+		(*fp->writeword)(fp, addr + i, buf[i]);
+    }
+
+}
