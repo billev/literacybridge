@@ -1,0 +1,182 @@
+VERSION:1.40
+TIME-PRECISION:128
+LANGUAGE:DG
+---
+P:DG
+      A!:[welcome]
+      Ah:<%>
+      A+|:I[faster] S+
+      A-|:I[slower] S-
+      A+:I[louder] V+
+      A-:I[quieter] V-
+      Ap:P
+      A^:L-[title-list]
+      Av:L+[title-list]
+      A<:T-10000
+      A>:T+10000
+      A*:Em
+      Ao:[context-menu]
+      Ao|:<%EN>
+  F:record-prompt
+    B:0-
+// next file is turn me off
+  F:P
+   B:0-
+  F:empty
+   B:0- [empty-list]
+  F:dg-deleted
+   B:0- [file now deleted]
+  F:dg-copying
+   B:0- [file copying]
+  F:dg-copied
+   B:0- [file now copied]
+  F:bell
+    B:300-1000. [short-bell]
+  F:E
+    B:0- [welcome]
+      A$:[home-help-OR]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:L
+    B:500- [home-help-OR]
+      A$:[right-subjects]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:H
+    B:500-6750. [right-subjects]
+      A$:[intro-record]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:rec-short
+    B:0- [intro-record] 
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  L:L/master-list [subject-list]
+     A$:I[up-down]
+     Ah:<%>
+     A>:L-[subject-list]
+     A<:L+[subject-list]
+     Ao:~
+     A*:Em
+  L:P/{[subject-list]} [title-list]
+     A^:L-[title-list]
+     Av:L+[title-list]
+     A*:~
+  F:updown
+    B:0- [up-down]
+  F:R
+    B:700-9750. [right-new help]
+      A^:Ud+[welcome]
+      Av:Z
+      A>:[home-beginning]
+      A<:[black-delete]
+      Ao:~
+      A*:~
+  F:S
+    B:300-10000. [home-beginning]
+      A>:[center-starts-stops]
+      A<:[right-new help]
+      Av:H
+      Ao:~
+      A*:~
+  F:T
+    B:700-13750. [center-starts-stops]
+      A<:[home-beginning]
+      A>:[minus-quieter]
+      Ao:~
+      A*:~
+  F:V
+    B:500-9250. [minus-quieter]
+      A<:[center-starts-stops]
+      A>:[plus-louder]
+      Ao:~
+      A*:~
+  F:U
+    B:500-8600. [plus-louder]
+      A>:[loud-battery-warning]
+      A<:[minus-quieter]
+      Ao:~
+      A*:~
+  F:vol-bat
+    B:0- [loud-battery-warning]
+      A>:[ff-rw]
+      A<:[plus-louder]
+      Ao:~
+      A*:~
+  F:FFRW
+    B:0- [ff-rw]
+      A>:[star-record]
+      A<:[loud-battery-warning]
+      Ao:~
+      A*:~
+  F:rec-long
+    B:0- [star-record]
+      A>:[black-copy]
+      A<:[ff-rw]
+      Ao:~
+      A*:~
+  F:tocopy
+    B:0- [black-copy]
+      A>:[black-delete]
+      A<:[star-record]
+      Ao:~
+      A*:~
+  F:todelete
+    B:0- [black-delete]
+      A>:[home-beginning]
+      A<:[black-copy]
+      Ao:~
+      A*:~
+  F:dg-context
+    B:0- [context-menu]
+      A>:[context-copy]
+      A<:[context-delete]
+  F:dg-context-copy
+    B:0- [context-copy]
+      A>:[context-delete]
+      A<:[context-menu]
+      Ao:[copy1]
+  F:dg-copy1  
+    B:0- [copy1] V+ / VN
+      Ao:[copy2]
+  F:dg-copy2  
+    B:0- [copy2] V+ / VN
+      Ao:C{[title-list]} [subject-list]
+  F:dg-context-delete
+    B:0- [context-delete]
+      A<:[context-copy]
+      A>:[context-menu]
+      Ao:[star-confirm-home-keep]
+  F:X
+    B:1000- [star-confirm-home-keep]
+      Ah:<%>
+      A*:D{[title-list]} [subject-list]
+
+  F:A
+    B:700-1750. [louder]
+  F:B
+    B:600-1800. [quieter]
+  F:C
+    B:600-1750. [faster]    
+  F:D  
+    B:200 - 1150. [slower]    

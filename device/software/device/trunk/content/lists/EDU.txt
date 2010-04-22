@@ -1,9 +1,6 @@
+pius#EDU
 africa-my-africa#EDU
 ^dino#EDU
 community-dev#EDU
 energy-sources#EDU
-^sikulu#EDU
-feeding-relationships#EDU
-^numbers#EDU
 ^alphabet#EDU
-morning-sun#EDU
