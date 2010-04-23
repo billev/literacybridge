@@ -21,8 +21,8 @@
 
 #include	"component/include/fs/typedef.h"
 #include	"component/include/fs/DriverLayer.h"
-#include	"./Driver/Include/USBHost/USBHostMSDC.h"	
-#include	"./Driver/Include/USBHost/USB_Host_RAM.h"
+//xxx#include	"./Driver/Include/USBHost/USBHostMSDC.h"	
+//xxx#include	"./Driver/Include/USBHost/USB_Host_RAM.h"
 
 
 #define C_DISK1_FLAG	0x0001
@@ -30,8 +30,8 @@
 #define C_DISK3_FLAG	0x0004
 #define C_DISK4_FLAG	0x0008
 
-INT16 bUSB_Init = -1;
-INT16 bUSB_LUN_Init;
+//rhm INT16 bUSB_Init = -1;
+//rhm INT16 bUSB_LUN_Init;
 
 unsigned int arUSBHostBuffer[256];
 unsigned int arUSBHostCSWBuffer[16];
@@ -73,22 +73,14 @@ unsigned int gBlk2BufCnt;
 
 #endif		//end of SUPPROT_2K_BLOCK
 
+/*rhm
 extern INT16 USBHost_Initial_1();
 extern INT16 USBHost_Uninitial_1();
 extern void USBHost_GetDrvInfo_1();
 extern INT16 USBHost_ReadSector_1();
 extern INT16 USBHost_WriteSector_1();
 
-
-struct Drv_FileSystem FS_USB_driver = {
-	"USB" ,
-	DEVICE_READ_ALLOW|DEVICE_WRITE_ALLOW ,
-	USBHost_Initial_1 ,
-	USBHost_Uninitial_1 ,
-	USBHost_GetDrvInfo_1 ,
-	USBHost_ReadSector_1 ,
-	USBHost_WriteSector_1 ,
-};
+rhm*/
 
 // from SystemIntoUSB.c
 
@@ -115,6 +107,8 @@ typedef enum
 #include "Reprog/USBD_Define.h"
 #include "Reprog/USBD.h"
 
+
+
 str_USB_Lun_Info USB_Lun_Define[] =
 {
 //	{0x00, LunType_NandDrive	, USB_Nand_Part0_Offset,	USB_Nand_Part0_Size, 	LunStatus_Normal},
@@ -131,7 +125,7 @@ str_USB_Lun_Info 	*FP_USB_Lun_Define[N_USB_LUN];
 
 USBHostType  USBHost_Flag;
 
-int fl_size;
+extern int fl_size;
 unsigned int REPROG_IN_Progress;
 unsigned int RHM_USBreprogBuf_Full;
 unsigned int *RHM_DEBUG_LAST_LBA;
@@ -140,7 +134,7 @@ flash *RHM_FlashPtr;
 unsigned int *RHM_FlashBuf;
 long USB_INSERT_PTR;
 long USB_ISR_PTR;
-void (*ReprogJump)() = 0;
+void (*ReprogJump)(void *);
 
 
 // frome (replacing) DrvStruct.c
@@ -148,6 +142,7 @@ void (*ReprogJump)() = 0;
 #define		CREAT_DRIVERLAYER_STRUCT
 //#include	"DriverLayer.h"
 //NAND FLASH partition define
+/*rhm
 const  UINT32 Nand_Part0_Offset = NAND_PART0_OFFSET;
 const  UINT32 Nand_Part0_Size = NAND_PART0_SIZE;
 const  UINT16 Nand_Part0_Mode = NAND_PART0_MODE;
@@ -161,13 +156,14 @@ const  UINT32 Nand_Part2_Size = NAND_PART2_SIZE;
 const  UINT16 Nand_Part2_Mode = NAND_PART2_MODE;
 
 const UINT32 Nand_Reserve_Offset = NAND_RESERVE_OFFSET;
+rhm */
 
-int	bNandInit;
+extern int	bNandInit;
 extern int bUSB_Init;
 
 //定义不使用IRAM。在NAND BOOT的情况下不能使用IRAM（带初始值的全局变量）
 
-struct Drv_FileSystem *FileSysDrv[NBLKDEV];
+//rhm struct Drv_FileSystem *FileSysDrv[NBLKDEV];
 
 // from FS_DS.c
 
@@ -186,12 +182,12 @@ unsigned long MP3FATReadBuffer;		//从文件系统中读取数据暂时到Buffer中
 #include ".\System\include\system\GPL162002.h"
 #include ".\Component\Include\FS\typedef.h"  // for BOOL
 
-#define	C_SEEK_SPEEDUP_SUPPORT
+//rhm#define	C_SEEK_SPEEDUP_SUPPORT
 
-#ifdef C_SEEK_SPEEDUP_SUPPORT
-int				gSeekSpeedupBufferFlag;
-unsigned int	gSeekSpeedupBuffer[512];
-#endif
+//rhm#ifdef C_SEEK_SPEEDUP_SUPPORT
+//rhmint				gSeekSpeedupBufferFlag;
+//rhmunsigned int	gSeekSpeedupBuffer[512];
+//rhm#endif
 
 
 //from scsi_table/asm
