@@ -34,7 +34,7 @@ P:EN
     B:0-1000. [short-bell]
   F:en-E
     B:0- [welcome]
-      A$:[home-help-OR]
+      A$:[right-subjects]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
@@ -44,7 +44,6 @@ P:EN
       A*:~
   F:en-L
     B:0- [home-help-OR]
-      A$:[right-subjects]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
@@ -62,8 +61,9 @@ P:EN
       Av:~
       Ao:<%DG>
       A*:~
-  F:en-rec-long
+  F:en-rec-med
     B:0- [intro-record] 
+      A$:[home-help-OR]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
@@ -89,58 +89,65 @@ P:EN
   F:en-R
     B:0- [right-new help]
       A^:Ud+[welcome]
-      Av:Z
-      A>:[home-beginning]
-      A<:[black-copy-del]
-      Ao:~
-      A*:~
-  F:en-S
-    B:0- [home-beginning]
-      A>:[center-starts-stops]
-      A<:[right-new help]
       Av:H
+      A>:[center-starts-stops]
+      A<:[black-copy-del]
       Ao:~
       A*:~
   F:en-T
     B:0- [center-starts-stops]
-      A<:[home-beginning]
+      A$:I[right-new help]
+      Av:Z
+      A<:[right-new help]
       A>:[minus-quieter]
       Ao:~
       A*:~
   F:en-V
     B:0- [minus-quieter]
+      A$:I[right-new help]
       A<:[center-starts-stops]
       A>:[plus-louder]
       Ao:~
       A*:~
   F:en-U
     B:0- [plus-louder]
+      A$:I[right-new help]
       A>:[loud-battery-warning]
       A<:[minus-quieter]
       Ao:~
       A*:~
   F:en-vol-bat
     B:0- [loud-battery-warning]
+      A$:I[right-new help]
       A>:[ff-rw]
       A<:[plus-louder]
       Ao:~
       A*:~
   F:en-FFRW
     B:0- [ff-rw]
+      A$:I[right-new help]
       A>:[star-record]
       A<:[loud-battery-warning]
       Ao:~
       A*:~
   F:en-rec-long
     B:0- [star-record]
+      A$:I[right-new help]
       A>:[black-copy-del]
       A<:[ff-rw]
       Ao:~
       A*:~
   F:en-tocopydelete
     B:0- [black-copy-del] V+ / VN
+      A$:I[right-new help]
       A>:[home-beginning]
       A<:[star-record]
+      Ao:~
+      A*:~
+  F:en-S
+    B:0- [home-beginning]
+      A>:[center-starts-stops]
+      A<:[black-copy-del]
       Ao:~
       A*:~
   F:en-context
@@ -152,11 +159,6 @@ P:EN
       A>:[context-delete]
       A<:[context-menu]
       Ao:[copy1]
-  F:A
-    B:0- [context-trim]
-      A>:[context-menu]
-      A<:[context-delete]
-      Ao:M{[title-list]} 
   F:en-copy1  
     B:0- [copy1] V+ / VN
       Ao:[copy2]
@@ -168,7 +170,13 @@ P:EN
       A$:[en-house]
       A<:[context-copy]
       A>:[context-menu]
+      Av:[context-trim]
       Ao:[star-confirm-home-keep]
+  F:en-context-delete
+    B:0- [context-trim]
+      A>:[context-menu]
+      A<:[context-delete]
+      Ao:M{[title-list]} 
   F:OR-right
     B:0- [OR-right] V+ / VN
       A>:[context-delete]
@@ -183,7 +191,6 @@ P:EN
     B:0- [star-confirm-home-keep]
       Ah:<%>
       A*:D{[title-list]} [subject-list]
-
   F:en-A
     B:0- [louder]
   F:en-B
