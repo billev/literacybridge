@@ -16,7 +16,7 @@ P:DG
       A>:T+10000
       A*:Em
       Ao:[context-menu]
-      Ao|:<%EN>
+      Ao|:<%KN>
   F:record-prompt
     B:0-
 // next file is turn me off
@@ -34,23 +34,22 @@ P:DG
     B:300-1000. [short-bell]
   F:E
     B:0- [welcome]
-      A$:[home-help-OR]
-      Ah:[right-new help]
-      A>:L-[subject-list]
-      A<:L+[subject-list]
-      A^:~
-      Av:~
-      Ao:<%EN>
-      A*:~
-  F:L
-    B:500- [home-help-OR]
       A$:[right-subjects]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%EN>
+      Ao:<%KN>
+      A*:~
+  F:LnoOR
+    B:500- [home-help-OR]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%KN>
       A*:~
   F:H
     B:500-6750. [right-subjects]
@@ -60,16 +59,17 @@ P:DG
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%EN>
+      Ao:<%KN>
       A*:~
   F:rec-short
     B:0- [intro-record] 
+      A$:[home-help-OR]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%EN>
+      Ao:<%KN>
       A*:~
   L:L/master-list [subject-list]
      A$:I[up-down]
@@ -87,62 +87,70 @@ P:DG
   F:R
     B:700-9750. [right-new help]
       A^:Ud+[welcome]
-      Av:Z
-      A>:[home-beginning]
+      Av:H
+      A>:[center-starts-stops]
       A<:[black-delete]
       Ao:~
       A*:~
   F:S
     B:300-10000. [home-beginning]
       A>:[center-starts-stops]
-      A<:[right-new help]
-      Av:H
+      A<:[black-delete]
       Ao:~
       A*:~
   F:T
     B:700-13750. [center-starts-stops]
+      A$:I[right-new help]
+      Av:Z
       A<:[home-beginning]
       A>:[minus-quieter]
       Ao:~
       A*:~
   F:V
     B:500-9250. [minus-quieter]
+      A$:I[right-new help]
       A<:[center-starts-stops]
       A>:[plus-louder]
       Ao:~
       A*:~
   F:U
     B:500-8600. [plus-louder]
+      A$:I[right-new help]
       A>:[loud-battery-warning]
       A<:[minus-quieter]
       Ao:~
       A*:~
   F:vol-bat
     B:0- [loud-battery-warning]
+      A$:I[right-new help]
       A>:[ff-rw]
       A<:[plus-louder]
       Ao:~
       A*:~
   F:FFRW
     B:0- [ff-rw]
+      A$:I[right-new help]
       A>:[star-record]
       A<:[loud-battery-warning]
       Ao:~
       A*:~
   F:rec-long
     B:0- [star-record]
+      A$:I[right-new help]
       A>:[black-copy]
       A<:[ff-rw]
       Ao:~
       A*:~
   F:tocopy
     B:0- [black-copy]
+      A$:I[right-new help]
       A>:[black-delete]
       A<:[star-record]
       Ao:~
       A*:~
   F:todelete
     B:0- [black-delete]
+      A$:I[right-new help]
       A>:[home-beginning]
       A<:[black-copy]
       Ao:~
@@ -166,11 +174,17 @@ P:DG
     B:0- [context-delete]
       A<:[context-copy]
       A>:[context-menu]
+      Av:[context-trim]
       Ao:[star-confirm-home-keep]
   F:X
     B:1000- [star-confirm-home-keep]
       Ah:<%>
       A*:D{[title-list]} [subject-list]
+  F:dg-context-delete
+    B:0- [context-trim]
+      A<:[context-delete]
+      A>:[context-menu]
+      Ao:M{[title-list]}
 
   F:A
     B:700-1750. [louder]
