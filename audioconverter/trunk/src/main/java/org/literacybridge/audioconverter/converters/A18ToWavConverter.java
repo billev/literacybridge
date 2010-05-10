@@ -22,7 +22,7 @@ public class A18ToWavConverter extends A18BaseConverter {
                 
 		for (String key : parameters.keySet()) {
 			if (key.equals(A18BaseConverter.BIT_RATE)) {
-				// command.append(" -b " + parameters.get(key));
+				command.append(" -b " + parameters.get(key));
 			} else if (key.equals(A18BaseConverter.SAMPLE_RATE)) {
 				command.append(" -s " + parameters.get(key));
 			}

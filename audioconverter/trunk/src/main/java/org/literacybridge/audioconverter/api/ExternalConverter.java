@@ -10,6 +10,7 @@ import org.literacybridge.audioconverter.converters.A18ToMP3Converter;
 import org.literacybridge.audioconverter.converters.A18ToWavConverter;
 import org.literacybridge.audioconverter.converters.AnyToA18Converter;
 import org.literacybridge.audioconverter.converters.BaseAudioConverter;
+import org.literacybridge.audioconverter.converters.FFMpegConverter;
 import org.literacybridge.audioconverter.converters.BaseAudioConverter.AudioConverterInitializationException;
 import org.literacybridge.audioconverter.converters.BaseAudioConverter.ConversionException;
 
@@ -18,6 +19,7 @@ public class ExternalConverter {
 	private A18ToMP3Converter A18ToMP3Conv;
 	private A18ToWavConverter A18ToWAVConv;
 	private AnyToA18Converter AnyToA18Conv;
+	private FFMpegConverter FFMpegConv;
 	
 	Map<String, String> parameters = new LinkedHashMap<String, String>();
 	
@@ -27,6 +29,7 @@ public class ExternalConverter {
 			A18ToMP3Conv = new A18ToMP3Converter();
 			A18ToWAVConv = new A18ToWavConverter();
 			AnyToA18Conv = new AnyToA18Converter();
+			FFMpegConv = new FFMpegConverter();
 		} catch (AudioConverterInitializationException e) {
 			
 			e.printStackTrace();
@@ -54,8 +57,13 @@ public class ExternalConverter {
 		}
 		if (targetFormat.getFileEnding() == "WAV")
 		{
+			if (getFileExtension(sourceFile).equalsIgnoreCase(".a18")) {
 				SetParameters(targetFormat);
 				A18ToWAVConv.convertFile(sourceFile, targetFile, overwrite, this.parameters);
+			} else {
+				SetParameters(targetFormat);
+				FFMpegConv.convertFile(sourceFile, targetFile, overwrite, this.parameters);
+			}
 		}
 		if (targetFormat.getFileEnding() == "MP3")
 		{
@@ -64,6 +72,10 @@ public class ExternalConverter {
 		}
 	}
 	
+	public static String getFileExtension(File file) {
+		String name = file.getName();
+		return name.substring(name.length() - 4, name.length()).toLowerCase();
+	}
 	
 	private void SetParameters(AudioConversionFormat paramFormat) {
 		
