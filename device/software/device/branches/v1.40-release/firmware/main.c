@@ -38,6 +38,8 @@ int main (void) {
 	initVoltage();	// get initial voltage before SACM_Init in BodyInit - may never run BodyInit()
 	if(SYS_OFF!=SysGetState()) {
 		BodyInit();
+		playDing();
+		wait(500); // allow fumbling with batteries in case power cut during startup
 	}
 	
 	USB_ISR_PTR = (long)USB_ISR;

@@ -14,7 +14,7 @@ extern void refuse_lowvoltage(int);
 void logException(unsigned int errorCode, const char * pStrError, int takeAction) {
 	// errorcode == 1 means memory error from BodyInit() and ucBSInit()
 	int i; 
-	char errorString[80];
+	char errorString[160];
 	
 	if(vCur_1 < V_MIN_SDWRITE_VOLTAGE) {
 	}
@@ -66,7 +66,7 @@ void logException(unsigned int errorCode, const char * pStrError, int takeAction
 		else if (takeAction == RESET)
 			resetSystem();
 		else if (takeAction ==  SHUT_DOWN)
-			setOperationalMode((int)P_HALT);
+			setOperationalMode((int)P_SLEEP);
 	}
 }
 

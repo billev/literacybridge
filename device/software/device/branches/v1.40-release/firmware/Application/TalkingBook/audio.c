@@ -381,13 +381,18 @@ static int recordAudio(char *pkgName, char *cursor) {
 			if (key == KEY_PLAY) { // pause  TODO: this key press to pause shouldn't be hard coded
 				pause();
 				setLED(LED_RED,FALSE);
+				// insertSound(&pkgSystem.files[REC_PAUSED_FILE_IDX],NULL,FALSE); 					
 				do
 					key = keyCheck(0);
-				while (key != KEY_PLAY && key != KEY_STAR);					
-				setLED(LED_RED,TRUE);
-				resume();
+					// NEED CODE HERE TO SAFELY SAVE FILE WHEN PAUSED FOR EXTENDED PERIOD OF TIME (maybe 60 min?)
+					// checkInactivity(key);   --- this would cause recording to be lost in just 30-300 sec inactivity
+				while (!key);
+				if (key == KEY_PLAY) {
+					setLED(LED_RED,TRUE);
+					resume();
+				}
 			}
-		} while ((key != KEY_STAR) && (low_voltage == 0)); // TODO: this key press to stop shouldn't be hard coded
+		} while ((!key || (key == KEY_PLAY)) && (low_voltage == 0)); // TODO: this key press to stop shouldn't be hard coded
 //		while ((end - start) < 3) { // must be at least 2.0 second recording
 //			end = getRTCinSeconds();			
 //		}
@@ -399,6 +404,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 		setLED(LED_RED,FALSE);
 		turnAmpOn();
 		playDing();
+		insertSound(&pkgSystem.files[POST_REC_FILE_IDX],NULL,TRUE); 					
 		insertSound(file,NULL,TRUE);  // replay subject
 
 		strcpy(temp,"TIME RECORDED (secs): ");

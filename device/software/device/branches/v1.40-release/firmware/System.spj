@@ -490,6 +490,13 @@ ID=
 EXPORT=3
 # End Source File
 # End Group
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\testPCB.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
 # End Group
 # Begin Group "Head Files"
 #PROP Default_Filter=
@@ -929,11 +936,95 @@ ID=
 EXPORT=3
 # End Source File
 # Begin Source File
-SOURCE=.\Component\Include\FS\DriverLayer.h
+SOURCE=component/include/fs/DriverLayer.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=0
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\system\include\system_head.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\driver\include\driver_head.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\component\include\component_head.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\talkingbook.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\files.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\device.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\audio.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\SD_reprog.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\startup.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\util.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\containers.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\lists.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
 # End Source File
 # End Group
 # End SubItem
@@ -1422,6 +1513,13 @@ ID=
 EXPORT=3
 # End Source File
 # End Group
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\testPCB.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
 # End Group
 # Begin Group "Head Files"
 #PROP Default_Filter=
@@ -1861,11 +1959,95 @@ ID=
 EXPORT=3
 # End Source File
 # Begin Source File
-SOURCE=.\Component\Include\FS\DriverLayer.h
+SOURCE=component/include/fs/DriverLayer.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=0
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\system\include\system_head.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\driver\include\driver_head.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\component\include\component_head.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\talkingbook.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\files.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\device.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\audio.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\SD_reprog.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\startup.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\util.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\containers.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\..\..\trunk\firmware\Application\TalkingBook\Include\lists.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
 # End Source File
 # End Group
 # End SubItem

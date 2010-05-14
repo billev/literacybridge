@@ -18,12 +18,13 @@
 #define SYSTEM_HEAP_SIZE 512	//config file values
 #define CONFIG_FILE		"a://config.txt"
 
+extern int testPCB(void);
 extern unsigned int SetSystemClockRate(unsigned int);
 extern int SystemIntoUDisk(unsigned int);
 
 static char * addTextToSystemHeap (char *);
 static void loadDefaultPackage(void);
-static void loadConfigFile (void);
+static int loadConfigFile (void);
 
 // These capitalized variables are set in the config file.
 APP_IRAM int KEY_PLAY, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_SELECT, KEY_STAR, KEY_HOME, KEY_PLUS, KEY_MINUS;
@@ -42,7 +43,8 @@ APP_IRAM int DEFAULT_TIME_PRECISION;
 APP_IRAM int DEFAULT_REWIND;
 APP_IRAM int INSERT_SOUND_REWIND_MS;
 APP_IRAM int HYPERLINK_SOUND_FILE_IDX, DELETED_FILE_IDX, PRE_COPY_FILE_IDX, POST_COPY_FILE_IDX, SPEAK_SOUND_FILE_IDX, 
-    INACTIVITY_SOUND_FILE_IDX, ERROR_SOUND_FILE_IDX, EMPTY_LIST_FILE_IDX;
+    INACTIVITY_SOUND_FILE_IDX, ERROR_SOUND_FILE_IDX, EMPTY_LIST_FILE_IDX, REC_PAUSED_FILE_IDX, POST_REC_FILE_IDX,
+    POST_PLAY_FILE_IDX;
 APP_IRAM int BLOCK_START_LEADER, BLOCK_END_LEADER;
 APP_IRAM long BIT_RATE;
 APP_IRAM int GREEN_LED_WHEN_PLAYING;
@@ -124,7 +126,8 @@ void startUp(void) {
 		check_new_sd_flash();
 	}
 	
-	loadConfigFile();	
+	if (loadConfigFile() == -1) // config.txt file not found
+		testPCB();	
 	if (!SNexists())
 		logException(32,(const char *)"no serial number",SHUT_DOWN);		
 
@@ -189,13 +192,14 @@ static char * addTextToSystemHeap (char *line) {
 	return startingHeap;
 }
 
-static void loadConfigFile(void) {
-	int handle;
+int loadConfigFile(void) {
+	int ret, handle;
 	char *name, *value;
 	char buffer[READ_LENGTH+1];
 	int attempt, goodPass;
 	const int MAX_RETRIES = 3;
-	
+
+	ret = 0;	
 	buffer[READ_LENGTH] = '\0'; //prevents readLine from searching for \n past buffer
 	
 	for (attempt = 0,goodPass = 0;attempt < MAX_RETRIES && !goodPass;attempt++) {
@@ -203,8 +207,10 @@ static void loadConfigFile(void) {
 		LOG_FILE = 0; //default in case no logging location in config file (turns logging off)
 		MACRO_FILE = 0; // default case if no MACRO_FILE listed
 		handle = tbOpen((unsigned long)(CONFIG_FILE),O_RDONLY);
-		if (handle == -1)
-			logException(14,0,USB_MODE); // can't open config file -- NOTE -- this can't be logged if log file comes from config
+		if (handle == -1) {
+			ret = -1;
+			logString((char *)"CONFIG_FILE NOT FOUND",BUFFER); //NOTE:can't be logged if log file comes from config file
+		}
 		getLine(-1,0);  // reset in case at end from prior use
 		while (goodPass && nextNameValuePair(handle, buffer, ':', &name, &value)) {
 			if (!value)
@@ -257,12 +263,15 @@ static void loadConfigFile(void) {
 				else if (!strcmp(name,(char *)"DEFAULT_REWIND")) DEFAULT_REWIND=strToInt(value);
 				else if (!strcmp(name,(char *)"INSERT_SOUND_REWIND_MS")) INSERT_SOUND_REWIND_MS=strToInt(value);
 				else if (!strcmp(name,(char *)"SPEAK_SOUND_FILE_IDX")) SPEAK_SOUND_FILE_IDX=strToInt(value);
+				else if (!strcmp(name,(char *)"REC_PAUSED_FILE_IDX")) REC_PAUSED_FILE_IDX=strToInt(value);
+				else if (!strcmp(name,(char *)"POST_REC_FILE_IDX")) POST_REC_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"INACTIVITY_SOUND_FILE_IDX")) INACTIVITY_SOUND_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"ERROR_SOUND_FILE_IDX")) ERROR_SOUND_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"EMPTY_LIST_FILE_IDX")) EMPTY_LIST_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"DELETED_FILE_IDX")) DELETED_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"PRE_COPY_FILE_IDX")) PRE_COPY_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"POST_COPY_FILE_IDX")) POST_COPY_FILE_IDX=strToInt(value);
+				else if (!strcmp(name,(char *)"POST_PLAY_FILE_IDX")) POST_PLAY_FILE_IDX=strToInt(value);				
 				else if (!strcmp(name,(char *)"HYPERLINK_SOUND_FILE_IDX")) HYPERLINK_SOUND_FILE_IDX=strToInt(value);
 				else if (!strcmp(name,(char *)"BLOCK_START_LEADER")) BLOCK_START_LEADER=strToInt(value);
 				else if (!strcmp(name,(char *)"BLOCK_END_LEADER")) BLOCK_END_LEADER=strToInt(value);
@@ -280,12 +289,15 @@ static void loadConfigFile(void) {
 				else if (!strcmp(name,(char *)"CLOCK_RATE")) CLOCK_RATE = strToInt(value);
 		}
 	}
-	if (!goodPass)
-		logException(14,0,USB_MODE); 		
+	if (!goodPass) {
+		ret = -1;
+		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",BUFFER);	  //logException(14,0,USB_MODE); 		
+	}
 	close(handle);
 	LED_ALL = LED_GREEN | LED_RED;
 	if (*(LOG_FILE+1) != ':')
 		LOG_FILE = 0; // should be == "a://....." otherwise, logging is turned off
+	return ret;
 }
 
 static void loadDefaultPackage(void) {

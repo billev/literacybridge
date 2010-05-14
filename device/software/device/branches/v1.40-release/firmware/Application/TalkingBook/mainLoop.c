@@ -465,7 +465,7 @@ extern int checkInactivity(BOOL resetTimer) {
 //		restoreVolume(FALSE);
 		lastActivity = currentTime;
 #ifdef TB_CAN_WAKE
-		setOperationalMode((int)P_HALT);  // keep RTC running
+		setOperationalMode((int)P_SLEEP);  // change to P_HALT to keep RTC running
 #else 
 		setOperationalMode((int)P_SLEEP); // shut down completely if will require power sw recycle to turn on
 		// Might want to go back to the audio alert since old hardware uses much more current in sleep than new hw
@@ -547,6 +547,9 @@ void mainLoop (void) {
 				if (insertBlock)
 					insertSound(getFileFromBlock(insertBlock),insertBlock,FALSE);
 			}
+			if (context.package->pkg_type == PKG_MSG) {
+				insertSound(&pkgSystem.files[POST_PLAY_FILE_IDX],NULL,FALSE); 					
+			}	
 		}
 		if (++inactivityCheckCounter > 10) {
 			checkInactivity(!context.isStopped && !context.isPaused);
@@ -1042,6 +1045,10 @@ static void takeAction (Action *action, EnumAction actionCode) {
 	if (actionCode == JUMP_TIME && context.returnPackage) {  // returning to user package after possibly inserting a system sound above
 		context.package = context.returnPackage;
 		context.returnPackage = NULL;
+	}
+	if (actionCode == SPEED_UP || actionCode == SPEED_DOWN) {
+		context.isPaused = FALSE;
+		resume();	
 	}
 	if (reposition)
 		play(context.file,newTime); //todo: chg to seek if same file

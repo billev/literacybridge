@@ -380,7 +380,7 @@ refuse_lowvoltage(int die)
 		setLED(LED_RED, FALSE);
 		wait(500);
 		setLED(LED_RED, FALSE);
-		setOperationalMode((int)P_HALT);
+		setOperationalMode((int)P_SLEEP);
 	} else {
 		playDing();
 		playDing();
