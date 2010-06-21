@@ -16,7 +16,4 @@ goto end
 format %2 /FS:FAT32 /v:TB2
 . > %2\tsn.LB2_00%3.tsn
 FOR /F %%A IN ('dir %1 /b') DO svn export %1\%%A %2\%%A
-
-rem svn export %1 clean
-rem xcopy %1 %2 /E
 :end
