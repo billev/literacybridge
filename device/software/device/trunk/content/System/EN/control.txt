@@ -1,4 +1,4 @@
-VERSION:1.40
+VERSION:1.41
 TIME-PRECISION:128
 LANGUAGE:EN
 ---
@@ -17,22 +17,27 @@ P:EN
       A*:Em
       Ao:[context-menu]
       Ao|:<%DG>
-  F:en-record-prompt
-    B:0-
-// next file is turn me off
-  F:en-P
-   B:0-
-  F:en-empty
-   B:0- [empty-list]
-  F:en-deleted
-   B:0- [file now deleted]
-  F:en-copying
-   B:0- [file is copying]
-  F:en-copied
-   B:0- [file now copied]
   F:bell
     B:0-1000. [short-bell]
-  F:en-E
+  F:1
+    B:0- [record prompt]
+  F:2
+    B:0- [recording paused]
+  F:3
+    B:0- [recording complete found in-]
+  F:4
+   B:0-  [turn me off]
+  F:5
+   B:0- [empty-list]
+  F:6
+   B:0- [file now deleted]
+  F:7
+   B:0- [file is copying]
+  F:8
+   B:0- [file now copied]
+  F:9
+   B:0- [press up for msg star to record]
+  F:10
     B:0- [welcome]
       A$:[right-subjects]
       Ah:[right-new help]
@@ -42,18 +47,9 @@ P:EN
       Av:~
       Ao:<%DG>
       A*:~
-  F:en-L
-    B:0- [home-help-OR]
-      Ah:[right-new help]
-      A>:L-[subject-list]
-      A<:L+[subject-list]
-      A^:~
-      Av:~
-      Ao:<%DG>
-      A*:~
-  F:en-H
+  F:11
     B:0- [right-subjects]
-      A$:[intro-record]
+      A$:[home-help-OR]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
@@ -61,9 +57,8 @@ P:EN
       Av:~
       Ao:<%DG>
       A*:~
-  F:en-rec-med
-    B:0- [intro-record] 
-      A$:[home-help-OR]
+  F:12
+    B:0- [home-help-OR]
       Ah:[right-new help]
       A>:L-[subject-list]
       A<:L+[subject-list]
@@ -78,124 +73,181 @@ P:EN
      A<:L+[subject-list]
      Ao:~
      A*:Em
-  F:en-updown
+  F:13
     B:0- [up-down]
-
   L:P/{[subject-list]} [title-list]
      A^:L-[title-list]
      Av:L+[title-list]
      A*:~
-
-  F:en-R
+  F:14
     B:0- [right-new help]
-      A^:Ud+[welcome]
-      Av:H
-      A>:[center-starts-stops]
-      A<:[black-copy-del]
+      A>:[turnoffon]
+      A<:[restart]
+      A^:~
+      Av:~
       Ao:~
       A*:~
-  F:en-T
+  F:15
+    B:0- [right new help-home begin]
+  F:16
+    B:0- [turnoffon]
+      A$:I[right new help-home begin]
+      A<:[right-new help]
+      A>:[center-starts-stops]
+      A^:[testPCB]
+      Av:Z
+      Ao:~
+      A*:~    
+  F:16
+    B:0- [testPCB]
+      A$:I[right new help-home begin]
+      A<:[right-new help]
+      A>:[center-starts-stops]
+      A^:[turnoffon]
+      Av:Z
+      Ao:~
+      A*:~    
+  F:17
     B:0- [center-starts-stops]
       A$:I[right-new help]
-      Av:Z
-      A<:[right-new help]
-      A>:[minus-quieter]
-      Ao:~
-      A*:~
-  F:en-V
-    B:0- [minus-quieter]
-      A$:I[right-new help]
-      A<:[center-starts-stops]
-      A>:[plus-louder]
-      Ao:~
-      A*:~
-  F:en-U
-    B:0- [plus-louder]
-      A$:I[right-new help]
-      A>:[loud-battery-warning]
-      A<:[minus-quieter]
-      Ao:~
-      A*:~
-  F:en-vol-bat
-    B:0- [loud-battery-warning]
-      A$:I[right-new help]
-      A>:[ff-rw]
-      A<:[plus-louder]
-      Ao:~
-      A*:~
-  F:en-FFRW
-    B:0- [ff-rw]
-      A$:I[right-new help]
+      Av:H
+      A<:[turnoffon]
       A>:[star-record]
-      A<:[loud-battery-warning]
+      A^:~
+      Av:~
       Ao:~
       A*:~
-  F:en-rec-long
+  F:18
     B:0- [star-record]
-      A$:I[right-new help]
-      A>:[black-copy-del]
-      A<:[ff-rw]
+      A$:I[right new help-home begin]
+      A>:[rec-pause]
+      A<:[center-starts-stops]
+      A^:~
+      Av:~
       Ao:~
       A*:~
-  F:en-tocopydelete
-    B:0- [black-copy-del] V+ / VN
-      A$:I[right-new help]
-      A>:[home-beginning]
+  F:19
+    B:0- [rec-pause]
+      A$:I[right new help-home begin]
+      A>:[minus-quieter]
       A<:[star-record]
+      A^:~
+      Av:~
       Ao:~
       A*:~
-  F:en-S
-    B:0- [home-beginning]
-      A>:[center-starts-stops]
+  F:20
+    B:0- [minus-quieter]
+      A$:I[right new help-home begin]
+      A<:[rec-pause]
+      A>:[plus-louder]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:21
+    B:0- [plus-louder]
+      A$:I[right new help-home begin]
+      A>:[minus-slower]
+      A<:[minus-quieter]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:22
+    B:0- [minus-slower]
+      A$:I[right new help-home begin]
+      A>:[plus-faster]
+      A<:[plus-louder]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:23
+    B:0- [plus-faster]
+      A$:I[right new help-home begin]
+      A<:[minus-slower]
+      A>:[loud-battery-warning]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:24
+    B:0- [loud-battery-warning]
+      A$:I[right new help-home begin]
+      A>:[ff-rw]
+      A<:[plus-faster]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:25
+    B:0- [ff-rw]
+      A$:I[right new help-home begin]
+      A>:[black-copy-del]
+      A<:[loud-battery-warning]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:26
+    B:0- [black-copy-del]
+      A$:I[right new help-home begin]
+      A>:[chglang]
+      A<:[ff-rw]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:27
+    B:0- [chglang] 
+      A$:I[right new help-home begin]
+      A>:[restart]
       A<:[black-copy-del]
+      A^:~
+      Av:~
       Ao:~
       A*:~
-  F:en-context
-    B:0- [context-menu] V+ / VN
+  F:28
+    B:0- [restart] 
+      A$:I[right new help-home begin]
+      A>:[turnoffon]
+      A<:[chglang]
+      A^:~
+      Av:~
+      Ao:~
+      A*:~
+  F:29
+    B:0- [context-menu]
       A>:[context-copy]
-      A<:[context-trim]
-  F:en-context-copy
-    B:0- [context-copy] V+ / VN
+      A<:[context-delete]
+  F:30
+    B:0- [context-copy]
       A>:[context-delete]
       A<:[context-menu]
       Ao:[copy1]
-  F:en-copy1  
-    B:0- [copy1] V+ / VN
+  F:31
+    B:0- [copy1]
       Ao:[copy2]
-  F:en-copy2  
-    B:0- [copy2] V+ / VN
+  F:32
+    B:0- [copy2]
       Ao:C{[title-list]} [subject-list]
-  F:en-context-delete
-    B:0- [context-delete] V+ / VN
-      A$:[en-house]
+  F:33
+    B:0- [context-delete]
       A<:[context-copy]
       A>:[context-menu]
       Av:[context-trim]
-      Ao:[star-confirm-home-keep]
-  F:en-context-delete
+      Ah:<%>
+      Ao:D{[title-list]} [subject-list]
+  F:34
     B:0- [context-trim]
       A>:[context-menu]
       A<:[context-delete]
       Ao:M{[title-list]} 
-  F:OR-right
-    B:0- [OR-right] V+ / VN
-      A>:[context-delete]
-      A<:[context-menu]
-      Ao:C{[title-list]} [subject-list]
-  F:en-house
-    B:0- [en-house] V+ / VN
-      A<:[context-copy]
-      A>:[context-menu]
-      Ao:[star-confirm-home-keep]
-  F:en-X
-    B:0- [star-confirm-home-keep]
-      Ah:<%>
-      A*:D{[title-list]} [subject-list]
-  F:en-A
+  F:35
     B:0- [louder]
-  F:en-B
+  F:36
     B:0- [quieter]
-  F:en-C
+  F:37
     B:0- [faster]    
-  F:en-D  
+  F:38
     B:0- [slower]    
