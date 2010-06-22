@@ -159,7 +159,6 @@
 
  
   <modules>
-  	<module>../audioconverter/trunk</module>
   	<module>../acm/trunk/acm-parent</module>
   </modules>
 </project>
