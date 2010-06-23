@@ -44,31 +44,19 @@ USB_Flash_init(flash *fp, int function)
 	phigh = (int *) &WriteWord;
 	fp->writeword = pCheck + (phigh - plow);
 	
-	phigh = (int *) &MemCopy;
-	fp->memcopy = pCheck + (phigh - plow);
-
-
+	phigh = (int *) &Nor_FlashID;
+	fp->flashtype = pCheck + (phigh - plow);
 	
-//test	FL.pflash = 0x30800;
-	
-//test	(*FL.erasesector) (&FL);
-
-}
-void MemCopy(unsigned int *to, unsigned int *from, unsigned int count)
-{
-again:
-	*to++ = *from++;
-	if(--count != 0)
-		goto again;
+	(*fp->flashtype)(fp);
+		
 }
 
 void EraseSector(flash *fp)
 {
 	unsigned int i;
-	unsigned int sst_flash = 0; // rhm remove
 	unsigned int *baseaddr = ((unsigned long)fp->pflash < BASEADDR) ? 0x0000f800 : BASEADDR;
 
-	if(sst_flash) {
+	if(fp->Flash_type != MX_MID) {
 		*(WORD *) (baseaddr + 0x5555) = 0x00AA;     // write data 0x00AA to device addr 5555H
 		*(WORD *) (baseaddr + 0x2AAA) = 0x0055;     // write data 0x0055 to device addr 2AAAH
 		*(WORD *) (baseaddr + 0x5555) = 0x0080;     // write data 0x0080 to device addr 5555H
@@ -82,13 +70,9 @@ void EraseSector(flash *fp)
 		*(WORD *) (baseaddr + 0x2AA) = 0x0055;     // write data 0x0055 to device addr 2AAH
 	}
 
-	if(sst_flash & (baseaddr >= BASEADDR)) {
-		*(WORD *) (fp->pflash) = 0x0050;     // write data 0x0030 to block erase
-	} else {
 		*(WORD *) (fp->pflash) = 0x0030;     // write data 0x0030 to device sector addr
-	}
 
-	for(i = *(WORD *) (fp->pflash);  (i & 0x0080) == 0; ) {
+	for(i = *(WORD *) (fp->pflash);  ((i & 0x0080) == 0); ) {
 		i = *(WORD *) (baseaddr);
 	}
 
@@ -121,10 +105,9 @@ void
 WriteWord(flash *fp, WORD *addr, unsigned int dataword)
 {
     unsigned int i, j = 10000;
-	unsigned int sst_flash = 0; //rhm remove
 	unsigned int *baseaddr = ((unsigned long)fp->pflash < BASEADDR) ? 0x0000f800 : BASEADDR;
   
-  if(sst_flash) {
+  if(fp->Flash_type != MX_MID) {
 	    *(WORD *) (baseaddr + 0x5555) = 0x00AA;  // 1st write data 0x00AA to device addr 5555H
 	    *(WORD *) (baseaddr + 0x2AAA) = 0x0055;  // 2nd write data 0x0055 to device addr 2AAAH
 	    *(WORD *) (baseaddr + 0x5555) = 0x00A0;  // 3rd write data 0x00A0 to device addr 5555H
@@ -146,7 +129,29 @@ WriteWord(flash *fp, WORD *addr, unsigned int dataword)
 //	(*fp->nanopause)(1000);
 
 }
+//asm("NORFLASHDRIVER_CODE:	.section .iram");
 
+//	asm(".public	_Nor_FlashID");
+unsigned int Nor_FlashID(flash *fp)
+{
+	unsigned int *baseaddr = BASEADDR;
+	unsigned int ret;
+	
+    *(WORD *) (baseaddr + 0x555) = 0x00AA;  // 1st write data 0x00AA to device addr 5555H
+	*(WORD *) (baseaddr + 0xAAA) = 0x0055;  // 2nd write data 0x0055 to device addr 2AAAH
+    *(WORD *) (baseaddr + 0x555) = 0x0090;  // 3rd write data 0x0090 to device addr 5555H
+    
+	ret = *(WORD *) (baseaddr); // read manufacturer id
+
+// exit id mode quickly	
+	asm("r2 = 0xf0");
+	asm("r1 = 0x0");
+	asm("ds:[r1] = r2");
+	
+	fp->Flash_type = ret;
+	
+	return(ret);
+}
 
 void EndFlashProg()
 {
@@ -168,10 +173,22 @@ void write_app_flash(int *bufp, int len, unsigned int fill)
 		len = 4096;
 	
 	newfp->pflash = (unsigned int *)TB_SERIAL_NUMBER_ADDR;
-	newfp->erasesector(newfp);
+	if(newfp->Flash_type == MX_MID) {	// MX memory, erase 1 4k chunk at 0x37000
+		newfp->erasesector(newfp);
+	} else { // SST memory, erase 2 2k chunks
+		newfp->erasesector(newfp);
+		newfp->pflash = (unsigned int *)TB_SERIAL_NUMBER_ADDR + 0x800;
+		newfp->erasesector(newfp);
+		newfp->pflash = (unsigned int *)TB_SERIAL_NUMBER_ADDR;
+	}
 	
-	for(i=0; i<4096; i++) {
-		(*newfp->writeword)(newfp, TB_SERIAL_NUMBER_ADDR + i, (i >= len) ? fill : bufp[i]);
+	for(i=0; i<len; i++) {
+		(*newfp->writeword)(newfp, TB_SERIAL_NUMBER_ADDR + i, bufp[i]);
+	}
+	if(fill == 0xffff)
+		return;
+	for(; i<4095; i++) {
+		(*newfp->writeword)(newfp, TB_SERIAL_NUMBER_ADDR + i, fill);
 	}
 }
 // define app flash data, 4k located at 0x37000 (TB_SERIAL_NUMBER_ADDR)
