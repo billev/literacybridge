@@ -1,0 +1,30 @@
+Sys_Exception(2); // todo: too many actions, files, blocks, or lists
+Sys_Exception(3); //todo: max block overlap exceeded
+Sys_Exception(4); //todo: text heap is full
+Sys_Exception(5); //todo: package name or path does not exist
+Sys_Exception(6);  // todo:invalid internal reference in control track file
+Sys_Exception(7); // todo: internal symbol heap is full
+Sys_Exception(8); //todo: syntax error in control track
+Sys_Exception(9); //todo: format problem with list
+Sys_Exception(10); // todo: can't access bootfile
+Sys_Exception(11); //todo:heap is full
+Sys_Exception(12); //todo:attempting to store string too big for pkg stack
+Sys_Exception(13); //can't access log file
+Sys_Exception(14); //can't access config file
+Sys_Exception(15); //todo:system heap is full
+Sys_Exception(16); //can't open file for new recording
+Sys_Exception(17); //can't open new system-variables file
+Sys_Exception(18); //file address doen't match pkgSystem or pkgUser
+Sys_Exception(19); //cannot change directory
+Sys_Exception(20); //copy problem
+Sys_Exception(21); //delete problem
+Sys_Exception(22); //open() problem but will retry
+Sys_Exception(23); //open() problem after many retries
+Sys_Exception(24); //chdir() problem but will retry
+Sys_Exception(25); //chdir() problem after many retries
+Sys_Exception(26); //syntax error in control track but will retry
+Sys_Exception(27); //warning of bad characters in goodString(char *,int)	
+Sys_Exception(28); //recording failed -- NEED AN AUDIO CLIP FOR THIS
+Sys_Exception(29); //delete failed
+Sys_Exception(30); // corrupted lists
+Sys_Exception(31); // corrupted macro file
