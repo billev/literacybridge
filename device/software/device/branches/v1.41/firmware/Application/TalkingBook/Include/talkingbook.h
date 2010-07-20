@@ -4,7 +4,7 @@
 #ifndef	__TALKINGBOOK_h__
 #define	__TALKINGBOOK_h__
 
-#define VERSION			"v1.41c"
+#define VERSION			"v1.41d"
 #define TB_CAN_WAKE  // hardware that allows wake from sleep/halt
 //IMPORTANT: changes to TB_CAN_WAKE must also be made to system_head.inc!!!
 
@@ -22,7 +22,6 @@ asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
 //	 * read and write new metadata scheme into audio files
 //	 * take a recording and make a translation on the device (keeping it linked) 
 //	 * copy entire category
-//   * change opening help-loop
 //	 * track playcount and copy count of each package
 //   * auto update VERSION with each new build (or SVN revision)
 //   * recognize when batteries have been changed (not waking from sleep/halt) -- reset clock and whatever else.
@@ -55,7 +54,6 @@ asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
 //   * power saving
 //     -- low power sleep mode when no activity
 //     -- limiting volume when voltage is dropping
-//   * recorded user feedback
 //   * detecting held buttons vs. tapped buttons (could be used with SHIFT-like modifier)
 //   * write a working malloc/free
 //   * rewrite containers so that DEFAULT package doesn't alloc same # of files/blocks/actions as others
@@ -75,7 +73,7 @@ asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
 #define READ_LENGTH			1024
 #define FILE_LENGTH			40
 #define PATH_LENGTH			(FILE_LENGTH * 2)
-#define LOG_CARRYOVER_BYTES 512
+#define LOG_CARRYOVER_BYTES 8096
 #define TEXT_EVENT_LEFT		'<'
 #define TEXT_EVENT_RIGHT	'>'
 #define TEXT_EVENT_UP		'^'
