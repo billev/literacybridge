@@ -465,7 +465,8 @@ extern int checkInactivity(BOOL resetTimer) {
 		// todo: add a check to see if earphones are used -- if so, reduce volume
 //		insertSound(&pkgSystem.files[INACTIVITY_SOUND_FILE_IDX],NULL,FALSE);
 //		restoreVolume(FALSE);
-		lastActivity = currentTime;
+//		lastActivity = currentTime;
+		markEndPlay(currentTime);
 #ifdef TB_CAN_WAKE
 		setOperationalMode((int)P_SLEEP);  // change to P_HALT to keep RTC running
 #else 
@@ -808,21 +809,14 @@ static void takeAction (Action *action, EnumAction actionCode) {
 					} else
 						play(context.file,0);
 					break;
-				case C_SACM_RECORD:
-				case C_SACM_PLAY:
-					context.isPaused = TRUE;
-					pause();
-					break;
-				case C_SACM_PAUSE:
-					context.isPaused = FALSE;
-					resume();	
-					break;
 				default:
 					if (context.isPaused) {
 						context.isPaused = FALSE;
+						context.packageStartTime += (getRTCinSeconds() - context.packagePausedTime); 
 						resume();	
 					} else {
 						context.isPaused = TRUE;
+						context.packagePausedTime = getRTCinSeconds();
 						pause();
 					}		
 					break;
@@ -831,6 +825,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			
 		case PAUSE:
 			pause();
+			context.packagePausedTime = getRTCinSeconds();
 			context.isPaused = TRUE;
 			break;
 			

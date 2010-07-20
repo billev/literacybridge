@@ -88,6 +88,9 @@ void setDefaults(void) {
 	BIT_RATE = DEFAULT_BIT_RATE;
 	
 	ADMIN_COMBO_KEYS = KEY_UP | KEY_DOWN;
+
+	context.packagePausedTime = 0;
+	context.packageStartTime = 0;
 }
 
 void startUp(void) {

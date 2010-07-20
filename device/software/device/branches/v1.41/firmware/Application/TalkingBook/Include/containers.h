@@ -189,6 +189,8 @@ struct Context {
 	CtnrPackage *returnPackage;
     CtnrFile *lastFile;
     long packageStartTime;
+    long packagePausedTime;
+    char filename[PATH_LENGTH];
 };
 
 extern Context context;
