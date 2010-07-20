@@ -93,26 +93,6 @@ int restoreVolume(BOOL normalVolume) {
 }
 
 int adjustVolume (int amount, BOOL relative, BOOL rememberOldVolume) {
-/*
-	APP_IRAM static long timeLastVolChg = 0;
-	long timeCurrent,diff;
-	char stringLog[30];
-	
-	timeCurrent = getRTCinSeconds();
-	diff = timeCurrent - timeLastVolChg;
-	timeLastVolChg = timeCurrent;
-	
-	strcat(stringLog,"V:");
-	longToDecimalString((long)volume,stringLog+3,5);
-	strcat(stringLog,",");
-	longToDecimalString(diff,stringLog+strlen(stringLog),5);
-	strcat(stringLog,"sec   ");
-	if (relative && amount > 0)
-		strcat(stringLog,"+");
-	else if (relative && amount < 0)
-		strcat(stringLog,"-");
-	logString(stringLog,BUFFER);
-*/		
 	if (rememberOldVolume)
 		oldVolume = volume;
 	
