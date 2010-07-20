@@ -197,7 +197,6 @@ static int getFileHandle (CtnrFile *newFile) {
 		strcat(sTemp,AUDIO_FILE_EXT);
 	}
 	ret = tbOpen((LPSTR)sTemp,O_RDONLY);
-//	logString(sTemp,ASAP);
 	return ret;
 }
 
@@ -335,7 +334,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 	int handle, ret = -1;
 	char temp[PATH_LENGTH];
 	char filepath[PATH_LENGTH];
-	long start, end, prev;
+	long start, end, paused, prev;
 	CtnrFile *file;
 	int key;
 	int low_voltage; //, v;
@@ -347,6 +346,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 	file = getListFile(cursor);
 	insertSound(file,NULL,TRUE);
 	start = getRTCinSeconds();
+/*
 	strcpy(temp,"\x0d\x0a");
 	longToDecimalString(start,temp+2,8);
 	strcat(temp,(const char *)": RECORD ");
@@ -354,6 +354,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 	LBstrncat(temp," -> ",60);
 	LBstrncat(temp,cursor,60);	
 	logString(temp,BUFFER);
+*/
 	insertSound(&pkgSystem.files[SPEAK_SOUND_FILE_IDX],NULL,TRUE);
 	stop();
 	start = getRTCinSeconds();
@@ -381,6 +382,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 			key = keyCheck(0);
 			if (key == KEY_PLAY) { // pause  TODO: this key press to pause shouldn't be hard coded
 				pause();
+				paused = getRTCinSeconds();
 				setLED(LED_RED,FALSE);
 				// insertSound(&pkgSystem.files[REC_PAUSED_FILE_IDX],NULL,FALSE); 					
 				do
@@ -390,6 +392,8 @@ static int recordAudio(char *pkgName, char *cursor) {
 				while (!key);
 				if (key == KEY_PLAY) {
 					setLED(LED_RED,TRUE);
+					start += getRTCinSeconds() - paused;  // reduce record time by paused time
+					paused = 0;
 					resume();
 				}
 			}
@@ -398,8 +402,6 @@ static int recordAudio(char *pkgName, char *cursor) {
 //			end = getRTCinSeconds();			
 //		}
 		SACM_Stop();		//Snd_Stop(); // no need to call stop() and flush the log
-		//lseek(handle, 6, SEEK_SET );			//Seek to the start of the file input
-		//write(handle,(LPSTR)header<<1,6);
 		close(handle);
 		asm("INT FIQ, IRQ");
 //		*P_WatchDog_Ctrl &= ~0x8000; // clear bit 15 to disable
@@ -408,10 +410,15 @@ static int recordAudio(char *pkgName, char *cursor) {
 		playDing();
 		insertSound(&pkgSystem.files[POST_REC_FILE_IDX],NULL,TRUE); 					
 		insertSound(file,NULL,TRUE);  // replay subject
-
-		strcpy(temp,"TIME RECORDED (secs): ");
-		longToDecimalString((long)end-start,temp+strlen(temp),4);
-		strcat(temp,"\x0d\x0a");
+		// log recording
+		strcpy(temp,",REC,");
+		strcat(temp,pkgName);
+		strcat(temp,",");
+		if (paused)
+			longToDecimalString((long)paused-start,temp+strlen(temp),4);
+		else
+			longToDecimalString((long)end-start,temp+strlen(temp),4);
+		//strcat(temp,"\x0d\x0a");
 		logString(temp,BUFFER);
 
 		strcpy(lastFilenameRecorded,filepath);
@@ -456,32 +463,29 @@ int createRecording(char *pkgName, int fromHeadphone, char *listName) {
 
 void markEndPlay(long timeNow) {
 	long timeDiff;
-	char log[40];
+	const int LOG_LENGTH = 100;
+	char log[LOG_LENGTH];
 	
 	if (context.packageStartTime) {
-		timeDiff = timeNow - context.packageStartTime;
+		if (context.isPaused)
+			timeDiff = context.packagePausedTime - context.packageStartTime;
+		else
+			timeDiff = timeNow - context.packageStartTime;
 		context.packageStartTime = 0;
 		if (timeDiff > MINIMUM_PLAY_SEC_TO_LOG) {
-			strcpy (log,"TIME PLAYED: ");
-			longToDecimalString(timeDiff,log+strlen(log),4);
-			strcat(log," sec at VOL=");
-			longToDecimalString((long)getVolume(),log+strlen(log),2);
+			strcpy (log,",PLAY,");
+			LBstrncat ((char *)log,context.filename,LOG_LENGTH-12); // title
+			strcat (log,",");
+			longToDecimalString(timeDiff,log+strlen(log),4); // length in sec
+			strcat (log,",");
+			longToDecimalString((long)getVolume(),log+strlen(log),2); // volume
 			strcat(log,"\x0d\x0a");
-			logString(log,BUFFER);
+			logString(log,ASAP);
 		}
 	}
 }
 
-void markStartPlay(long timeNow, const char * name) {
-	const int LOG_LENGTH = PATH_LENGTH + 20;
-	char log[LOG_LENGTH];
-	
+void markStartPlay(long timeNow, const char * name) {	
 	context.packageStartTime = timeNow;
-//	strcpy(log,"\x0d\x0a");
-//	longToDecimalString(timeNow,log+2,8);
-	longToDecimalString(timeNow,log,8);
-	strcat((char *)log,(const char *)": PLAY ");
-	if (LBstrncat((char *)log,name,LOG_LENGTH) == LOG_LENGTH-1)
-		log[LOG_LENGTH-2] = '~';
-	logString(log,BUFFER);	
+	strcpy(context.filename,name);
 }
