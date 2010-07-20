@@ -1,4 +1,10 @@
-v1.41 (MOFA/VSO customer firmware with bug fixes)
+v1.41d (MOFA/VSO update)
+ - logs playback and recording with commas so it can be imported in Excel as .csv
+ - also logs if paused in middle of recording just before going to sleep
+ - no longer counts paused time during playback or recording
+ - changed config file to empty log.txt less often and keep more of it
+ 
+v1.41c (MOFA/VSO customer firmware with bug fixes)
  - now incorporates PCB test procedure and starts when config or serial num is missing
  - removed voltage handling feature for now until more stable
  - removed reset button option (concerned causing bug, but may have been fine)
