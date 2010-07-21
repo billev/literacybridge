@@ -44,7 +44,7 @@ P:EN
       A>:L-[subject-list]
       A<:L+[subject-list]
       A^:~
-      Av:~
+      Av:Z
       Ao:<%DG>
       A*:~
   F:11
@@ -54,7 +54,7 @@ P:EN
       A>:L-[subject-list]
       A<:L+[subject-list]
       A^:~
-      Av:~
+      Av:Z
       Ao:<%DG>
       A*:~
   F:12
@@ -63,7 +63,7 @@ P:EN
       A>:L-[subject-list]
       A<:L+[subject-list]
       A^:~
-      Av:~
+      Av:Z
       Ao:<%DG>
       A*:~
   L:L/master-list [subject-list]
@@ -95,7 +95,7 @@ P:EN
       A<:[right-new help]
       A>:[center-starts-stops]
       A^:[testPCB]
-      Av:Z
+      Av:~
       Ao:~
       A*:~    
   F:16
@@ -104,13 +104,12 @@ P:EN
       A<:[right-new help]
       A>:[center-starts-stops]
       A^:[turnoffon]
-      Av:Z
+      Av:~
       Ao:~
       A*:~    
   F:17
     B:0- [center-starts-stops]
       A$:I[right-new help]
-      Av:H
       A<:[turnoffon]
       A>:[star-record]
       A^:~
