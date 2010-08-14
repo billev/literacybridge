@@ -1,0 +1,4 @@
+:MM:SanDisk
+:MS:256MB
+:FW:v1.41c
+bent pin in microSD card
