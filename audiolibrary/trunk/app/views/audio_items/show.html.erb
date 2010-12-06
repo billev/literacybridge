@@ -1,0 +1,27 @@
+<h1><%=h @default_localization.title %></h1>
+
+<p>
+  <strong>Author:</strong> <%= link_to @default_localization.creator, "#" %>
+</p>
+
+<p>
+  <strong>Categories:</strong> 
+  <%= (@audio_item.categories.collect { |c| c.name }).join(", ") %>
+</p>
+
+<p>
+  <%=h @default_localization.description %>
+</p>
+
+<%= link_to "Download audio file", @default_localization.recording.url, :class => "button" %>
+
+<h3>Available Translations:</h3>
+
+<ul class="circle">
+<% @audio_item.localizations.each do |localization| %>
+	<li><%= link_to localization.locale.description, audio_item_path(@audio_item, :localization_id => localization.id) %></li>
+<% end %>
+</ul>
+
+<%= link_to 'Edit', edit_audio_item_path(@audio_item) %> |
+<%= link_to 'Back', audio_items_path %>

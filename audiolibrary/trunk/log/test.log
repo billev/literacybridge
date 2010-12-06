@@ -1,0 +1,44 @@
+Unable to load metadata, underlying cause no such file to load -- metadata 
+
+ /Library/Ruby/Site/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/Library/Ruby/Site/1.8/rubygems/custom_require.rb:31:in `require'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:158:in `require'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:265:in `require_or_load'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:224:in `depend_on'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:136:in `require_dependency'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:853:in `try_to_load_dependency'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:868:in `require_fixture_classes'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:865:in `each'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:865:in `require_fixture_classes'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:848:in `fixtures'
+./test/test_helper.rb:35
+./test/unit/helpers/metadatas_helper_test.rb:1:in `require'
+./test/unit/helpers/metadatas_helper_test.rb:1
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5:in `load'
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5:in `each'
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+Unable to load metadata, underlying cause no such file to load -- metadata 
+
+ /Library/Ruby/Site/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/Library/Ruby/Site/1.8/rubygems/custom_require.rb:31:in `require'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:158:in `require'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:265:in `require_or_load'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:224:in `depend_on'
+/Users/tanya/.gem/ruby/1.8/gems/activesupport-2.3.8/lib/active_support/dependencies.rb:136:in `require_dependency'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:853:in `try_to_load_dependency'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:868:in `require_fixture_classes'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:865:in `each'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:865:in `require_fixture_classes'
+/Users/tanya/.gem/ruby/1.8/gems/activerecord-2.3.8/lib/active_record/fixtures.rb:848:in `fixtures'
+./test/test_helper.rb:35
+./test/functional/metadatas_controller_test.rb:1:in `require'
+./test/functional/metadatas_controller_test.rb:1
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5:in `load'
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5:in `each'
+/Library/Ruby/Gems/1.8/gems/rake-0.8.7/lib/rake/rake_test_loader.rb:5
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
