@@ -1,0 +1,23 @@
+development:
+  bucket_name: audiolibrary.dev
+  access_key_id: AKIAIVSLQIKSPY2M3D6Q
+  secret_access_key: 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
+
+test:
+  bucket_name: audiolibrary.dev
+  access_key_id: AKIAIVSLQIKSPY2M3D6Q
+  secret_access_key: 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
+  distribution_domain:
+
+staging:
+  bucket_name: audiolibrary.dev
+  access_key_id: AKIAIVSLQIKSPY2M3D6Q
+  secret_access_key: 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
+  distribution_domain:  
+  
+production:
+  bucket_name: audiolibrary.prod
+  access_key_id: AKIAIVSLQIKSPY2M3D6Q
+  secret_access_key: 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
+  distribution_domain:
+  use_ssl: true

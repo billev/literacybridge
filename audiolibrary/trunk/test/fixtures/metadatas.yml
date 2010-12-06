@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  dc_contributor: MyString
+  dc_coverage: MyString
+  dc_creator: MyString
+  dc_date: 2010-07-25
+  dc_description: MyString
+
+two:
+  dc_contributor: MyString
+  dc_coverage: MyString
+  dc_creator: MyString
+  dc_date: 2010-07-25
+  dc_description: MyString

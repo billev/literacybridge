@@ -1,0 +1,43 @@
+<h1>Editing Audio Item</h1>
+
+<% form_for( @audio_item, :url => { :action => "create" } ) do |item_form| %>
+  <%= item_form.error_messages %>
+
+
+  	<p>
+		<label for="categories">Categories</label>
+		<% @categories.each do |category| %>
+			<%= check_box_tag("audio_item[category_list][#{category.id}]", "1", @audio_item.categories.detect{|d| d == category}) %>
+			<%= "#{category.name}"%><br />
+		<% end %>
+	</p>	
+
+  <% item_form.fields_for :localizations do |localization_form| %>
+
+  <p>
+	<%= localization_form.label "Language" %><br />
+	<%= localization_form.select("locale_id", Locale.all.collect {|loc| [ loc.description, loc.id ] } ) %>
+  </p>
+
+  <p>
+    <%= localization_form.label "Title" %><br />
+    <%= localization_form.text_field :title %>
+  </p>
+
+  <p>
+    <%= localization_form.label "Author" %><br />
+    <%= localization_form.text_field :creator %>
+  </p>
+  <p>
+    <%= localization_form.label "Description" %><br />
+    <%= localization_form.text_field :description %>
+  </p>
+
+  <% end %>
+
+  <p>
+    <%= item_form.submit 'Save' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', audio_items_path %>

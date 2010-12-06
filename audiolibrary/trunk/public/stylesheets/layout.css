@@ -1,0 +1,460 @@
+/* Categories */
+
+ul.categories li.sub { padding-left: 20px; }
+ul.categories li.subsub { padding-left: 40px; }
+
+/* Blog */
+
+div.post { padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px dotted #bbb; }
+
+body.blog div.entry img { float: right; margin: 5px 0 10px 10px; }
+
+div.wp-caption.alignleft { float: left; margin: 5px 10px 10px 5px; }
+div.wp-caption.alignright { float: right; margin: 5px 0 10px 10px; }
+
+p.postmetadata { font-size: 11px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #777; clear: both; }
+p.postmetadata a { color: inherit; }
+p.postmetadata a:hover { color: inherit; }
+
+p.wp-caption-text { text-align: center; font-size: 12px; color: #777; }
+
+blockquote { background-color: #efefef; margin-left: 20px; }
+
+div.narrowcolumn { width: 600px; float: left; }
+body.blog div#sidebar, body.archive div#sidebar { width: 250px; float: right; }
+
+div#footer { clear: both; }
+
+div#sidebar li { margin: 5px 0; }
+
+ul.sub-nav li.current_page_item a { color: #333; font-weight: bold; }
+
+div.main ul { list-style-type: circle; padding: 5px 0 5px 15px; }
+div.main ul li { padding: 10px 0;}
+
+
+/* About Sections */
+
+
+div.main ul.people { list-style-type: none; padding: 0; margin: 0; }
+div.main ul li { overflow: hidden; }
+div.main ul li, div.section-about h2 { clear: both; }
+div.main h2 { margin: 15px 0; }
+div.main ul.people li img { float: left; margin: 0; padding: 0; }
+div.main ul.people li p, div.main ul.people li h4 { margin-left: 150px; }
+
+
+
+/* Reset Some Global Settings */
+body {
+  background: #efeae4 url(../images/dirty.png);
+  font-family: "Georgia", Cambria, Times New Roman, Times, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Headings and Type */
+h1, h2, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  color: #cc5229;
+}
+p {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+
+div#content p { margin-bottom: 18px; }
+
+hr {
+  margin: 15px 0 20px;
+  border-top: 1px dotted #c9c3bc;
+}
+
+ul.recent-posts {
+  margin: 0 0 15px;
+}
+ul.recent-posts li {
+  margin: 0 0 10px;
+  line-height: 18px;
+}
+ul.recent-posts li h5 {
+  line-height: 18px;
+}
+ul.recent-posts li small {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
+
+/* Image Styles */
+img.thick-border, body.blog div.entry img {
+  border: 10px solid #fff;
+  box-shadow: 0 1px 3px rgba(87,47,28,.5);
+  -moz-box-shadow: 0 1px 3px rgba(87,47,28,.5);
+  -webkit-box-shadow: 0 1px 3px rgba(87,47,28,.5);
+}
+
+img.thin-border {
+  border: none;
+  box-shadow: 0 1px 2px rgba(87,47,28,.5);
+  -moz-box-shadow: 0 1px 2px rgba(87,47,28,.5);
+  -webkit-box-shadow: 0 1px 2px rgba(87,47,28,.5);
+}
+
+
+img.right {
+  margin: 5px 0 20px 20px;
+}
+
+/* Wells */
+div.well {
+  background: #e0dad2;
+  margin: 0 0 20px;
+  padding: 14px 14px 15px;
+  border: 1px solid #dbd2c7;
+  border-top-color: #c9c3bc;
+  border-bottom: 0;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.5);
+  -moz-box-shadow: 0 1px 0 rgba(255,255,255,.5);
+  -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+
+/* New Buttons */
+a.button {
+  display: inline-block;
+  background-color: #8baf2e;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(transparent), to(rgba(0,0,0,.25)));
+  background-image: -moz-linear-gradient(top, transparent, rgba(0,0,0,.25));
+  padding: 6px 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 -1px 1px rgba(0,0,0,.25);
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.25);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.25);
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.25);
+  text-transform: capitalize;
+}
+a.button.large {
+  font-size: 15px;
+  padding: 6px 15px;
+}
+a.button.orange {
+  background-color: #cc5229;
+}
+
+/* Video Thumbnails */
+a.video-th img {
+  border: 5px solid #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.5);
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+
+/* Give our key elements some alignment and base styles */
+div#header,
+div#content,
+div#footer {
+  width: 940px;
+  margin: 0 auto;
+}
+
+div.content {
+  text-shadow: 0 1px 1px rgba(255,255,255,.75);
+}
+
+/* Header */
+div#header {
+  background: transparent url(../images/black-fill-25.png);
+  background: transparent -webkit-gradient(linear, 0 0, 0 100%, from(rgba(60,33,20,.1)), to(rgba(60,33,20,.25)));
+  background: transparent -moz-linear-gradient(top, rgba(60,33,20,.1), rgba(60,33,20,.25));
+  height: 40px;
+  margin-bottom: 30px;
+  margin-top: 0;
+  border-bottom: 1px dotted #fff;
+  border-color: rgba(255,255,255,.15);
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 8px 0;
+}
+
+/* Special header styles for homepage */
+body.home div#header { 
+	margin-top: 30px; 
+	border-top: 1px dotted #fff;
+	border-color: rgba(255,255,255,.15);
+	padding: 5px 10px;
+	width: 940px;
+}
+
+div.segment img { 
+	float: left;
+	margin-right: 15px;
+}
+
+div.segment { 
+	margin-bottom: 15px; 
+}
+
+div.segment .btn {
+	margin-right: 10px;
+}
+
+div#twitter h3 { margin-bottom: 3px; }
+div#twitter h3 img { display: inline; margin-left: 8px; }
+
+/* IE6 Fixes */
+*html div#header { background: none; }
+*html body.home div#header { background-color: #4c2717; }
+
+div#header h3 {
+  float: left;
+  margin: 0;
+}
+div#header img {
+  float: left;
+  margin-right: 10px;
+}
+div#header a#logo,
+div#header ul a {
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.5);
+  -webkit-transition: .2s linear all;
+}
+div#header a#logo {
+  float: left;
+  display: block;
+  font-weight: normal;
+}
+div#header ul {
+  float: left;
+  margin-left: 30px;
+}
+div#header li {
+  display: inline;
+}
+div#header li a {
+  font: normal 14px/40px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 0 10px;
+}
+div#header a:hover,
+div#header a#logo:hover {
+  text-shadow: 0 0 15px rgba(255,255,255,.85);
+}
+div#header a.btn {
+  float: right;
+  margin-top: 7px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.5);
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+
+
+/* Homepage and Page Headers */
+
+div.slide { display: none; width: 1080px; height: 528px; margin: auto; position: absolute; position-x: center; }
+div#slide0 { display: block; background: url("../images/home/slide0.jpg"); }
+div#slide1 { background: url("../images/home/slide1.jpg");  }
+div#slide2 { background: url("../images/home/slide2.jpg");  }
+div#slide3 { background: url("../images/home/slide3.jpg");  }
+div#slide4 { background: url("../images/home/slide4.jpg");  }
+
+div#hero,
+div.page-header,
+div.page-header {
+  width: 100%;
+  margin: 0;
+}
+
+div.inner-wrapper: { width: 100%; }
+body.home div.inner-wrapper { width: 1080px; margin: auto; position: relative; }
+
+div#hero,
+div.page-header {
+  margin-top: -115px;
+  margin-bottom: 29px;
+  border-bottom: 1px solid #fff;
+}
+div#hero h1,
+div.page-header h1 {
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.5);
+}
+/* Homepage Hero Unit */
+div#hero,
+div#hero div.inner-wrapper {
+  height: 528px;
+}
+div#hero {
+  background: #160706 url(../images/home/hero-tile-bg.jpg) repeat-x 0 0;
+}
+div#hero div.inner-wrapper {
+  /*background: transparent url(../images/home/hero-bg.jpg) no-repeat center top;*/
+}
+div#hero div.container {
+  padding-top: 200px;
+}
+div#hero h1,
+div#hero p {
+  width: 380px;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.5);
+}
+div#hero h1 {
+  margin: 0 0 10px;
+  font-size: 50px;
+}
+div#hero p {
+  font-size: 20px;
+  line-height: 25px;
+  color: #efeae4
+}
+div#hero a.video-th {
+  color: #fff;
+  color: rgba(255,255,255,.75);
+  font-size: 16px;
+  line-height: 20px;
+}
+div#hero a.video-th img {
+  float: left;
+}
+div#hero a.video-th span {
+  display: block;
+  float: left;
+  padding: 20px 10px;
+}
+/* Page Headers - these are just like the hero unit in terms of visual style */
+div.page-header,
+div.page-header div.inner-wrapper {
+  height: 180px;
+}
+div.page-header {
+  background: #381a11 url(../images/page-header-tile-bg.jpg) repeat-x 0 0;
+  margin-top: -91px;
+  margin-bottom: 30px;
+}
+div.page-header div.inner-wrapper {
+  background: transparent url(../images/page-header-bg.jpg) no-repeat center top;
+}
+div.page-header div.container {
+  padding-top: 70px;
+}
+div.page-header a.post-edit-link {
+  float: right;
+  margin-top: 25px;
+  color: #fff;
+}
+div.page-header h1 small {
+  display: block;
+  font-size: 20px;
+  line-height: 30px;
+  color: #c0b0a7;
+  letter-spacing: 0;
+}
+
+/* Footer */
+div#footer {
+  margin-top: 20px;
+  padding: 19px 0 30px;
+  border-top: 1px dotted #c9c3bc;
+}
+div#footer p {
+  color: #94857e;
+}
+div#footer ul {
+  
+}
+div#footer li {
+  display: inline;
+  padding-right: 15px;
+}
+
+
+/* Sidebar */
+div#sidebar {
+  
+}
+
+  
+/* Twitter Widget */
+.twtr-hd, .twtr-ft {
+  display: none;
+}
+.twtr-timeline {
+  height: auto !important;
+  margin-top: 10px;
+}
+.twtr-doc {
+  height: auto !important;
+  overflow: visible !important;
+}
+.twtr-tweet {
+  border-top: 1px dotted #dbd2c7;
+  padding: 9px 0 !important;
+  margin: 0 !important;
+}
+.twtr-tweet-text {
+  color: #555;
+  font: normal 13px/18px "Helvetica Neue", Helvetica, arial, sans-serif !important;
+}
+#twtr-widget-1 .twtr-bd p {
+  line-height: 18px !important;
+  font-size: 13px !important
+}
+#twtr-widget-1 div.twtr-tweet-text p i,
+#twtr-widget-1 div.twtr-tweet-text p i a {
+  color: #999 !important;
+  font-size: 11px;
+  line-height: 20px;
+  margin: 0 !important;
+}
+#twtr-widget-1.twtr-widget .twtr-tweet-wrap {
+  padding: 0 !important;
+}
+#twtr-widget-1.twtr-widget .twtr-tweet {
+  border-bottom: 0;
+  color: #666;
+}
+#twtr-widget-1 a.twtr-timestamp {
+  color: #ccc !important;
+}
+#twitter-widget .twtr-reply {
+  display: none !important;
+}
+
+/* Homepage (horizontal) tweets */
+div.horizontal-tweets .twtr-timeline {
+  width: 960px !important;
+  margin-left: -20px !important;
+}
+div.horizontal-tweets .twtr-tweet {
+  float: left;
+  display: inline;
+  width: 300px !important;
+  margin: 0 0 0 20px !important;
+  padding: 0 !important;
+  border: none;
+}
+
+ul.disc li { list-style: disc; margin-left: 18px; }
+  
+table.donations th { font-weight: bold; height: 26px; }  
+table.donations tr td { vertical-align: top; padding-bottom: 12px; }
+
+div.callout { background: #fff; 
+box-shadow: 0 1px 3px rgba(87,47,28,.5);
+-moz-box-shadow: 0 1px 3px rgba(87,47,28,.5);
+-webkit-box-shadow: 0 1px 3px rgba(87,47,28,.5); padding: 20px 20px 0px; }

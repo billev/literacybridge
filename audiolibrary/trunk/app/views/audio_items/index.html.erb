@@ -1,0 +1,44 @@
+<%= link_to 'New Audio Item', new_audio_item_path, :class => "large button" %>
+<h1>Audio Library</h1>
+
+<div class="row">
+	<div class="four columns">
+		<h4>Categories</h4>
+		<ul class="categories">
+		<% @categories.each do |category| %>
+			<li><%= link_to facet_string(category), url_for( :controller => 'audio_items', :action => 'index', :category_id => category.id) %>
+				
+			<%= '<ul class="sub">' if category.children %>
+			<% category.children.each do |subcat| %>
+			  <li><%= link_to facet_string(subcat), url_for( :controller => 'audio_items', :action => 'index', :category_id => subcat.id) %>
+			  	<%= '<ul class="sub">' if subcat.children %>
+				<% subcat.children.each do |subsubcat| %>
+   				  <li><%= link_to facet_string(subsubcat), url_for( :controller => 'audio_items', :action => 'index', :category_id => subsubcat.id) %></li>
+				<% end %>
+			  </li><%= '</ul>' if subcat.children %>
+			<% end %>
+			</li><%= '</ul>' if category.children %>
+		<% end %>
+		</ul>
+	</div>
+	<div class="twelve columns">
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Description</th>
+  </tr>
+
+<% @audio_items.each do |audio_item| %>
+<% localization = audio_item.localizations.first %>
+  <tr>
+    <td><%= link_to localization.title, audio_item %></td>
+    <td><%=h localization.creator %></td>
+    <td><%=h localization.description %></td>
+    <td><%= link_to 'Delete', audio_item, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+</div>
+</div>
+
