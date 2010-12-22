@@ -8356,3 +8356,1221 @@ Rendering audio_items/new
   [4;36;1mLocale Load (0.5ms)[0m   [0;1mSELECT * FROM `locales` [0m
   [4;35;1mLocale Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
 Completed in 120ms (View: 94, DB: 7) | 200 OK [http://localhost/audio_items/new]
+  [4;36;1mSQL (24.9ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:18:51) [GET]
+  [4;36;1mCategory Load (16.8ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.8ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (15.4ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (37.2ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (15.4ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.7ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.8ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 331ms (View: 154, DB: 120) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:40:22) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.7ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (2.2ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.6ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 83ms (View: 44, DB: 14) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:42:08) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.5ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (17.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.1ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 146ms (View: 91, DB: 30) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:46:37) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.7ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.8ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.5ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 84ms (View: 38, DB: 13) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:47:28) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.5ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 135ms (View: 33, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:49:51) [GET]
+  [4;35;1mCategory Load (0.5ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (2.4ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.8ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.3ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.4ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.9ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 137ms (View: 88, DB: 15) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:50:03) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.1ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.7ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 74ms (View: 34, DB: 14) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:50:32) [GET]
+  [4;35;1mCategory Load (0.6ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.6ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (2.2ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.7ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 130ms (View: 93, DB: 14) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:51:33) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.7ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.4ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.5ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.4ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.5ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.7ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 80ms (View: 34, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 22:54:36) [GET]
+  [4;35;1mCategory Load (0.5ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.7ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.9ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.5ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 138ms (View: 41, DB: 13) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:03:52) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (1.4ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.5ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.7ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.1ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 76ms (View: 34, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:05:06) [GET]
+  [4;35;1mCategory Load (0.6ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (1.1ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.9ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 81ms (View: 37, DB: 13) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:08:35) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.5ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (39.9ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.8ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 173ms (View: 92, DB: 51) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:13:30) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (25.7ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.6ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (9.7ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (8.9ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.3ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (2.9ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (7.2ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 152ms (View: 36, DB: 60) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:14:05) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.7ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.8ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 72ms (View: 34, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#new (for 127.0.0.1 at 2010-12-21 23:14:57) [GET]
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Columns (1.8ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/new
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM `categories` [0m
+  [4;35;1mCategory Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` [0m
+  [4;35;1mLocale Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+Completed in 74ms (View: 49, DB: 7) | 200 OK [http://localhost/audio_items/new]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#images to png (for 127.0.0.1 at 2010-12-21 23:14:57) [GET]
+  Parameters: {"id"=>"logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: create, destroy, edit, identify_browser, identify_os, index, new, show, and update):
+  
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:19:07) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.6ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.5ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.5ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.5ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.8ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 80ms (View: 40, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:19:15) [GET]
+  [4;35;1mCategory Load (0.5ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.6ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.9ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.3ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.8ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 142ms (View: 40, DB: 14) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:20:18) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.8ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.5ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.9ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 131ms (View: 92, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ApplicationController#index (for 127.0.0.1 at 2010-12-21 23:20:18) [GET]
+
+ActionController::RoutingError (No route matches "/images/page-header-tile-bg.jpg" with {:method=>:get}):
+  
+
+Rendering rescues/layout (not_found)
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:20:38) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.5ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.7ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.2ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 74ms (View: 34, DB: 13) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:21:00) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.7ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.7ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.2ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.5ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 134ms (View: 33, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:21:48) [GET]
+  [4;35;1mCategory Load (0.6ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.5ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.8ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 73ms (View: 33, DB: 12) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:22:01) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.2ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.1ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 74ms (View: 34, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:38:35) [GET]
+  [4;35;1mCategory Load (0.7ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.5ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.7ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.9ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.5ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+
+ActionView::TemplateError (wrong number of arguments (3 for 2)) on line #42 of app/views/audio_items/index.html.erb:
+39:   	<tr>
+40:       <td><%= link_to localization.title, audio_item %></td>
+41:       <td><%=h localization.creator %></td>
+42:       <td><%=h concat localization.description, 20, "..." %></td>
+43:       <td><%= link_to 'Delete', audio_item, :confirm => 'Are you sure?', :method => :delete %></td>
+44:   	</tr>
+45:   </tbody>
+
+    app/views/audio_items/index.html.erb:42:in `concat'
+    app/views/audio_items/index.html.erb:42
+    app/views/audio_items/index.html.erb:37:in `each'
+    app/views/audio_items/index.html.erb:37
+    app/controllers/audio_items_controller.rb:16:in `index'
+
+Rendered rescues/_trace (32.5ms)
+Rendered rescues/_request_and_response (1.2ms)
+Rendering rescues/layout (internal_server_error)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:38:42) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 2824ms (View: 2787, DB: 14) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:38:45) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.6ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.5ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.5ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.8ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: The binding argument of #concat is no longer needed.  Please remove it from your views and helpers. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 2862ms (View: 2826, DB: 12) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:38:59) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.5ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.4ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 178ms (View: 46, DB: 13) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:39:16) [GET]
+  [4;35;1mCategory Load (0.6ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.7ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.7ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 79ms (View: 40, DB: 14) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-21 23:39:25) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.1ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 77ms (View: 39, DB: 12) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:06:46) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (19.7ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.6ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.7ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.6ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 109ms (View: 54, DB: 31) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:07:07) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.8ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 76ms (View: 37, DB: 12) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:07:28) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (1.2ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.7ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.1ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.1ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 80ms (View: 37, DB: 13) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:08:03) [GET]
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (1.9ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.5ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.3ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+DEPRECATION WARNING: truncate takes an option hash instead of separate length and omission arguments. (called from _run_erb_app47views47audio_items47index46html46erb at /Users/tanya/Sites/literacy-bridge/audiolibrary/trunk/app/views/audio_items/index.html.erb:42)
+Completed in 88ms (View: 46, DB: 14) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:08:35) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.5ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (1.6ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.3ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 78ms (View: 41, DB: 11) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:11:45) [GET]
+  [4;36;1mCategory Load (0.6ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (20.7ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.8ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 136ms (View: 49, DB: 33) | 200 OK [http://localhost/]

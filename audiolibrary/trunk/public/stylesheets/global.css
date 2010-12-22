@@ -64,9 +64,8 @@
 	blockquote cite:before { content: "\2014 \0020"; }
 	blockquote cite a, blockquote cite a:visited { color: #555; }
 	blockquote cite a:hover { color: #555; text-decoration: none; }
-	
-	
-	hr { border: solid #ddd; border-width: 1px 0 0; clear: both; margin: 17px 0 18px; height: 0; }
+		
+	hr { border: solid #ddd; border-width: 1px 0 0; clear: both; margin: 17px 0 18px; height: 0; margin: 15px 0 20px; border-top: 1px dotted #c9c3bc; }
 	body.ie hr { margin: 8px 0 9px; }
 	
 	code, pre { font: 12px/18px "Monaco", "Courier New", "Courier", monospace; color: #e33100; }
@@ -87,6 +86,7 @@
 	table { margin: 0;}
 	table td, table th { padding: 15px; }
 	table th { font-weight: bold; }
+	table tbody tr { border-bottom: 1px dashed #ccc; }
 
 /*	--------------------------------------------------
 	Lists
@@ -169,7 +169,7 @@
 	/* --------------------------------------------------
 	=Structure
 	-------------------------------------------------- */
-	div.container { position: relative; width: 940px; margin: 0 auto; }
+	div.content { position: relative; width: 940px; margin: 0 auto; }
 
 	
 	/*	--------------------------------------------------
@@ -182,9 +182,6 @@
 
 		.row { margin: 0 0 18px -20px; width: 960px; }
 		.column, .columns { float: left; display: inline; margin: 0 0 0 20px; }
-
-		#contentMain { width: 540px; }
-		#contentSec { width: 360px; margin-left: 40px; }
 
 		.one 					{ width: 40px; }
 		.two 					{ width: 100px; }

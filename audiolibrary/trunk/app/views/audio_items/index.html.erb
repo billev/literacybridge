@@ -1,5 +1,7 @@
-<%= link_to 'New Audio Item', new_audio_item_path, :class => "large button" %>
-<h1>Audio Library</h1>
+<div class="page-header">
+	<%= link_to 'New Audio Item', new_audio_item_path, :class => "large button" %>
+	<h1>Audio Library</h1>
+</div>
 
 <div class="row">
 	<div class="four columns">
@@ -23,20 +25,25 @@
 	</div>
 	<div class="twelve columns">
 <table>
-  <tr>
-    <th>Title</th>
-    <th>Author</th>
-    <th>Description</th>
-  </tr>
+  <thead>
+  	<tr>
+    	<th>Title</th>
+    	<th>Author</th>
+    	<th>Description</th>
+  	</tr>
+  </thead>
 
-<% @audio_items.each do |audio_item| %>
-<% localization = audio_item.localizations.first %>
-  <tr>
-    <td><%= link_to localization.title, audio_item %></td>
-    <td><%=h localization.creator %></td>
-    <td><%=h localization.description %></td>
-    <td><%= link_to 'Delete', audio_item, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+  <tbody>
+	<% @audio_items.each do |audio_item| %>
+	<% localization = audio_item.localizations.first %>
+  	<tr>
+      <td><%= link_to localization.title, audio_item %></td>
+      <td><%=h localization.creator %></td>
+      <td><%=h truncate localization.description, :length => 90 %></td>
+      <td><%= link_to 'Delete', audio_item, :confirm => 'Are you sure?', :method => :delete %></td>
+  	</tr>
+  </tbody>
+
 <% end %>
 </table>
 </div>
