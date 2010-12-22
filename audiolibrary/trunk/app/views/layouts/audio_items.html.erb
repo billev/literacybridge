@@ -7,12 +7,17 @@
   <title>Audio Library: <%= controller.action_name %></title>
   <%= stylesheet_link_tag 'global', 'layout' %>
 </head>
-<body>
+<body id="<%= @controller.action_name.camelize(:lower) +  @controller.controller_name.camelize %>" class="<%= @browser %> <%= @os %>">
+
+<div id="header">
+	<div class="content">
+		<h3 class="logo"><a href="/"><img src="images/logo.png" />Literacy Bridge</a></h3>
+	</div>
+</div>
 
 <div class="container content">
-<p style="color: green"><%= notice %></p>
-
 <%= yield %>
+<p style="color: green"><%= notice %></p>
 
 </div>
 

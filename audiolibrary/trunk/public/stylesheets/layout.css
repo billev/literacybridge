@@ -1,3 +1,23 @@
+/* Header */
+div#header {
+  background: transparent url(../images/bg/page-header-bg.jpg) no-repeat center top;
+  height: 40px;
+  margin-bottom: 30px;
+  margin-top: 0;
+  border-bottom: 1px dotted #fff;
+  border-color: rgba(255,255,255,.15);
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 8px 0;
+}
+
+div#header div.content { 
+  background: transparent url(../images/black-fill-25.png);
+  background: transparent -webkit-gradient(linear, 0 0, 0 100%, from(rgba(60,33,20,.1)), to(rgba(60,33,20,.25)));
+  background: transparent -moz-linear-gradient(top, rgba(60,33,20,.1), rgba(60,33,20,.25)); 
+}
+
 /* Categories */
 
 ul.categories li.sub { padding-left: 20px; }
@@ -66,25 +86,8 @@ p {
 
 div#content p { margin-bottom: 18px; }
 
-hr {
-  margin: 15px 0 20px;
-  border-top: 1px dotted #c9c3bc;
-}
-
-ul.recent-posts {
-  margin: 0 0 15px;
-}
-ul.recent-posts li {
-  margin: 0 0 10px;
-  line-height: 18px;
-}
-ul.recent-posts li h5 {
-  line-height: 18px;
-}
-ul.recent-posts li small {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
-}
+ul.categories li { border-bottom: 1px dashed #ccc; }
+ul.categories li:last-child { border: none; }
 
 /* Image Styles */
 img.thick-border, body.blog div.entry img {
@@ -99,11 +102,6 @@ img.thin-border {
   box-shadow: 0 1px 2px rgba(87,47,28,.5);
   -moz-box-shadow: 0 1px 2px rgba(87,47,28,.5);
   -webkit-box-shadow: 0 1px 2px rgba(87,47,28,.5);
-}
-
-
-img.right {
-  margin: 5px 0 20px 20px;
 }
 
 /* Wells */
@@ -151,19 +149,10 @@ a.button.orange {
   background-color: #cc5229;
 }
 
-/* Video Thumbnails */
-a.video-th img {
-  border: 5px solid #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,.5);
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.5);
-  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.5);
-}
 
 
 /* Give our key elements some alignment and base styles */
-div#header,
-div#content,
-div#footer {
+div.content {
   width: 940px;
   margin: 0 auto;
 }
@@ -172,46 +161,6 @@ div.content {
   text-shadow: 0 1px 1px rgba(255,255,255,.75);
 }
 
-/* Header */
-div#header {
-  background: transparent url(../images/black-fill-25.png);
-  background: transparent -webkit-gradient(linear, 0 0, 0 100%, from(rgba(60,33,20,.1)), to(rgba(60,33,20,.25)));
-  background: transparent -moz-linear-gradient(top, rgba(60,33,20,.1), rgba(60,33,20,.25));
-  height: 40px;
-  margin-bottom: 30px;
-  margin-top: 0;
-  border-bottom: 1px dotted #fff;
-  border-color: rgba(255,255,255,.15);
-  position: relative;
-  z-index: 5;
-  width: 100%;
-  padding: 8px 0;
-}
-
-/* Special header styles for homepage */
-body.home div#header { 
-	margin-top: 30px; 
-	border-top: 1px dotted #fff;
-	border-color: rgba(255,255,255,.15);
-	padding: 5px 10px;
-	width: 940px;
-}
-
-div.segment img { 
-	float: left;
-	margin-right: 15px;
-}
-
-div.segment { 
-	margin-bottom: 15px; 
-}
-
-div.segment .btn {
-	margin-right: 10px;
-}
-
-div#twitter h3 { margin-bottom: 3px; }
-div#twitter h3 img { display: inline; margin-left: 8px; }
 
 /* IE6 Fixes */
 *html div#header { background: none; }
@@ -225,7 +174,7 @@ div#header img {
   float: left;
   margin-right: 10px;
 }
-div#header a#logo,
+div#header h3.logo a,
 div#header ul a {
   height: 40px;
   line-height: 40px;
@@ -233,7 +182,7 @@ div#header ul a {
   text-shadow: 0 1px 1px rgba(0,0,0,.5);
   -webkit-transition: .2s linear all;
 }
-div#header a#logo {
+div#header h3.logo a {
   float: left;
   display: block;
   font-weight: normal;
@@ -250,211 +199,17 @@ div#header li a {
   padding: 0 10px;
 }
 div#header a:hover,
-div#header a#logo:hover {
-  text-shadow: 0 0 15px rgba(255,255,255,.85);
-}
-div#header a.btn {
-  float: right;
-  margin-top: 7px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.5);
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.5);
-  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+div#header h3.logo a:hover {
+  text-decoration: none; text-shadow: 0 0 15px rgba(255,255,255,.85);
 }
 
-
-
-/* Homepage and Page Headers */
-
-div.slide { display: none; width: 1080px; height: 528px; margin: auto; position: absolute; position-x: center; }
-div#slide0 { display: block; background: url("../images/home/slide0.jpg"); }
-div#slide1 { background: url("../images/home/slide1.jpg");  }
-div#slide2 { background: url("../images/home/slide2.jpg");  }
-div#slide3 { background: url("../images/home/slide3.jpg");  }
-div#slide4 { background: url("../images/home/slide4.jpg");  }
-
-div#hero,
-div.page-header,
-div.page-header {
-  width: 100%;
-  margin: 0;
-}
-
-div.inner-wrapper: { width: 100%; }
-body.home div.inner-wrapper { width: 1080px; margin: auto; position: relative; }
-
-div#hero,
-div.page-header {
-  margin-top: -115px;
-  margin-bottom: 29px;
-  border-bottom: 1px solid #fff;
-}
-div#hero h1,
-div.page-header h1 {
-  color: #fff;
-  text-shadow: 0 1px 1px rgba(0,0,0,.5);
-}
-/* Homepage Hero Unit */
-div#hero,
-div#hero div.inner-wrapper {
-  height: 528px;
-}
-div#hero {
-  background: #160706 url(../images/home/hero-tile-bg.jpg) repeat-x 0 0;
-}
-div#hero div.inner-wrapper {
-  /*background: transparent url(../images/home/hero-bg.jpg) no-repeat center top;*/
-}
-div#hero div.container {
-  padding-top: 200px;
-}
-div#hero h1,
-div#hero p {
-  width: 380px;
-  color: #fff;
-  text-shadow: 0 1px 1px rgba(0,0,0,.5);
-}
-div#hero h1 {
-  margin: 0 0 10px;
-  font-size: 50px;
-}
-div#hero p {
-  font-size: 20px;
-  line-height: 25px;
-  color: #efeae4
-}
-div#hero a.video-th {
-  color: #fff;
-  color: rgba(255,255,255,.75);
-  font-size: 16px;
-  line-height: 20px;
-}
-div#hero a.video-th img {
-  float: left;
-}
-div#hero a.video-th span {
-  display: block;
-  float: left;
-  padding: 20px 10px;
-}
-/* Page Headers - these are just like the hero unit in terms of visual style */
-div.page-header,
-div.page-header div.inner-wrapper {
-  height: 180px;
-}
-div.page-header {
-  background: #381a11 url(../images/page-header-tile-bg.jpg) repeat-x 0 0;
-  margin-top: -91px;
-  margin-bottom: 30px;
-}
-div.page-header div.inner-wrapper {
-  background: transparent url(../images/page-header-bg.jpg) no-repeat center top;
-}
-div.page-header div.container {
-  padding-top: 70px;
-}
-div.page-header a.post-edit-link {
-  float: right;
-  margin-top: 25px;
-  color: #fff;
-}
-div.page-header h1 small {
-  display: block;
-  font-size: 20px;
-  line-height: 30px;
-  color: #c0b0a7;
-  letter-spacing: 0;
-}
 
 /* Footer */
-div#footer {
-  margin-top: 20px;
-  padding: 19px 0 30px;
-  border-top: 1px dotted #c9c3bc;
-}
-div#footer p {
-  color: #94857e;
-}
-div#footer ul {
-  
-}
-div#footer li {
-  display: inline;
-  padding-right: 15px;
-}
+div#footer { margin-top: 20px; padding: 19px 0 30px; border-top: 1px dotted #c9c3bc; }
+div#footer p { color: #94857e; }
+div#footer li { display: inline; padding-right: 15px; }
 
+/* Homepage */
 
-/* Sidebar */
-div#sidebar {
-  
-}
-
-  
-/* Twitter Widget */
-.twtr-hd, .twtr-ft {
-  display: none;
-}
-.twtr-timeline {
-  height: auto !important;
-  margin-top: 10px;
-}
-.twtr-doc {
-  height: auto !important;
-  overflow: visible !important;
-}
-.twtr-tweet {
-  border-top: 1px dotted #dbd2c7;
-  padding: 9px 0 !important;
-  margin: 0 !important;
-}
-.twtr-tweet-text {
-  color: #555;
-  font: normal 13px/18px "Helvetica Neue", Helvetica, arial, sans-serif !important;
-}
-#twtr-widget-1 .twtr-bd p {
-  line-height: 18px !important;
-  font-size: 13px !important
-}
-#twtr-widget-1 div.twtr-tweet-text p i,
-#twtr-widget-1 div.twtr-tweet-text p i a {
-  color: #999 !important;
-  font-size: 11px;
-  line-height: 20px;
-  margin: 0 !important;
-}
-#twtr-widget-1.twtr-widget .twtr-tweet-wrap {
-  padding: 0 !important;
-}
-#twtr-widget-1.twtr-widget .twtr-tweet {
-  border-bottom: 0;
-  color: #666;
-}
-#twtr-widget-1 a.twtr-timestamp {
-  color: #ccc !important;
-}
-#twitter-widget .twtr-reply {
-  display: none !important;
-}
-
-/* Homepage (horizontal) tweets */
-div.horizontal-tweets .twtr-timeline {
-  width: 960px !important;
-  margin-left: -20px !important;
-}
-div.horizontal-tweets .twtr-tweet {
-  float: left;
-  display: inline;
-  width: 300px !important;
-  margin: 0 0 0 20px !important;
-  padding: 0 !important;
-  border: none;
-}
-
-ul.disc li { list-style: disc; margin-left: 18px; }
-  
-table.donations th { font-weight: bold; height: 26px; }  
-table.donations tr td { vertical-align: top; padding-bottom: 12px; }
-
-div.callout { background: #fff; 
-box-shadow: 0 1px 3px rgba(87,47,28,.5);
--moz-box-shadow: 0 1px 3px rgba(87,47,28,.5);
--webkit-box-shadow: 0 1px 3px rgba(87,47,28,.5); padding: 20px 20px 0px; }
+div.page-header { margin-bottom: 10px; }
+div.page-header .large.button { float: right; }
