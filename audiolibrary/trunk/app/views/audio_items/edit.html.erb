@@ -1,6 +1,6 @@
 <h1>Editing Audio Item</h1>
 
-<% form_for( @audio_item, :url => { :action => "create" } ) do |item_form| %>
+<% form_for( @audio_item, :url => { :action => "create" }, :html => { :multipart => true } ) do |item_form| %>
   <%= item_form.error_messages %>
 
 
@@ -31,6 +31,12 @@
   <p>
     <%= localization_form.label "Description" %><br />
     <%= localization_form.text_field :description %>
+  </p>
+
+  <p>
+    <%= localization_form.label "Audio File" %><br />
+	Current file: <%= @default_localization.recording.url %>
+	<%= localization_form.file_field :recording %>
   </p>
 
   <% end %>
