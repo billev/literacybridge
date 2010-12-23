@@ -9574,3 +9574,152 @@ Rendering audio_items/index
   [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
   [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
 Completed in 136ms (View: 49, DB: 33) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 00:21:29) [GET]
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (34.0ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.6ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (1.9ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (0.2ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.2ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 188ms (View: 88, DB: 46) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 17:07:00) [GET]
+  [4;36;1mCategory Load (0.6ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` [0m
+  [4;36;1mAudioItem Columns (19.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Load (0.7ms)[0m   [0mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;36;1mLocalization Columns (18.7ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mLocale Columns (6.6ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;35;1mCategory Columns (15.4ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1maudio_items_categories Columns (59.9ms)[0m   [0;1mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;35;1mAudioItem Load (1.0ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;36;1mCategory Load (0.7ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;35;1mAudioItem Load (2.9ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;35;1mAudioItem Load (0.4ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;36;1mCategory Load (0.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;36;1mCategory Load (2.3ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;35;1mAudioItem Load (0.5ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;36;1mCategory Load (0.4ms)[0m   [0;1mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 369ms (View: 157, DB: 134) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#index (for 127.0.0.1 at 2010-12-22 17:07:08) [GET]
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.`parent_id` IS NULL) [0m
+  [4;36;1mAudioItem Load (0.5ms)[0m   [0;1mSELECT * FROM `audio_items` [0m
+  [4;35;1mAudioItem Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Load (0.6ms)[0m   [0;1mSELECT `localizations`.* FROM `localizations` WHERE (`localizations`.audio_item_id IN (1,2,3,4,5,6,7,8,9,10,11,12)) [0m
+  [4;35;1mLocalization Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mLocale Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` WHERE (`locales`.`id` IN (1,2,3)) [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/index
+  [4;36;1mCategory Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1maudio_items_categories Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `audio_items_categories`[0m
+  [4;36;1mAudioItem Load (0.4ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 2 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 2) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 5 ) [0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 5) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 8 ) [0m
+  [4;35;1mAudioItem Load (0.3ms)[0m   [0mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 9 ) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 6 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 6) [0m
+  [4;36;1mAudioItem Load (0.3ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 3 ) [0m
+  [4;35;1mCategory Load (0.3ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 3) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 7 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 7) [0m
+  [4;36;1mAudioItem Load (0.2ms)[0m   [0;1mSELECT * FROM `audio_items` INNER JOIN `audio_items_categories` ON `audio_items`.id = `audio_items_categories`.audio_item_id WHERE (`audio_items_categories`.category_id = 4 ) [0m
+  [4;35;1mCategory Load (0.2ms)[0m   [0mSELECT * FROM `categories` WHERE (`categories`.parent_id = 4) [0m
+Completed in 112ms (View: 71, DB: 13) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#new (for 127.0.0.1 at 2010-12-22 17:07:19) [GET]
+  [4;36;1mAudioItem Columns (1.4ms)[0m   [0;1mSHOW FIELDS FROM `audio_items`[0m
+  [4;35;1mLocalization Columns (1.7ms)[0m   [0mSHOW FIELDS FROM `localizations`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCOMMIT[0m
+  [4;36;1mCategory Load (0.5ms)[0m   [0;1mSELECT * FROM `categories` [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/new
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `categories` [0m
+  [4;36;1mCategory Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `categories`[0m
+  [4;35;1mLocale Load (0.4ms)[0m   [0mSELECT * FROM `locales` [0m
+  [4;36;1mLocale Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `locales`[0m
+Completed in 126ms (View: 100, DB: 7) | 200 OK [http://localhost/audio_items/new]
+  [4;35;1mSQL (0.6ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#images to png (for 127.0.0.1 at 2010-12-22 17:07:20) [GET]
+  Parameters: {"id"=>"logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: create, destroy, edit, identify_browser, identify_os, index, new, show, and update):
+  
+
+Rendering rescues/layout (not_found)
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#images to png (for 127.0.0.1 at 2010-12-22 17:07:30) [GET]
+  Parameters: {"id"=>"logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: create, destroy, edit, identify_browser, identify_os, index, new, show, and update):
+  
+
+Rendering rescues/layout (not_found)
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AudioItemsController#new (for 127.0.0.1 at 2010-12-22 17:07:41) [GET]
+  [4;35;1mAudioItem Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `audio_items`[0m
+  [4;36;1mLocalization Columns (1.6ms)[0m   [0;1mSHOW FIELDS FROM `localizations`[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mCategory Load (0.4ms)[0m   [0mSELECT * FROM `categories` [0m
+Rendering template within layouts/audio_items
+Rendering audio_items/new
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM `categories` [0m
+  [4;35;1mCategory Columns (1.2ms)[0m   [0mSHOW FIELDS FROM `categories`[0m
+  [4;36;1mLocale Load (0.4ms)[0m   [0;1mSELECT * FROM `locales` [0m
+  [4;35;1mLocale Columns (1.4ms)[0m   [0mSHOW FIELDS FROM `locales`[0m
+Completed in 48ms (View: 23, DB: 7) | 200 OK [http://localhost/audio_items/new]
