@@ -4,7 +4,8 @@ class Localization < ActiveRecord::Base
 
   belongs_to :locale
   belongs_to :audio_item
-  validates_presence_of :title, :creator
+  validates_presence_of :title
+  validates_attachment_presence :recording
   
   has_attached_file :recording,
     :storage => :s3,

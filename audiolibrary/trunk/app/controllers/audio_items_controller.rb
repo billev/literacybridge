@@ -53,12 +53,18 @@ class AudioItemsController < ApplicationController
   def edit
     @audio_item = AudioItem.find(params[:id])
     @categories = Category.find(:all)
+    
+    if params[:localization_id]
+      @default_localization = Localization.find(params[:localization_id]) 
+    end
+    @default_localization ||= @audio_item.localizations.first
   end
 
   # POST /audio_items
   # POST /audio_items.xml
   def create
     @audio_item = AudioItem.new(params[:audio_item])
+    @categories = Category.find(:all)
 
     respond_to do |format|
       if @audio_item.save
