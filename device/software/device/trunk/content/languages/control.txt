@@ -1,8 +1,7 @@
-VERSION:1.41
+VERSION:1.50
 TIME-PRECISION:128
-LANGUAGE:EN
 ---
-P:EN
+P
       A!:[welcome]
       Ah:<%>
       A+|:I[faster] S+
@@ -16,7 +15,7 @@ P:EN
       A>:T+10000
       A*:Em
       Ao:[context-menu]
-      Ao|:<%DG>
+      Ao|:<%+>
   F:bell
     B:0-1000. [short-bell]
   F:1
@@ -45,7 +44,7 @@ P:EN
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%DG>
+      Ao:<%+>
       A*:~
   F:11
     B:0- [right-subjects]
@@ -55,7 +54,7 @@ P:EN
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%DG>
+      Ao:<%+>
       A*:~
   F:12
     B:0- [home-help-OR]
@@ -64,10 +63,9 @@ P:EN
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%DG>
+      Ao:<%+>
       A*:~
-  L:L/master-list [subject-list]
-     A$:I[up-down]
+  L:L [subject-list]
      Ah:<%>
      A>:L-[subject-list]
      A<:L+[subject-list]
@@ -105,7 +103,7 @@ P:EN
       A>:[center-starts-stops]
       A^:[turnoffon]
       Av:Z
-      Ao:~
+      Ao:X
       A*:~    
   F:17
     B:0- [center-starts-stops]

@@ -29,3 +29,4 @@ Sys_Exception(29); //delete failed
 Sys_Exception(30); // corrupted lists
 Sys_Exception(31); // corrupted macro file
 Sys_Exception(32); // no serial number
+Sys_Exception(33); // can't access system order file
