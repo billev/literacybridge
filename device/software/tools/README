@@ -1,0 +1,7 @@
+The files meta.c and meta.py are standalone command line apps. They sre simple examples of handling meta data in c and python.
+
+metaclass.py defines a calss imported by metagui.py. metagui.py is a simple minded gui that will step forward or backward through a list of .a18 files showing the meta data. The file list can be on the command line like this:
+
+python metagui.py *.a18
+
+or just run "python metagui.py" and choose files from the multi select file open dialog.
