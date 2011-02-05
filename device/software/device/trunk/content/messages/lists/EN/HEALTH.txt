@@ -2,5 +2,3 @@ mansugo#HEALTH
 medications-user#HEALTH
 breastmilk#HEALTH
 sanitation-user#HEALTH
-hain2#HEALTH
-hain7#HEALTH

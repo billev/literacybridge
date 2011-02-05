@@ -1,2 +1,1 @@
-^pig#STORY
 changes-in-world#STORY

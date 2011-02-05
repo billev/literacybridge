@@ -5,5 +5,3 @@ vacinate-user#AGRIC
 harvest#AGRIC
 test-seeds#AGRIC
 timing#AGRIC
-harvesting#AGRIC
-livestock#AGRIC
