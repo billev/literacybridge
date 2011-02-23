@@ -1,0 +1,219 @@
+VERSION:1.40
+TIME-PRECISION:128
+LANGUAGE:ES
+---
+P:ES
+      A!:[welcome]
+      Ah:<%>
+      A+|:I[faster] S+
+      A-|:I[slower] S-
+      A+:I[louder] V+
+      A-:I[quieter] V-
+      Ap:P
+      A^:L-[title-list]
+      Av:L+[title-list]
+      A<:T-10000
+      A>:T+10000
+      A*:Em
+      Ao:[context-menu]
+      Ao|:<%EN>
+  F:25
+    B:0- [speak]
+  F:54
+   B:0- [inactivity]
+  F:10
+   B:0- [empty-list]
+  F:35
+   B:0- [file now deleted]
+  F:39
+   B:0- [file is copying]
+  F:40
+   B:0- [file now copied]
+  F:bell
+    B:0-1000. [short-bell]
+  F:1
+    B:0- [welcome]
+      A$:[blank]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:blank
+    B:0-300 [blank]
+      A$:[right-subjects]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:3
+    B:0- [home-help-OR]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:5
+    B:0- [right-subjects]
+      A$:[intro-record]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  F:6
+    B:0- [intro-record] 
+      A$:[home-help-OR]
+      Ah:[right-new help]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:<%EN>
+      A*:~
+  L:L/master-list [subject-list]
+     A$:I[up-down]
+     Ah:<%>
+     A>:L-[subject-list]
+     A<:L+[subject-list]
+     Ao:~
+     A*:Em
+  F:7
+    B:0- [up-down]
+
+  L:P/{[subject-list]} [title-list]
+     A^:L-[title-list]
+     Av:L+[title-list]
+     A*:~
+
+  F:11
+    B:0- [right-new help]
+      A^:Ud+[welcome]
+      Av:H
+      A>:[center-starts-stops]
+      A<:[black-copy-del]
+      Ao:~
+      A*:~
+  F:12
+    B:0- [home-beginning]
+      A>:[center-starts-stops]
+      A<:[black-copy-del]
+      Ao:~
+      A*:~
+  F:13
+    B:0- [center-starts-stops]
+      A$:I[right-new help]
+      Av:Z
+      A<:[home-beginning]
+      A>:[minus-quieter]
+      Ao:~
+      A*:~
+  F:15
+    B:0- [minus-quieter]
+      A$:I[right-new help]
+      A<:[center-starts-stops]
+      A>:[plus-louder]
+      Ao:~
+      A*:~
+  F:16
+    B:0- [plus-louder]
+      A$:I[right-new help]
+      A>:[minus-slower]
+      A<:[minus-quieter]
+      Ao:~
+      A*:~
+  F:18
+    B:0- [minus-slower]
+      A$:I[right-new help]
+      A<:[plus-louder]
+      A>:[plus-faster]
+      Ao:~
+      A*:~
+  F:17
+    B:0- [plus-faster]
+      A$:I[right-new help]
+      A>:[loud-battery-warning]
+      A<:[minus-slower]
+      Ao:~
+      A*:~
+  F:19
+    B:0- [loud-battery-warning]
+      A$:I[right-new help]
+      A>:[ff-rw]
+      A<:[plus-faster]
+      Ao:~
+      A*:~
+  F:20
+    B:0- [ff-rw]
+      A$:I[right-new help]
+      A>:[star-record]
+      A<:[loud-battery-warning]
+      Ao:~
+      A*:~
+  F:21
+    B:0- [star-record]
+      A$:I[right-new help]
+      A>:[black-copy-del]
+      A<:[ff-rw]
+      Ao:~
+      A*:~
+  F:24
+    B:0- [black-copy-del]
+      A$:I[right-new help]
+      A>:[home-beginning]
+      A<:[star-record]
+      Ao:~
+      A*:~
+  F:30
+    B:0- [context-menu]
+      A>:[context-copy]
+      A<:[context-delete]
+  F:36
+    B:0- [context-copy]
+      A>:[context-delete]
+      A<:[context-menu]
+      Ao:[copy1]
+  F:37  
+    B:0- [copy1]
+      Ao:[copy2]
+  F:38  
+    B:0- [copy2]
+      Ao:C{[title-list]} [subject-list]
+  F:31
+    B:0- [context-delete]
+      A$:[escape]
+      A<:[context-copy]
+      A>:[context-trim]
+      Ao:[star-confirm-home-keep]
+  F:62
+    B:0- [context-trim]
+      A<:[context-delete]
+      A>:[context-menu]
+      Ao:M{[title-list]}
+  F:55
+    B:0- [escape]
+      A<:[context-copy]
+      A>:[context-menu]
+      Ao:[star-confirm-home-keep]
+  F:34
+    B:0- [star-confirm-home-keep]
+      Ah:<%>
+      A*:D{[title-list]} [subject-list]
+
+  F:41
+    B:0- [louder]
+  F:42
+    B:0- [quieter]
+  F:43
+    B:0- [faster]    
+  F:44  
+    B:0- [slower]    
