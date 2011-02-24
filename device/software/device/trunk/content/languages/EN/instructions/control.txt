@@ -9,8 +9,8 @@ P
       A+:I[louder] V+
       A-:I[quieter] V-
       Ap:P
-      A^:T-10000
-      Av:T+10000
+      A^:L-[title-list]
+      Av:L+[title-list]
       A<:T-10000
       A>:T+10000
       A*:Em
@@ -73,6 +73,10 @@ P
      A*:Em
   F:13
     B:0- [up-down]
+  L:P/{[subject-list]} [title-list]
+     A^:L-[title-list]
+     Av:L+[title-list]
+     A*:~
   F:14
     B:0- [right-new help]
       A>:[turnoffon]
@@ -87,7 +91,7 @@ P
     B:0- [turnoffon]
       A$:I[right new help-home begin]
       A<:[right-new help]
-      A>:[start-translation]
+      A>:[center-starts-stops]
       A^:[testPCB]
       Av:Z
       Ao:~
@@ -100,34 +104,12 @@ P
       A^:[turnoffon]
       Av:Z
       Ao:X
-      A*:~
-  L:T [translate-list]
-      A^:L-[translate-list]
-      Av:L+[translate-list]
-      A*:El
-      A>:Ln
-      A<:Lo
-  F:39
-    B:0- [start-translation]
-      A$:I[right-new help]
-      A<:[turnoffon]
-      A>:[center-starts-stops]
-      A^:~
-      Av:~
-      Ao:[translation-options]
-      A*:~
-  F:40
-    B:0- [translation-options]
-      A<:Ln
-      A>:Lo
-      A^:L-[translate-list]
-      Av:L+[translate-list]
-      Ao:~
-      A*:~
+      A*:~    
   F:17
     B:0- [center-starts-stops]
       A$:I[right-new help]
-      A<:[start-translation]
+      Av:H
+      A<:[turnoffon]
       A>:[star-record]
       A^:~
       Av:~
@@ -245,17 +227,20 @@ P
     B:0- [copy1]
       Ao:[copy2]
   F:32
-    B:0- [copy2]      
+    B:0- [copy2]
+      Ao:C{[title-list]} [subject-list]
   F:33
     B:0- [context-delete]
       A<:[context-copy]
       A>:[context-menu]
       Av:[context-trim]
       Ah:<%>
+      Ao:D{[title-list]} [subject-list]
   F:34
     B:0- [context-trim]
       A>:[context-menu]
       A<:[context-delete]
+      Ao:M{[title-list]} 
   F:35
     B:0- [louder]
   F:36
@@ -263,4 +248,4 @@ P
   F:37
     B:0- [faster]    
   F:38
-    B:0- [slower]
+    B:0- [slower]    
