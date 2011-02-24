@@ -62,6 +62,7 @@ asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
 #define DEFAULT_SYSTEM_PATH	"a:/system/"
 #define PKG_CONTROL_FILENAME_BIN	"control.bin"
 #define PKG_CONTROL_FILENAME_TXT	"control.txt"
+#define TRANSLATE_FILENAME_BIN      "translate.bin"
 #define APP_DATA_FILENAME		"data.bin"
 #define SYS_PKG_CHAR		'%'
 #define APP_PKG_CHAR		'^'

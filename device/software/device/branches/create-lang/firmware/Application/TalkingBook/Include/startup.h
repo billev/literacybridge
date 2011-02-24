@@ -17,6 +17,7 @@ extern void setDefaults(void);
 extern char *nextSystem(void);
 extern char *prevSystem(void); 
 extern unsigned int GetMemManufacturer(void);
+extern void loadSystemNames(void);
 
 #ifndef OLD_MEMBRANE_SW 
 

@@ -24,7 +24,7 @@ extern INT16 SD_Initial(void);
 static char * addTextToSystemHeap (char *);
 static void loadDefaultUserPackage(void);
 static int loadConfigFile (void);
-static void loadSystemNames(void);
+//static void loadSystemNames(void);
 static char *currentSystem(void);
 static void cleanUpOldRevs(void);
 
@@ -120,7 +120,8 @@ void setDefaults(void) {
 void startUp(void) {
 	char buffer[200];
 	char strCounts[20];
-	int key;
+	char filepath [PATH_LENGTH];
+	int key, handle, temp;
 	
 	SetSystemClockRate(MAX_CLOCK_SPEED); // to speed up initial startup -- set CLOCK_RATE later
 
@@ -200,7 +201,22 @@ void startUp(void) {
 	}
 //#endif
 	loadSystemNames(); 
-	loadPackage(PKG_SYS,currentSystem());	
+	loadPackage(PKG_SYS,currentSystem());
+			
+	//Load translation list from bin
+	strcpy(filepath,LANGUAGES_PATH);
+	temp=strlen(filepath);
+	strcat(filepath,TRANSLATE_FILENAME_BIN);
+	handle = tbOpen((LPSTR)(filepath),O_CREAT|O_RDWR);
+	//Also check that translate temp directory exists before re-loading
+	filepath[temp]=0;
+	strcat(filepath,TRANSLATE_TEMP_DIR);
+	if (handle != -1 && dirExists( (LPSTR) filepath) ) {
+		temp = read(handle, (unsigned long)&context.transList<<1, sizeof(TranslationList)<<1);
+		close(handle);
+	}
+	//Always start with not translated list
+	context.transList.mode = '0';
 	SetSystemClockRate(CLOCK_RATE); // either set in config file or the default 48 MHz set at beginning of startUp()
 
 	unlink ((LPSTR) (STAT_DIR SNCSV));
@@ -425,7 +441,7 @@ unsigned int GetMemManufacturer()
 }
 
 
-static void loadSystemNames() {
+extern void loadSystemNames() {
 	int handle;
 	char *cursorRead;
 	char systemOrderFile[PATH_LENGTH];
