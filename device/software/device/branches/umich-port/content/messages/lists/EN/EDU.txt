@@ -1,7 +1,0 @@
-pius#EDU
-^alphabet#EDU
-pronunciation-user#EDU
-opinion-user#EDU
-^dino#EDU
-community-dev#EDU
-energy-sources#EDU
