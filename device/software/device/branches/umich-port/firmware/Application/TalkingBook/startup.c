@@ -13,22 +13,23 @@
 #include "Include/SD_reprog.h"
 #include "Include/mainLoop.h"
 #include "Include/startup.h"
+#include "Include/filestats.h"
 #include <ctype.h>
 
-#define SYSTEM_HEAP_SIZE 512	//config file values
-#define CONFIG_FILE		"a://system/config.txt"
-#define ALT_CONFIG_FILE		"a://config.txt"
+#include <stdlib.h>
 
 extern int testPCB(void);
 extern unsigned int SetSystemClockRate(unsigned int);
-extern int SystemIntoUDisk(unsigned int);
-extern INT16 SD_Initial(void);
+/* XXX: David D. No more USB/SD */
+/* extern int SystemIntoUDisk(unsigned int); */
+/* extern INT16 SD_Initial(void); */
 
 static char * addTextToSystemHeap (char *);
 static void loadDefaultUserPackage(void);
 static int loadConfigFile (void);
 static void loadSystemNames(void);
 static char *currentSystem(void);
+static void cleanUpOldRevs(void);
 
 // These capitalized variables are set in the config file.
 APP_IRAM int KEY_PLAY, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_SELECT, KEY_STAR, KEY_HOME, KEY_PLUS, KEY_MINUS;
@@ -132,15 +133,21 @@ void startUp(void) {
 	
 	//to stop user from wondering if power is on and possibly cycling too quickly,
 	playDing();  // it is important to play a sound immediately 
-	
+//	cleanUpOldRevs();	
 	key = keyCheck(1);  // long keycheck 
 	
 	// voltage checks in SystemIntoUSB.c
 	if (key == KEY_STAR || key == KEY_MINUS) {
 		// allows USB device mode no matter what is on memory card
-		Snd_Stop();
+		/* XXX: David D. Change to our sound interface */
+		/* Snd_Stop(); */
+		audio_stop(&__gaudio);
+		/* XXX: David D. No more USB */
+		/* XXX: David D. SystemIntoUDisk? */
+		/*
 		SystemIntoUDisk(1);	
 		SD_Initial();  // recordings are bad after USB device connection without this line (todo: figure out why)
+		*/
 		loadConfigFile();
 		processInbox();
 		resetSystem();
@@ -153,16 +160,20 @@ void startUp(void) {
 	
 	// check for new firmware first, but don't flash if voltage is low
 	if(V_MIN_SDWRITE_VOLTAGE <= vCur_1) {
-		check_new_sd_flash();
+		/* XXX: David D. Do not support (yet) */
+		/* check_new_sd_flash(); */
 	}
 	
 	if (loadConfigFile() == -1) // config.txt file not found
-		testPCB();	
+		/* XXX: David D. Do not support (yet) */
+		/* testPCB();	 */
 	if (!SNexists()) {
 		logException(32,(const char *)"no serial number",LOG_ONLY);
-		testPCB();	
+		/* XXX: David D. Do not support (yet) */
+		/* testPCB();	*/
 	}
-	SysDisableWaitMode(WAITMODE_CHANNEL_A);
+	/* XXX: David D. Not sure what this does, but we're managing the kernel now */
+	/* SysDisableWaitMode(WAITMODE_CHANNEL_A); */
 	adjustVolume(NORMAL_VOLUME,FALSE,FALSE);
 	adjustSpeed(NORMAL_SPEED,FALSE);
 	loadDefaultUserPackage();
@@ -195,7 +206,7 @@ void startUp(void) {
 	strcat(buffer,"\x0d\x0a" "CYCLE "); //cycle number
 	longToDecimalString(systemCounts.powerUpNumber,(char *)(buffer+strlen(buffer)),4);
 	strcat(buffer,(const char *)" - version " VERSION);
-	logString(buffer,BUFFER);
+	logString(buffer,FILE_BUFFER);
 //#ifdef TB_CAN_WAKE
 	if(MEM_TYPE == MX_MID) {
 		logRTC();  
@@ -204,6 +215,28 @@ void startUp(void) {
 	loadSystemNames(); 
 	loadPackage(PKG_SYS,currentSystem());	
 	SetSystemClockRate(CLOCK_RATE); // either set in config file or the default 48 MHz set at beginning of startUp()
+
+	/* XXX: David D. We don't use LPSTR */
+	unlink (/*(LPSTR)*/ (STAT_DIR SNCSV));
+	strcpy(buffer,getDeviceSN(1));
+	strcat(buffer, ",");
+	longToDecimalString(systemCounts.powerUpNumber, strCounts, 4); 
+	strcat(buffer, strCounts);
+	
+	{
+		int ret, bytesToWrite;
+		char line[80];
+		/* XXX: David D. We don't use LPSTR */
+		ret = open(/*(LPSTR)*/(STAT_DIR SNCSV), O_RDWR|O_CREAT);
+		if (ret >= 0) {
+			bytesToWrite = convertDoubleToSingleChar(line,buffer,TRUE);
+			/* XXX: David D. addresses must be passed as addresses */
+			/* write(ret, (unsigned long)line<<1, bytesToWrite); */
+			write(ret, (const void *)((unsigned long)line<<1), bytesToWrite);
+			close(ret);
+		}
+	}
+	
 	mainLoop();
 }
 
@@ -223,7 +256,7 @@ static char * addTextToSystemHeap (char *line) {
 	startingHeap = cursorSystemHeap;
 	cursorSystemHeap = startingHeap + length;
 	if (cursorSystemHeap-systemHeap >= SYSTEM_HEAP_SIZE) {
-		logString(line,ASAP);
+		logString(line,FILE_ASAP);
 		logException(15,0,USB_MODE); //todo:system heap is full
 	}
 	strcpy(startingHeap,line);
@@ -337,7 +370,7 @@ int loadConfigFile(void) {
 	}
 	if (!goodPass) {
 		ret = -1;
-		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",BUFFER);	  //logException(14,0,USB_MODE); 		
+		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",FILE_BUFFER);	  //logException(14,0,USB_MODE); 		
 	}
 	close(handle);
 	LED_ALL = LED_GREEN | LED_RED;
@@ -355,10 +388,13 @@ static void loadDefaultUserPackage(void) {
 	pkgDefault.pkg_type = PKG_MSG;
 	parseControlFile (sTemp, &pkgDefault);
 }
+
+/* XXX: David D. CHECK: Now managed by kernel */
+/*
 void initVoltage()
 {
 	extern void set_voltmaxvolume();
-	APP_IRAM static unsigned long timeInitialized = -1;
+	APP_IRAM static unsigned long timeInitialized = 0xFFFFFFFF;
 	int i, j, k, sumv;
 
 	// init battery voltage sensing	
@@ -394,17 +430,24 @@ void initVoltage()
 	}
 	set_voltmaxvolume();
 }
+*/
+
 unsigned int GetMemManufacturer()
 {
+	/* XXX: David D. do not support! */
+	/*
 	flash  FL = {0};
 	int fl_size = USB_Flash_init((flash *)0, 0);
-	int flash_execution_buf[fl_size];
+	int *flash_execution_buf = malloc(fl_size * sizeof(int));
 	
 	FL.flash_exe_buf = (void *) &flash_execution_buf[0];
 	USB_Flash_init(&FL, 1);
 	
+	free(flash_execution_buf);
 	return(FL.Flash_type);
 
+	*/
+	return 0;
 
 }
 
@@ -454,3 +497,21 @@ char *prevSystem() {
 	return ret;
 }
 
+static void cleanUpOldRevs() {
+	int handle, ret;
+	struct f_info file_info;
+			
+	if (dirExists((LPSTR)"a://Firmware")) {
+		tbChdir((LPSTR)"a://Firmware");
+		/* XXX: David D. We don't use LPSTR */
+		ret =_findfirst(/*(LPSTR)*/"*.*", &file_info, D_FILE);
+		while (ret >= 0) {
+			/* XXX: David D. f_name to fname */
+			/*ret = unlink((LPSTR)file_info.f_name);*/
+			ret = unlink(/*(LPSTR)*/file_info.fname);
+			ret = _findnext(&file_info);	
+		}	
+		tbChdir((LPSTR)"a://");
+		rmdir(/*(LPSTR)*/"a://Firmware");
+	}
+}

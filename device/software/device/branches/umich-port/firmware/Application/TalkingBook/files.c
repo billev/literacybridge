@@ -47,12 +47,17 @@ void clearStaleLog() {
 			logException(13,0,0); 
 		else {
 			lseek(handle,-LOG_CARRYOVER_BYTES,SEEK_END);
-			ret = read(handle,(unsigned long)&buffer<<1,LOG_CARRYOVER_BYTES);
+			/* XXX: David D. addresses must be passed as addresses */
+			/*ret = read(handle,(unsigned long)&buffer<<1,LOG_CARRYOVER_BYTES);*/
+			ret = read(handle,(void *)((unsigned long)&buffer<<1),LOG_CARRYOVER_BYTES);
 			close(handle);
-			unlink((LPSTR)(LOG_FILE));
+			/* XXX: David D. We don't use LPSTR */
+			unlink(/*(LPSTR)*/(LOG_FILE));
 			handle = tbOpen((LPSTR)(LOG_FILE),O_CREAT|O_RDWR|O_TRUNC);
 			if (handle != -1) {
-				write(handle,(unsigned long)&buffer<<1,LOG_CARRYOVER_BYTES);
+				/* XXX: David D. addresses must be passed as addresses */
+				/*write(handle,(unsigned long)&buffer<<1,LOG_CARRYOVER_BYTES);*/
+				write(handle,(const void *)((unsigned long)&buffer<<1),LOG_CARRYOVER_BYTES);
 				close(handle);
 			} else
 				logException(13,0,0); 
@@ -66,7 +71,9 @@ void logString(char *string, int whenToWrite) {
 	// WARNING: if !waitToWrite, this could destory *string
 	// todo: add whenToWrite parameter to allow write "ASAP but preserve" 	
 	if (LOG_FILE) {
-		if (whenToWrite==ASAP && !SACM_Status()) {
+		/* XXX: David D. porting to our audio interface */
+		/* if (whenToWrite==FILE_ASAP && !SACM_Status()) { */
+		if (whenToWrite==FILE_ASAP && !audio_is_playing(&__gaudio)) {
 			flushLog();
 			appendStringToFile(LOG_FILE,string);  // destroys *string	
 		} else {
@@ -92,8 +99,10 @@ void logString(char *string, int whenToWrite) {
 }
 
 void flushLog(void) {
-
-	if (idxLogBuffer && LOG_FILE && !SACM_Status()) {	
+	
+	/* XXX: David D. converting to our audio interface */
+	/* if (idxLogBuffer && LOG_FILE && !SACM_Status()) { */
+	if (idxLogBuffer && LOG_FILE && !audio_is_playing(&__gaudio)) {
 		appendStringToFile(LOG_FILE,logBuffer);	
 		idxLogBuffer = 0;
 	}
@@ -123,22 +132,41 @@ int insertStringInFile(const char * filename, char * strText, long posInsert) {
 		if (ret > 0) 
 			*(strText + ret) = '\0';
 		if (posInsert) {
+			/* XXX: David D. addresses must be passed as addresses */
+			/*
 			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,posInsert % MAX_BYTES);
 			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
+			*/
+			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),posInsert % MAX_BYTES);
+			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+
 			for (i=bytesToWrite; i < posInsert; i+= MAX_BYTES) {
+				/* XXX: David D. addresses must be passed as addresses */
+				/*
 				bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
 				ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
+				*/
+				bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
+				ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
 			}
 		}
 		bytesToWrite = convertDoubleToSingleChar(tempLine,strText,TRUE);
+		/* XXX: David D. addresses must be passed as addresses */
+		/*
 		ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);		
 		do {
 			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
 			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
+			*/
+		ret = write(wHandle,(const void *)((unsigned long)tempLine<<1),bytesToWrite);		
+		do {
+			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
+			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
 		} while (bytesToWrite == MAX_BYTES);
 		close(wHandle);
 		close(rHandle);
-		i = unlink((LPSTR)filename);
+		/* XXX: David D. We don't use LPSTR */
+		i = unlink(/*(LPSTR)*/filename);
 		if (i != -1) {
 			//todo: change this to rename instead of copy and unlink
 			i = rename((LPSTR)wFilepath,(LPSTR)filename);
@@ -185,7 +213,9 @@ int appendStringToFile(const char * filename, char * strText) {
 	if(handle >= 0 ) {
 		ret = 0;
 		bytesToWrite = convertDoubleToSingleChar(strText,strText,TRUE);
-	 	ret = write(handle, (unsigned long)strText << 1, bytesToWrite);
+		/* XXX: David D. We don't use LPSTR */
+	 	/*ret = write(handle, (unsigned long)strText << 1, bytesToWrite);*/
+	 	ret = write(handle, (const void *)((unsigned long)strText << 1), bytesToWrite);
 		close(handle);
 	}
 	return ret;
@@ -253,7 +283,9 @@ int findDeleteStringFromFile(char *path, char *filename, const char * string, BO
 			unequal = strcmp(rCursor, string);
 			if (unequal && shouldDelete) {
 				bytesToWrite = convertDoubleToSingleChar(tempLine,rCursor,TRUE);
-				ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);
+				/* XXX: David D. addresses must be passed as addresses */
+				/*ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);*/
+				ret = write(wHandle,(const void *)((unsigned long)tempLine<<1),bytesToWrite);
 			}
 			if (!unequal) {
 				ret = 0;
@@ -264,12 +296,15 @@ int findDeleteStringFromFile(char *path, char *filename, const char * string, BO
 		close(rHandle);
 		if (shouldDelete) {
 			close(wHandle);
-			i = unlink((LPSTR)filename);
+			/* XXX: David D. We don't use LPSTR */
+			i = unlink(/*(LPSTR)*/filename);
 			if (i != -1) {
 				i = rename((LPSTR)tempFilename,(LPSTR)filename);
 //				i = _copy((LPSTR)tempFilename,(LPSTR)filename);
-				if (i != 0)
-					i = unlink((LPSTR)tempFilename);
+				if (i != 0) {
+					/* XXX: David D. We don't use LPSTR */
+					i = unlink(/*(LPSTR)*/tempFilename);
+				}
 			}
 			ret = i;
 		}
@@ -284,8 +319,8 @@ long getFilePosition() {
 void trimFile(char * filePath, unsigned long frameStart, unsigned long frameEnd) {
 	const char tempFilename[15] = "a:/trimmed.tmp";
 	const int wordsHeaderSize = 3;
-	const int wordsPerFrame = 40;
-	const int bigBufferSize = wordsPerFrame * 10;
+	#define wordsPerFrame 40
+	#define bigBufferSize (wordsPerFrame * 10)
 	const int sacm_mode = 0x7d00;
 	int wHandle,rHandle;
 	int bufferBig[bigBufferSize];
@@ -303,28 +338,43 @@ void trimFile(char * filePath, unsigned long frameStart, unsigned long frameEnd)
 	wordsNewSize = wordsFromFrames(frameEnd-frameStart+1);
 	*pSize = (long)((wordsNewSize<<1) + 2);
 	*(pHeader+2) = sacm_mode;
-	rHandle = open((LPSTR)filePath,O_RDONLY);	
+	/* XXX: David D. We don't use LPSTR */
+	rHandle = open(/*(LPSTR)*/filePath,O_RDONLY);	
 	lseek(rHandle,wordStart<<1,SEEK_SET);
 	
-	wHandle = open((LPSTR)tempFilename,O_CREAT|O_RDWR|O_TRUNC);	
-	ret = write(wHandle,(unsigned long)pHeader<<1,6);
+	/* XXX: David D. We don't use LPSTR */
+	wHandle = open(/*(LPSTR)*/tempFilename,O_CREAT|O_RDWR|O_TRUNC);	
+	/* XXX: David D. addresses must be passed as addresses */
+	/*ret = write(wHandle,(unsigned long)pHeader<<1,6);*/
+	ret = write(wHandle,(const char *)((unsigned long)pHeader<<1),6);
 	
 	for(wordsRemaining=wordsNewSize;wordsRemaining > bigBufferSize;wordsRemaining -= bigBufferSize) {
+		/* XXX: David D. addresses must be passed as addresses */
+		/*
 		ret = read(rHandle,(unsigned long)pBuffer<<1,bigBufferSize<<1);
 		ret = write(wHandle,(unsigned long)pBuffer<<1,bigBufferSize<<1);
+		*/
+		ret = read(rHandle,(void *)((unsigned long)pBuffer<<1),bigBufferSize<<1);
+		ret = write(wHandle,(const void *)((unsigned long)pBuffer<<1),bigBufferSize<<1);
 	}
 	for(;wordsRemaining > 0; wordsRemaining -= wordsPerFrame) {
+		/* XXX: David D. addresses must be passed as addresses */
+		/*
 		ret = read(rHandle,(unsigned long)pBuffer<<1,wordsPerFrame<<1);
 		ret = write(wHandle,(unsigned long)pBuffer<<1,wordsPerFrame<<1);
+		*/
+		ret = read(rHandle,(void *)((unsigned long)pBuffer<<1),wordsPerFrame<<1);
+		ret = write(wHandle,(const void *)((unsigned long)pBuffer<<1),wordsPerFrame<<1);
 	}
 	ret = close(rHandle);
 	ret = close(wHandle);
-	ret = unlink((LPSTR)filePath);
+	/* XXX: David D. We don't use LPSTR */
+	ret = unlink(/*(LPSTR)*/filePath);
 	wait(100);
-	ret = unlink((LPSTR)filePath);
-	ret = chdir((LPSTR)USER_PATH);
+	ret = unlink(/*(LPSTR)*/filePath);
+	ret = chdir(/*(LPSTR)*/USER_PATH);
 	pHeader = filePath + strlen(USER_PATH);
-	ret = unlink((LPSTR)pHeader);
+	ret = unlink(/*(LPSTR)*/pHeader);
 	ret = rename((LPSTR)tempFilename,(LPSTR)filePath);	
 }
 
@@ -335,7 +385,8 @@ BOOL readBuffer(int handle, char *buffer, int bytesToRead) {
 	int i, bytesRead, wordsRead;
 	BOOL ret;
 	
-	bytesRead = read(handle, (unsigned long)buffer<<1,bytesToRead);
+	/* XXX: David D. addresses must be passed as addresses */
+	bytesRead = read(handle, (void *)((unsigned long)buffer<<1),bytesToRead);
 	wordsRead = bytesRead / 2;
 	
 	if ((bytesRead % 2) == 1) // odd
@@ -425,24 +476,21 @@ char * getLine (int fileHandle, char *buffer) {
 }
 
 INT16 tbOpen(LPSTR path, INT16 open_flag) {
-	const int RETRIES = 3;
+	const int RETRIES = 2;
 	int i;
 	INT16 handle;
 	//todo: move number of attempts into config file, but have fall back number in define (since config has to be open)
 
 	for (i = 0; i < RETRIES; i++) { 
-		handle = open(path, open_flag);
+		/* XXX: David D. addresses must be passed as addresses */
+		/*handle = open(path, open_flag);*/
+		handle = open((char *)path, open_flag);
 		if (handle < 0)
 			logException(22,(const char *)path,0);
 		else
 			break;
 		wait(100);
 	}
-/*  commenting lines below to let caller decide how to handle inability to open particular file:
-
-	if (handle < 0)
-		logException(23,(const char *)path,RESET);
-	*/
 	return handle;
 }
 
@@ -453,7 +501,10 @@ INT16 tbChdir(LPSTR path) {
 	//todo: move number of attempts into config file, but have fall back number in define (since config has to be open)
 
 	for (i = 0; i < RETRIES; i++) { 
-		ret = chdir(path);
+		/* XXX: David D. addresses must be passed as addresses */
+		/* ret = chdir(path);*/
+		ret = chdir((char *)path);
+		
 		if (ret < 0)
 			logException(24,(const char *)path,0);
 		else
@@ -469,7 +520,9 @@ int fileExists(LPSTR name) {
 	int ret;
 	struct stat_t statbuf;
 	
-	ret = stat(name, &statbuf);
+	/* XXX: David D. addresses must be passed as addresses */
+	/*ret = stat(name, &statbuf);*/
+	ret = stat((char *)name, &statbuf);
 //	if((ret == 0) && !(statbuf.st_mode & 0x10)) //exists and not a dir
 	if(ret == 0)  // it exists - could be a directory - use line above for file only test
 		ret = 1;
@@ -485,8 +538,14 @@ int dirExists(LPSTR name) {
 	
 //	ret = _findfirst(name, &f_info, D_DIR);
 //	if (ret >= 0)
+	/* XXX: David D. addresses must be passed as addresses */
+	/* XXX: David D. fixed dir check to work with new file_info struct */
+	/*
 	ret = stat(name, &statbuf);
 	if((ret == 0) && (statbuf.st_mode & 0x10)) // exists and is a directory
+	*/
+	ret = stat((char *)name, &statbuf);
+	if((ret == 0) && (statbuf.fattrib & AM_DIR)) // exists and is a directory
 		ret = 1;
 	else 
 		ret = 0;
@@ -500,8 +559,9 @@ int fileCopy(char * from, char * to) {
 	unsigned int loopCount;
 	
 	ret = 0;	
-	rHandle = open((LPSTR)from,O_RDONLY);
-	wHandle = open((LPSTR)to,O_CREAT|O_TRUNC|O_WRONLY);
+	/* XXX: David D. We don't use LPSTR */
+	rHandle = open(/*(LPSTR)*/from,O_RDONLY);
+	wHandle = open(/*(LPSTR)*/to,O_CREAT|O_TRUNC|O_WRONLY);
 //	*P_WatchDog_Ctrl &= ~0x4007; // clear bits 0-2 for 2 sec and bit 14 to select system reset
 //	*P_WatchDog_Ctrl |= 0x8000; // set bit 15 to enable watchdog
 
@@ -511,9 +571,13 @@ int fileCopy(char * from, char * to) {
 //			*P_WatchDog_Clear = 0xA005; 	
 			if (!(loopCount % 64))
 				playBip();
-			rCount = read(rHandle,(unsigned long)&buffer<<1,COPY_BUFFER_SIZE<<2);
+			/* XXX: David D. addresses must be passed as addresses */
+			/*rCount = read(rHandle,(unsigned long)&buffer<<1,COPY_BUFFER_SIZE<<2);*/
+			rCount = read(rHandle,(void *)((unsigned long)&buffer<<1),COPY_BUFFER_SIZE<<2);
 			if (rCount > 0) {
-				wCount = write(wHandle,(unsigned long)&buffer<<1,rCount);
+				/* XXX: David D. addresses must be passed as addresses */
+				/*wCount = write(wHandle,(unsigned long)&buffer<<1,rCount);*/
+				wCount = write(wHandle,(const void *)((unsigned long)&buffer<<1),rCount);
 				if (wCount == -1 || (wCount != rCount)) {
 					ret = -1;
 					break;

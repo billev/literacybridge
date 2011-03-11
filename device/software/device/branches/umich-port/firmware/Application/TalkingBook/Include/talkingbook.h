@@ -1,17 +1,22 @@
-// Copyright 2009,2010 Literacy Bridge
+// Copyright 2009-2011 Literacy Bridge
 // CONFIDENTIAL -- Do not share without Literacy Bridge Non-Disclosure Agreement
 // Contact: info@literacybridge.org
 #ifndef	__TALKINGBOOK_h__
 #define	__TALKINGBOOK_h__
 
-#define VERSION			"v1.50r152"
+#define VERSION			"v1.50r582"
 #define TB_CAN_WAKE  // hardware that allows wake from sleep/halt
 //IMPORTANT: changes to TB_CAN_WAKE must also be made to system_head.inc!!!
 
-asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
+/* XXX: David D. comment */
+/*asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000 */
 #define APP_IRAM 		__attribute__((section(".APP_IRAM")))
 
-#include "./Component/Include/FS/typedef.h"
+/* XXX: David D. Do not use the G+ Typedefs, they break our typedefs */
+/*#include "./Component/Include/FS/typedef.h"*/
+/* Our typedefs here */
+#include "lib/typedefs.h"
+
 #include "./Application/TalkingBook/Include/app_exception.h"
 #include "util.h"
 
@@ -59,7 +64,9 @@ asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
 //   * write a working malloc/free
 //   * rewrite containers so that DEFAULT package doesn't alloc same # of files/blocks/actions as others
 #define MAX_CLOCK_SPEED			96
-#define PKG_CONTROL_FILENAME	"control.txt"
+#define DEFAULT_SYSTEM_PATH	"a:/system/"
+#define PKG_CONTROL_FILENAME_BIN	"control.bin"
+#define PKG_CONTROL_FILENAME_TXT	"control.txt"
 #define APP_DATA_FILENAME		"data.bin"
 #define SYS_PKG_CHAR		'%'
 #define APP_PKG_CHAR		'^'
