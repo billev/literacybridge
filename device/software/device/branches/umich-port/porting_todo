@@ -1,0 +1,132 @@
+###merged from rev. 556
+
+
+This is our current TODO list for adjusting Cliffs code.  Cliff's code adjusting
+conventions are:
+
+All changed code should be commented with:
+		/* XXX: <your name> <your comment> */
+	example:
+		/* XXX: David D. Cast int to enum to remove compiler warning */
+
+- A list of functions which do not link can be found by trying to compile/link
+		tests/cliff_test, although do not save/commit the modified project or it
+		will cause svn conflicts
+
+- If you change the functionality of a line you should comment the old code so it
+		is easier to track bugs introduced by us.
+- All commenting should be with /* */ to separate our comments from Cliff's
+- Any recurring compiler error/warnings you find should be noted at the bottom of
+		this file so I can report them to Cliff. Mark them as - NOT REPORTED, I will
+		change that once I report them to Cliff's bug tracker
+- Any compiler warnings which will result in incorrect execution should be
+		fixed, warnings which will not result in incorrect execution may be left or
+		fixed at your discretion.
+
+
+NOTE: All of Cliff's application code is in src/cliff/Application/TalkingBook/ DO NOT
+				modify code outside of that, it is from G+ and it is very poorly written
+
+Things we need to port:
+	Any Assembly listing:
+		device.c asm(nop) - Asking Cliff, may be able to use our timer
+
+	All of Cliff's FS Calls to elm: -- Implementation - Done, TODO: testing
+		Should Make compatibility layer for
+			open
+			close
+			read
+			write
+			unlink
+			getcwd
+			rmdir
+			chdir
+			lseek
+			_findfirst (traversing directories)
+			_findnext (traversing directories)
+			_copy (file to file copy)
+			stat - NOTE: Compatibility layer should just return elm FILINFO and change
+							Cliff's code to use that
+
+	Cliff's audio calls:
+		SACM*
+		Snd_*
+		NOTE: I emailed Cliff about this, I'm unsure of the interface difference, 
+						awaiting response before editing
+
+	Cliff's button input: -- Done!
+		SP_GetCh
+		KeyScan_ServiceLoop
+
+Things we need to remove/defer: -- David Working on
+	USB Interface
+	Reprogram
+	Wait-state management - NOTE: I emailed Cliff, further updates coming
+
+Kernel functions we still need to implement:
+	flash_close()
+	wdt_*()
+		wdt_start();
+		wdt_ping();
+		wdt_stop();
+		wdt_set_max();
+	reset()
+	Kernel WIC Controller...
+
+Wrapper functions we need to implement:
+	get_pressed() - returns a bitmask of currently pressed keys - Done (untested) -David D
+	unix file wrapper (see file changes) - Done (untested) - David D.
+
+Things we need to figure out:
+	None Currently
+
+Things Cliff should know about:
+	Compiler Warnings:
+		Comparison of unsigned value to -1 or >= 0 - REPORTED
+		Implicit cast from int to enum - REPORTED
+		Deprecated function definitions (pre-ansi no argument defs) - REPORTED
+		??Unused variables in functions - NOT REPORTED
+		Implicit cast from signed to unsigned (and unsigned to signed) - REPORTED
+		Assignment in condition - REPORTED
+		Non-void function does not return value - REPORTED
+
+	Compiler Errors:
+
+	Bugs:
+		edit.c 114:
+		  clipStartFrame -= adjustmentFrames; (clipStartFrame is unsigned, overflow possible)
+
+	Inefficient porting:
+		Button interface - Should be rewritten
+		some issues with context (isPaused) - our audio keeps track of that
+
+Things to ask Cliff:
+	- Does he anticipate any 16-32 bit architecture issues
+		- manipulate pointers as char * then read as int?
+		- endianness issues?
+	- Passing arguments to fs write call (address to uint32_t, shift left by 1?) - related to last Q?? - WORD ADDRESSED
+	- Do the pseudo-constant porting
+	- wait functions
+	- wordsFromFrames, framesFromBytes, framesFromMSec - What do they do? - convert time for cutting off audio
+	- ask about SCAM_Status() - expected result when paused? when stopped? - only really care if its stopped
+	- ask about Snd_A1800_GetCurrentTime - returns samples, ms, what? - ms
+	- SACMGet_A1800FAT_Mode() - What does this do? - just to play for for G+
+	- RES_BIP/DING_A18_SA - Constant?  Can I use #define? - addresses (not strings)
+	- InitVoltage() - Voltage monitoring interfaces? - 
+					device.h header (defines, v_min_usb_voltage 1.9V) check voltage for record-reprog to ensure no FS corruption
+	- RTC interfaces? real time, time since startup, etc? - Time since core started
+
+things cliff wants:
+	how long has a button been held down?
+
+Sleep:
+	mainLoop:
+		checkInactivity?
+			check to see if connected
+			goto sleep state
+
+
+
+ALL POINTERS ARE WORD BASED
+
+jira.literacybridge.org
