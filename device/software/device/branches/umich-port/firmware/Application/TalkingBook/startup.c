@@ -16,18 +16,20 @@
 #include "Include/filestats.h"
 #include <ctype.h>
 
+#include <stdlib.h>
+
 extern int testPCB(void);
 extern unsigned int SetSystemClockRate(unsigned int);
-extern int SystemIntoUDisk(unsigned int);
-extern INT16 SD_Initial(void);
+/* XXX: David D. No more USB/SD */
+/* extern int SystemIntoUDisk(unsigned int); */
+/* extern INT16 SD_Initial(void); */
 
 static char * addTextToSystemHeap (char *);
 static void loadDefaultUserPackage(void);
 static int loadConfigFile (void);
 static void loadSystemNames(void);
 static char *currentSystem(void);
-static void flagConfigFile(void);
-static int resetConfigFile(void);
+static void cleanUpOldRevs(void);
 
 // These capitalized variables are set in the config file.
 APP_IRAM int KEY_PLAY, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_SELECT, KEY_STAR, KEY_HOME, KEY_PLUS, KEY_MINUS;
@@ -121,7 +123,6 @@ void setDefaults(void) {
 void startUp(void) {
 	char buffer[200];
 	char strCounts[20];
-	char filename[FILE_LENGTH];
 	int key;
 	
 	SetSystemClockRate(MAX_CLOCK_SPEED); // to speed up initial startup -- set CLOCK_RATE later
@@ -138,10 +139,15 @@ void startUp(void) {
 	// voltage checks in SystemIntoUSB.c
 	if (key == KEY_STAR || key == KEY_MINUS) {
 		// allows USB device mode no matter what is on memory card
-		Snd_Stop();
-		cleanUpOldRevs(); // cleanup any old revs before someone sees the file system
+		/* XXX: David D. Change to our sound interface */
+		/* Snd_Stop(); */
+		audio_stop(&__gaudio);
+		/* XXX: David D. No more USB */
+		/* XXX: David D. SystemIntoUDisk? */
+		/*
 		SystemIntoUDisk(1);	
 		SD_Initial();  // recordings are bad after USB device connection without this line (todo: figure out why)
+		*/
 		loadConfigFile();
 		processInbox();
 		resetSystem();
@@ -151,29 +157,23 @@ void startUp(void) {
 		copyOutbox();
 		resetSystem();
 	}	
-
-	if (!SNexists()) {
-		// This will update the version when the device has just been programmed with probe,
-		// which wipes out the serial number.
-		writeVersionToDisk();	
-	}
+	
 	// check for new firmware first, but don't flash if voltage is low
 	if(V_MIN_SDWRITE_VOLTAGE <= vCur_1) {
-		updateSN();
-		if (check_new_sd_flash(filename)) {
-			flagConfigFile();  //change config file name to indicate about to be reprogrammed
-			startUpdate(filename);
-		}
+		/* XXX: David D. Do not support (yet) */
+		/* check_new_sd_flash(); */
 	}
 	
-	if (loadConfigFile() == -1) { // config.txt file not found
-		testPCB();	
-	}
+	if (loadConfigFile() == -1) // config.txt file not found
+		/* XXX: David D. Do not support (yet) */
+		/* testPCB();	 */
 	if (!SNexists()) {
 		logException(32,(const char *)"no serial number",LOG_ONLY);
-		testPCB();	
+		/* XXX: David D. Do not support (yet) */
+		/* testPCB();	*/
 	}
-	SysDisableWaitMode(WAITMODE_CHANNEL_A);
+	/* XXX: David D. Not sure what this does, but we're managing the kernel now */
+	/* SysDisableWaitMode(WAITMODE_CHANNEL_A); */
 	adjustVolume(NORMAL_VOLUME,FALSE,FALSE);
 	adjustSpeed(NORMAL_SPEED,FALSE);
 	loadDefaultUserPackage();
@@ -206,15 +206,18 @@ void startUp(void) {
 	strcat(buffer,"\x0d\x0a" "CYCLE "); //cycle number
 	longToDecimalString(systemCounts.powerUpNumber,(char *)(buffer+strlen(buffer)),4);
 	strcat(buffer,(const char *)" - version " VERSION);
-	logString(buffer,BUFFER);
+	logString(buffer,FILE_BUFFER);
 //#ifdef TB_CAN_WAKE
 	if(MEM_TYPE == MX_MID) {
 		logRTC();  
 	}
 //#endif
+	loadSystemNames(); 
+	loadPackage(PKG_SYS,currentSystem());	
 	SetSystemClockRate(CLOCK_RATE); // either set in config file or the default 48 MHz set at beginning of startUp()
 
-	unlink ((LPSTR) (STAT_DIR SNCSV));
+	/* XXX: David D. We don't use LPSTR */
+	unlink (/*(LPSTR)*/ (STAT_DIR SNCSV));
 	strcpy(buffer,getDeviceSN(1));
 	strcat(buffer, ",");
 	longToDecimalString(systemCounts.powerUpNumber, strCounts, 4); 
@@ -223,16 +226,16 @@ void startUp(void) {
 	{
 		int ret, bytesToWrite;
 		char line[80];
-		ret = open((LPSTR)(STAT_DIR SNCSV), O_RDWR|O_CREAT);
+		/* XXX: David D. We don't use LPSTR */
+		ret = open(/*(LPSTR)*/(STAT_DIR SNCSV), O_RDWR|O_CREAT);
 		if (ret >= 0) {
 			bytesToWrite = convertDoubleToSingleChar(line,buffer,TRUE);
-			write(ret, (unsigned long)line<<1, bytesToWrite);
+			/* XXX: David D. addresses must be passed as addresses */
+			/* write(ret, (unsigned long)line<<1, bytesToWrite); */
+			write(ret, (const void *)((unsigned long)line<<1), bytesToWrite);
 			close(ret);
 		}
 	}
-	loadSystemNames(); 
-	SD_Initial();  // recordings are bad after USB device connection without this line (todo: figure out why)
-	loadPackage(PKG_SYS,currentSystem());	
 	
 	mainLoop();
 }
@@ -253,26 +256,12 @@ static char * addTextToSystemHeap (char *line) {
 	startingHeap = cursorSystemHeap;
 	cursorSystemHeap = startingHeap + length;
 	if (cursorSystemHeap-systemHeap >= SYSTEM_HEAP_SIZE) {
-		logString(line,ASAP);
+		logString(line,FILE_ASAP);
 		logException(15,0,USB_MODE); //todo:system heap is full
 	}
 	strcpy(startingHeap,line);
 	return startingHeap;
 }
-
-static void flagConfigFile(void) {
-	// This fct is used to cause a read error on control file open only when reprogramming has recently happened
-	// This means that there is no time-costly check to disk to see if reprogramming has happened;
-	// instead we know only when the config file isn't there.
-	rename((LPSTR)CONFIG_FILE,(LPSTR)FLAGGED_CONFIG_FILE);
-}
-
-static int resetConfigFile(void) {
-	// see flagConfigFile()
-	int ret;
-	ret = rename((LPSTR)FLAGGED_CONFIG_FILE,(LPSTR)CONFIG_FILE);
-	return ret;	
-}	
 
 int loadConfigFile(void) {
 	int ret, handle;
@@ -292,17 +281,11 @@ int loadConfigFile(void) {
 		if (handle == -1) {
 			handle = tbOpen((unsigned long)(ALT_CONFIG_FILE),O_RDONLY);
 			if (handle == -1) {
-				// check if config file was renamed to indicate reprogramming was recently started
-				if (resetConfigFile() >= 0) {
-					writeVersionToDisk();
-					handle = tbOpen((unsigned long)(CONFIG_FILE),O_RDONLY);
-				}
+				ret = -1;
+				goodPass = 0; //NOTE:can't be logged if log file comes from config file
 			}
 		}
-		if (handle == -1) {
-			ret = -1;
-			goodPass = 0; //NOTE:can't be logged if log file comes from config file
-		} else if (goodPass)
+		if (goodPass)
 			getLine(-1,0);  // reset in case at end from prior use
 		while (goodPass && nextNameValuePair(handle, buffer, ':', &name, &value)) {
 			if (!value)
@@ -387,7 +370,7 @@ int loadConfigFile(void) {
 	}
 	if (!goodPass) {
 		ret = -1;
-		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",BUFFER);	  //logException(14,0,USB_MODE); 		
+		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",FILE_BUFFER);	  //logException(14,0,USB_MODE); 		
 	}
 	close(handle);
 	LED_ALL = LED_GREEN | LED_RED;
@@ -405,10 +388,13 @@ static void loadDefaultUserPackage(void) {
 	pkgDefault.pkg_type = PKG_MSG;
 	parseControlFile (sTemp, &pkgDefault);
 }
+
+/* XXX: David D. CHECK: Now managed by kernel */
+/*
 void initVoltage()
 {
 	extern void set_voltmaxvolume();
-	APP_IRAM static unsigned long timeInitialized = -1;
+	APP_IRAM static unsigned long timeInitialized = 0xFFFFFFFF;
 	int i, j, k, sumv;
 
 	// init battery voltage sensing	
@@ -444,17 +430,24 @@ void initVoltage()
 	}
 	set_voltmaxvolume();
 }
+*/
+
 unsigned int GetMemManufacturer()
 {
+	/* XXX: David D. do not support! */
+	/*
 	flash  FL = {0};
 	int fl_size = USB_Flash_init((flash *)0, 0);
-	int flash_execution_buf[fl_size];
+	int *flash_execution_buf = malloc(fl_size * sizeof(int));
 	
 	FL.flash_exe_buf = (void *) &flash_execution_buf[0];
 	USB_Flash_init(&FL, 1);
 	
+	free(flash_execution_buf);
 	return(FL.Flash_type);
 
+	*/
+	return 0;
 
 }
 
@@ -504,18 +497,21 @@ char *prevSystem() {
 	return ret;
 }
 
-void cleanUpOldRevs() {
-	int ret;
+static void cleanUpOldRevs() {
+	int handle, ret;
 	struct f_info file_info;
 			
 	if (dirExists((LPSTR)"a://Firmware")) {
 		tbChdir((LPSTR)"a://Firmware");
-		ret =_findfirst((LPSTR)"*.*", &file_info, D_FILE);
+		/* XXX: David D. We don't use LPSTR */
+		ret =_findfirst(/*(LPSTR)*/"*.*", &file_info, D_FILE);
 		while (ret >= 0) {
-			ret = unlink((LPSTR)file_info.f_name);
+			/* XXX: David D. f_name to fname */
+			/*ret = unlink((LPSTR)file_info.f_name);*/
+			ret = unlink(/*(LPSTR)*/file_info.fname);
 			ret = _findnext(&file_info);	
 		}	
 		tbChdir((LPSTR)"a://");
-		rmdir((LPSTR)"a://Firmware");
+		rmdir(/*(LPSTR)*/"a://Firmware");
 	}
 }

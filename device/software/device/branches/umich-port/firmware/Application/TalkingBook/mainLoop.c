@@ -19,11 +19,19 @@
 #include "Include/mainLoop.h"
 #include "./Reprog/USB_Flash_reprog.h"
 
+/* XXX: David D. for P_SLEEP and P_HALT and button interface */
+#include "Include/port.h"
+/* XXX: David D. for asserts */
+#include <assert.h>
+/* XXX: David D. for INT_MAX */
+#include <limits.h>
+
 typedef enum EnumEnterOrExit EnumEnterOrExit;
 enum EnumEnterOrExit {ENTERING, EXITING};
 extern int SystemIntoUDisk(unsigned int);
 extern int testPCB(void);
-extern INT16 SD_Initial(void);
+/* XXX: David D. No longer exists */
+/* extern INT16 SD_Initial(void); */
 
 static void processBlockEnterExit (CtnrBlock *, EnumEnterOrExit);
 static void processTimelineJump (int, int);
@@ -57,7 +65,7 @@ static EnumAction getStartEndCodeFromTimeframe(int idxTimeframe, EnumBorderCross
 	if (approach == FORWARD_JUMPING) {
 		do {
 			skipHyperlinkedBlock = FALSE;
-			if (blockTimeline[++idxTimeframe].time != -1) {
+			if (blockTimeline[++idxTimeframe].time != INT_MAX) {
 				startOrEnd = getTimelineDiff(idxTimeframe,&idxStart,&idxEnd);
 				if (startOrEnd == STARTING && isBlockHyperlinked(&blocks[idxStart]))
 					skipHyperlinkedBlock = TRUE;
@@ -85,9 +93,9 @@ static EnumAction getStartEndCodeFromTimeframe(int idxTimeframe, EnumBorderCross
 	if (idxTimeframe == -1) {
 		// moved to beginning of file -- return NOP action at last endTime
 		*actionTime = 0;
-		*idxAction = -1;
+		*idxAction = INT_MAX;
 		actionCode = STOP;
-	} else if (blockTimeline[idxTimeframe].time == -1) {
+	} else if (blockTimeline[idxTimeframe].time == INT_MAX) {
 		// no timeframes left -- return STOP action at last endTime
 		getTimelineDiff(idxTimeframe+1,&idxStart,&idxEnd);
 		*actionTime = blocks[idxEnd].endTime;
@@ -175,9 +183,10 @@ static void processBlockEnterExit (CtnrBlock *block, EnumEnterOrExit enteringOrE
 		}
 		else {
 			if (LEDhyperlink == 0x08) { 
+				/* XXX: David D. FIXME I don't know what to do here... */
 				context.USB = TRUE;
 				stop();
-				setUSBDevice(TRUE);
+				/* setUSBDevice(TRUE); */
 			}
 			else {
 				green = LEDhyperlink & 0x01;
@@ -307,7 +316,7 @@ static void processButtonEvent(int eventType) {
 		action = getMatchingAction(eventType);
 
 	if (action)
-		takeAction(action, -1);
+		takeAction(action, INT_MAX);
 	if (context.returnPackage) {
 		if (action) {
 			actionCode = getActionCode(action);
@@ -396,7 +405,7 @@ static void endOfTimeframe(int idxTimeframe, BOOL isPlayerStopped) {
 			if (idxTimeframe < MAX_STATES)
 				nextTimeframe = blockTimeline[context.idxTimeframe+1].time;
 			else
-				nextTimeframe = -1;
+				nextTimeframe = INT_MAX;
 			context.timeNextTimeframe = nextTimeframe;
 		}
 	}
@@ -468,6 +477,8 @@ extern int checkInactivity(BOOL resetTimer) {
 //		insertSound(&pkgSystem.files[INACTIVITY_SOUND_FILE_IDX],NULL,FALSE);
 //		restoreVolume(FALSE);
 		lastActivity = currentTime;
+		writeVersionToDisk(); // seems like as good a time as any to check if this info logged (delay was too long on startup)
+		//	cleanUpOldRevs();	
 //#ifdef TB_CAN_WAKE
 		if(MEM_TYPE == MX_MID) {
 			setOperationalMode((int)P_SLEEP);  // keep RTC running
@@ -492,11 +503,13 @@ extern int checkInactivity(BOOL resetTimer) {
 	// log time every minute to track power-on time
 	if (!justLogged && !(currentTime % 60) && (context.isStopped || context.isPaused)) {
 		longToDecimalString(currentTime,stringLog,5);
-		logString(stringLog,ASAP);
+		logString(stringLog,FILE_ASAP);
 		justLogged = 1;	
 	} else if (justLogged  && (currentTime % 60))
 		justLogged = 0;		
 
+	/* XXX: David D. No more USB */
+	/*
 	if(USB_CLIENT_POLL_INTERVAL && (currentTime - lastUSBCheck > USB_CLIENT_POLL_INTERVAL)) {
 		int usbret;
 		
@@ -511,6 +524,7 @@ extern int checkInactivity(BOOL resetTimer) {
 			processInbox();
 		}
 	}
+	*/
 }
 
 void mainLoop (void) {
@@ -542,14 +556,22 @@ void mainLoop (void) {
 		
 		// check for start or end event
 		// todo: do we have to check SACM_Status() to see if stopped or can that be moved into the start/end event processing?
+		/* XXX: David D. converting to our audio interface */
+		/*
 		if (SACM_Status() && !context.isPaused && 
 			compressTime(Snd_A1800_GetCurrentTime(),context.package->timePrecision) >= context.timeNextTimeframe)
+		*/
+		if (!audio_is_playing(&__gaudio) && !context.isPaused && 
+			compressTime(sampleToMs(audio_tell(&__gaudio)),context.package->timePrecision) >= context.timeNextTimeframe)
 				endOfTimeframe(context.idxTimeframe, FALSE);
-		else if (!context.isStopped && !SACM_Status()) { // just stopped playing
+		/* XXX: David D. converting to our audio interface */
+		/* else if (!context.isStopped && !SACM_Status()) { // just stopped playing */
+		else if (!context.isStopped && !audio_is_playing(&__gaudio)) { // just stopped playing
 			// this assume that stopped means end of audio file
 			// todo: this should be checking end action for CtnrFile (doesn't exist yet)
 			context.isStopped = TRUE;
-			turnAmpOff();
+			/* XXX: David D. this is now managed by the kernel */
+			/* turnAmpOff(); */
 			markEndPlay(getRTCinSeconds());
 			flushLog();			
 			if (GREEN_LED_WHEN_PLAYING) {
@@ -603,12 +625,14 @@ static void takeAction (Action *action, EnumAction actionCode) {
 		
 	replayFile = NULL;
 	list = NULL;
-	oldTime = compressTime(Snd_A1800_GetCurrentTime(),context.package->timePrecision);
+	/* XXX: David D. converting to our audio interface */
+	/* oldTime = compressTime(Snd_A1800_GetCurrentTime(),context.package->timePrecision); */
+	oldTime = compressTime(sampleToMs(audio_tell(&__gaudio)),context.package->timePrecision);
 	newFile = 0;
-	newTime = -1;
+	newTime = INT_MAX;
 	newBlock = 0;
 		
-	if (actionCode == -1)
+	if (actionCode == INT_MAX)
 		actionCode = getActionCode(action);
 	if (action) {
 		aux = action->aux;
@@ -694,7 +718,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			stop();
 			tempList = &context.package->lists[destination];
 			getListFilename(filename,destination,FALSE);
-			if (tempList->currentFilePosition == -1) // haven't picked a msg in category yet --> copy the whole category
+			if (tempList->currentFilePosition == INT_MAX) // haven't picked a msg in category yet --> copy the whole category
 				cursor = NULL;
 			else
 				cursor = getCurrentList(tempList);
@@ -716,7 +740,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			cursor = getCurrentList(tempList);		
 			cpyListPath(filepath);	
 			ret = findDeleteStringFromFile(filepath,filename,cursor,TRUE);
-			tempList->currentFilePosition = -1; // forces next list action to reload
+			tempList->currentFilePosition = INT_MAX; // forces next list action to reload
 			if (ret != -1)
 				ret = deletePackage(cursor);
 			else
@@ -795,13 +819,19 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			break;
 			
 		case USB_DEVICE_ON:
+			/* XXX: David D. No more USB */
+			assert(0);
+			/*
 			setUSBDevice(TRUE);
 			newBlock = &context.package->blocks[destination];
 			newTime = newBlock->startTime;
 			reposition = TRUE;
+			*/
 			break;	
 					
 		case USB_HOST_ON:
+			/* XXX: David D. No more USB */
+			assert(0);
 /*			stop();
 			setUSBDevice(TRUE);
 			newBlock = &context.package->blocks[destination];
@@ -815,11 +845,15 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			break;
 
 		case PLAY_PAUSE:
-			status = SACM_Status();
+			/* XXX: David D. converting to our audio interface */
+			/* status = SACM_Status(); */
+			status = audio_is_playing(&__gaudio);
 			switch (status) {
 				case 0:
 //					if (context.package->pkg_type != PKG_SYS)
-						markStartPlay(Snd_A1800_GetCurrentTime(),context.package->strHeapStack+context.package->idxName);
+					/* XXX: David D. converting to our audio interface */
+					/*	markStartPlay(Snd_A1800_GetCurrentTime(),context.package->strHeapStack+context.package->idxName); */
+						markStartPlay(sampleToMs(audio_tell(&__gaudio)),context.package->strHeapStack+context.package->idxName);
 					if (context.idxActiveList == -1) {
 						enterOrExitAllBlocks(context.idxTimeframe,ENTERING);
 						i = getStartingBlockIdxFromTimeline(context.idxTimeframe);
@@ -896,12 +930,12 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			break;
 	
 		case RETURN:
-			if (stackPop(&context.package,&newFile,&newTime))  // times are compressed 
+			if (stackPop(&context.package,&newFile,(int *)&newTime))  // times are compressed 
 				reposition = TRUE;
 			break;
 
 		case FWD:
-			newActionCode = getStartEndCodeFromTimeframe(context.idxTimeframe,FORWARD_JUMPING, &newTime, &newIdxAction);
+			newActionCode = getStartEndCodeFromTimeframe(context.idxTimeframe,FORWARD_JUMPING, (int *)&newTime, &newIdxAction);
 			switch (newActionCode) {
 				case NOP:
 				case PAUSE:
@@ -916,7 +950,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 					newTime = newBlock->startTime;
 					break;
 				case RETURN:
-					stackPop(&context.package,&newFile,&newTime); //todo: double verify there was something on stack (shouldn't have gotten RETURN if not) 
+					stackPop(&context.package,&newFile,(int *)&newTime); //todo: double verify there was something on stack (shouldn't have gotten RETURN if not) 
 					break;
 				default:
 					//no action needed
@@ -931,7 +965,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 				// just move to start time of same timeframe 
 				newTime = getCurrentTimeframeStart(); // must make sure we call the Start event 
 			} else {
-				newActionCode = getStartEndCodeFromTimeframe(context.idxTimeframe,BACKWARD_JUMPING, &newTime, &newIdxAction);
+				newActionCode = getStartEndCodeFromTimeframe(context.idxTimeframe,BACKWARD_JUMPING, (int *)&newTime, &newIdxAction);
 				switch (newActionCode) {
 					case NOP:
 					case PAUSE:
@@ -943,7 +977,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 						newTime = newBlock->startTime;
 						break;  
 					case RETURN:
-						stackPop(&context.package,&newFile,&newTime); //todo: double verify there was something on stack (shouldn't have gotten RETURN if not) 
+						stackPop(&context.package,&newFile,(int *)&newTime); //todo: double verify there was something on stack (shouldn't have gotten RETURN if not) 
 						break;
 					default:
 						//no action needed
@@ -961,7 +995,9 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			if (context.returnPackage)
 				context.package = context.returnPackage;
 			if (context.package != &pkgSystem) {
-				longOldTime = Snd_A1800_GetCurrentTime();
+				/* XXX: David D. converting to our audio interface */
+				/* longOldTime = Snd_A1800_GetCurrentTime(); */
+				longOldTime = sampleToMs(audio_tell(&__gaudio));
 				l = (signed long)extractSignedTime(destination,context.package->timePrecision); // hoping this brings back an originally negative number
 				longNewTime = longOldTime + l;
 				if (l >= 0) 
@@ -989,7 +1025,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 						newFile = getFileFromBlock(newBlock);
 						break;  
 					case RETURN:
-						stackPop(&context.package,&newFile,&newTime); //todo: double verify there was something on stack (shouldn't have gotten RETURN if not) 
+						stackPop(&context.package,&newFile,(int *)&newTime); //todo: double verify there was something on stack (shouldn't have gotten RETURN if not) 
 						break;
 					default:
 						//no action needed
@@ -1001,14 +1037,21 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			break;
 		case SLEEP:
 			// call sleep function
+			writeVersionToDisk(); // seems like as good a time as any to check if this info logged (delay was too long on startup)
 			setOperationalMode((int)P_SLEEP); 
 			break;
 		case HALT:
 			// call sleep function
+			writeVersionToDisk(); // seems like as good a time as any to check if this info logged (delay was too long on startup)
 			setOperationalMode((int)P_HALT); 
 			break;
-		case TEST_PCB:
+		/* 
+		 * XXX: David D. We do not support TEST_PCB right now,
+		 * as the function is totally different 
+		 */
+		/*case TEST_PCB:
 			testPCB();
+			break;*/
 		case NOP:
 			// no operation
 			break;
@@ -1028,7 +1071,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			if (!list)
 				buildBlockTimelines(newFile);
 			context.idxTimeframe = -1; // to signal it hasn't been set yet
-			context.timeNextTimeframe = -1; // resets this -- necessary for lists that dont go to processTimelineJump
+			context.timeNextTimeframe = INT_MAX; // resets this -- necessary for lists that dont go to processTimelineJump
 		}
 		if (!list) {
 			context.idxActiveList = -1;
@@ -1132,7 +1175,8 @@ void loadPackage(int pkgType, const char * pkgName) {
 			strcat(filePath,UI_SUBDIR);
 		temp = filePath + strlen(filePath);
 		strcpy(temp,PKG_CONTROL_FILENAME_BIN);
-		handle = open((LPSTR)(filePath),O_RDONLY);
+		/* XXX: David D. We don't use LPSTR */
+		handle = open(/*(LPSTR)*/(filePath),O_RDONLY);
 		if (handle == -1) {
 			strcpy(temp,PKG_CONTROL_FILENAME_TXT);
 			flagParse = fileExists((LPSTR)filePath);
@@ -1142,7 +1186,8 @@ void loadPackage(int pkgType, const char * pkgName) {
 			strcpy(filePath,LANGUAGES_PATH);
 			temp = filePath + strlen(filePath);
 			strcpy(temp,PKG_CONTROL_FILENAME_BIN);
-			handle = open((LPSTR)(filePath),O_RDONLY);
+			/* XXX: David D. We don't use LPSTR */
+			handle = open(/*(LPSTR)*/(filePath),O_RDONLY);
 			if (handle == -1) {
 				strcpy(temp,PKG_CONTROL_FILENAME_TXT);
 				flagParse = fileExists((LPSTR)filePath);
@@ -1150,7 +1195,9 @@ void loadPackage(int pkgType, const char * pkgName) {
 		}
 		pkg = context.package;
 		if (handle != -1) {
-			ret = read(handle,(unsigned long)pkg<<1,sizeof(CtnrPackage)<<1);
+			/* XXX: David D. addresses must be passed as addresses */
+			/*ret = read(handle,(unsigned long)pkg<<1,sizeof(CtnrPackage)<<1);*/
+			ret = read(handle,(void *)((unsigned long)pkg<<1),sizeof(CtnrPackage)<<1);
 			close (handle);
 		} else if (flagParse) {
 			// no binary control track, so must parse the text file		
@@ -1173,7 +1220,8 @@ void loadPackage(int pkgType, const char * pkgName) {
 			strcpy(temp,PKG_CONTROL_FILENAME_BIN);
 			handle = tbOpen((LPSTR)(filePath),O_CREAT|O_RDWR);
 			if (handle != -1) {
-				ret = write(handle, (unsigned long)pkg<<1, sizeof(CtnrPackage)<<1);
+				/* XXX: David D. addresses should be passed as addresses */
+				ret = write(handle, (const void *)((unsigned long)pkg<<1), sizeof(CtnrPackage)<<1);
 				close(handle);
 			}
 		} else {
@@ -1188,7 +1236,7 @@ void loadPackage(int pkgType, const char * pkgName) {
 	// initialize context
 	// primarily used to reset system list position when returning from user content
 	for (i=0; i < MAX_LISTS; i++) 
-		pkg->lists[i].currentFilePosition = -1;
+		pkg->lists[i].currentFilePosition = INT_MAX;
 //	pkg->recInProgress = FALSE;
 	if (pkg->countPackageActions) 
 		action = pkg->actions;

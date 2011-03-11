@@ -24,18 +24,21 @@ void saveSystemCounts() {
 		
 	i = 0;
 	do {
- 		ret = unlink((LPSTR)(SYSTEM_VARIABLE_FILE));
+		/* XXX: David D. We do not need LPSTR */
+ 		ret = unlink(/*(LPSTR)*/(SYSTEM_VARIABLE_FILE));
  		if (ret)
 	 		wait(100);
 	}
 	while (ret && ++i < 3);
 	
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_CREAT|O_RDWR);
-	if (handle != -1)
-		ret = write(handle, (unsigned long)&systemCounts<<1, sizeof(SystemCounts)<<1);
-	else {
+	if (handle != -1) {
+		/* XXX: David D. addresses must be passed as addresses */
+		/*ret = write(handle, (unsigned long)&systemCounts<<1, sizeof(SystemCounts)<<1);*/
+		ret = write(handle, (const void *)((unsigned long)&systemCounts<<1), sizeof(SystemCounts)<<1);
+	} else {
 		if (ret)
-			logString((char *)"failed unlink of system var file",BUFFER);
+			logString((char *)"failed unlink of system var file",FILE_BUFFER);
 		close(handle);
 		logException(17,SYSTEM_VARIABLE_FILE,RESET); //can't save SYSTEM_VARIABLE_FILE;
 	}
@@ -46,9 +49,11 @@ int loadSystemCounts() {
 	int handle, ret;
 
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_RDONLY);
-	if (handle != -1)
-		ret = read(handle,(unsigned long)&systemCounts<<1,sizeof(SystemCounts)<<1);
-	else
+	if (handle != -1) {
+		/* XXX: David D. addresses must be passed as addresses */
+		/*ret = read(handle,(unsigned long)&systemCounts<<1,sizeof(SystemCounts)<<1);*/
+		ret = read(handle,(void *)((unsigned long)&systemCounts<<1),sizeof(SystemCounts)<<1);
+	} else
 		ret = -1;
 	close(handle);
 	return ret;

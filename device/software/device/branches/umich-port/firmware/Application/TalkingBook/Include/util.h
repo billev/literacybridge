@@ -14,8 +14,9 @@
 // extern unsigned long int strlen(const char *);
 // extern unsigned long int strspn(const char *, const char *);
 // extern unsigned long int strcspn(const char *, const char *);
-extern void *memset(void *, int, unsigned long);
-extern void *memcpy(void *, const void *, unsigned long);
+/* XXX: David D. Why do these return void*? is this an issue? and comment */
+/*extern void *memset(void *, int, unsigned long);
+extern void *memcpy(void *, const void *, unsigned long);*/
 
 extern int strIndex (const char *, char);
 extern int getBitShift (unsigned int);

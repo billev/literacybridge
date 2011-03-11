@@ -6,6 +6,10 @@
 
 #include "containers.h"
 
+/* XXX: David D. for our audio interface */
+#include "lib/audio.h"
+extern audio_t __gaudio;
+
 extern void SACM_Stop(void);
 
 extern void playDing(void);
