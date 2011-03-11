@@ -4,14 +4,19 @@
 #ifndef	__TALKINGBOOK_h__
 #define	__TALKINGBOOK_h__
 
-#define VERSION			"v1.50r588"
+#define VERSION			"v1.50r582"
 #define TB_CAN_WAKE  // hardware that allows wake from sleep/halt
 //IMPORTANT: changes to TB_CAN_WAKE must also be made to system_head.inc!!!
 
-asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000
+/* XXX: David D. comment */
+/*asm("APP_IRAM: .SECTION .IRAM");  // , .ADDR = 0x5000 */
 #define APP_IRAM 		__attribute__((section(".APP_IRAM")))
 
-#include "./Component/Include/FS/typedef.h"
+/* XXX: David D. Do not use the G+ Typedefs, they break our typedefs */
+/*#include "./Component/Include/FS/typedef.h"*/
+/* Our typedefs here */
+#include "lib/typedefs.h"
+
 #include "./Application/TalkingBook/Include/app_exception.h"
 #include "util.h"
 

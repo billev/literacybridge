@@ -11,38 +11,63 @@
 #include "Include/device.h"
 #include "Include/startup.h"
 
-extern void _SystemOnOff(void);
-extern int SystemIntoUDisk(unsigned int);
-extern void KeyScan_ServiceLoop(void);
-extern int SP_GetCh(void);
+/* XXX: David D. for INT_MAX */
+#include <limits.h>
+/* XXX: David D. for __NOP() */
+#include "sys/mps_cm0.h"
+/* XXX: David D. for rtc */
+#include "device/rtc.h"
+
+/* XXX: David D. for P_HALT and P_SLEEP and button interfaces */
+#include "Include/port.h"
+
+/* XXX: David D. These no longer exist */
+/* extern void _SystemOnOff(void); */
+/* extern int SystemIntoUDisk(unsigned int); */
+/* extern void KeyScan_ServiceLoop(void); */
+/* extern int SP_GetCh(void); */
 
 static void logKeystroke(int);
 static void Log_ClockCtrl(void);
-static void turnSDoff(void);
-static void turnNORoff(void);
+/* XXX: David D. These no longer exist */
+/* static void turnSDoff(void); */
+/* static void turnNORoff(void); */
 
 APP_IRAM static int volume, speed;
 APP_IRAM static unsigned long voltage; // voltage sample 
 APP_IRAM static int oldVolume;
 extern APP_IRAM int vThresh_1;
 extern APP_IRAM unsigned int vCur_1;
+/* XXX: David D. This is deprecated */
 void set_voltmaxvolume();
 
 
 void resetRTC(void) {
+	/* XXX: David D. converting to our rtc interface */
+	/*
 	*P_Second = 0;
 	*P_Minute = 0;
-	*P_Hour = 0;	
+	*P_Hour = 0;
+	*/
+	rtc_reset();	
 }
 
 void logRTC(void) {
 	unsigned long h,m,s;
 	char time[12];
 
+	/* XXX: David D. converting to our rtc interface */
+	/*
 	h = (unsigned long) *P_Hour;	
 	m = (unsigned long) *P_Minute;
 	s = (unsigned long) *P_Second;
-
+	*/
+	unsigned long long ms;
+	ms = RTC_TICK_TO_MS(rtc_get_ticks());
+	h = (unsigned long) (ms / (1000 * 60 * 60));
+	m = (unsigned long) (ms / (1000 * 60)) - (h * 60);
+	s = (unsigned long) (ms / (1000)) - (m * 60) - (h * 60 * 60);
+	
 	longToDecimalString(h,time,4);
 	time[4] = 'h';
 	longToDecimalString(m,time+5,2);
@@ -50,19 +75,25 @@ void logRTC(void) {
 	longToDecimalString(s,time+8,2);
 	time[10] = 's';
 	time[11] = 0;
-	logString(time,ASAP);
+	logString(time,FILE_ASAP);
 }
 
 
 long getRTCinSeconds(void) {
+	/* XXX: David D. converting to our rtc */
+	/*
 	unsigned long ret, secH;
 	unsigned int secM, sec;
-	
+		
 	sec = (unsigned int)*P_Second;
 	secM = (unsigned int)*P_Minute * 60;
 	secH = (unsigned long)*P_Hour * 3600;
 	ret = sec + secM + secH;
+
 	return (long)ret;
+	*/
+
+	return RTC_TICK_TO_MS(rtc_get_ticks()) / 1000;
 }
 
 void setLED(unsigned int color, BOOL on) {
@@ -73,6 +104,8 @@ void setLED(unsigned int color, BOOL on) {
 		unsigned int nAttrib;
 		unsigned int nDrv;
 	};
+	/* XXX: David D. FIXME LED ports? */
+	/*
 	struct GPIO *LEDPort = (struct GPIO *)P_IOB_Data;
 	if (on) {
  		LEDPort->nDir 	 |= color;
@@ -80,6 +113,7 @@ void setLED(unsigned int color, BOOL on) {
 		LEDPort->nBuffer   |= color;
 	} else
 		LEDPort->nBuffer   &= ~color;  //LEDPort->nData   &= ~color;
+	*/
 }
 
 int restoreVolume(BOOL normalVolume) {
@@ -127,7 +161,9 @@ int adjustVolume (int amount, BOOL relative, BOOL rememberOldVolume) {
 		volume = MAX_VOLUME;
 	if (volume < 1)  
 		volume = 1;
-	SACM_Volume(volume);	
+	/* XXX: David D. Switching to our volume interface */
+	/* SACM_Volume(volume);	*/
+	audio_set_volume(&__gaudio, volume);
 	return volume;
 }
 
@@ -141,7 +177,9 @@ int adjustSpeed (int amount, BOOL relative) {
 		speed = MAX_SPEED;
 	if (speed < 0)  
 		speed = 0;
-	SACM_Speed(speed);	
+	/* XXX: David D. Switching to our volume interface */
+	/* SACM_Speed(speed); */
+	audio_set_speed(&__gaudio, speed);
 	return speed;
 }
 
@@ -153,24 +191,29 @@ int getSpeed(void) {
 	return speed;
 }
 
+/* XXX: David D. this device no longer exists */
+/*
 void setUSBDevice (BOOL set) {		
 	if (set) {
 		Snd_Stop();
 		flushLog();
-		cleanUpOldRevs(); // cleanup any old revs
 		SystemIntoUDisk(USB_CLIENT_SVC_LOOP_CONTINUOUS);	
 		SD_Initial();  // recordings are bad after USB device connection without this line (todo: figure out why)
 		processInbox();
 		setLED(LED_ALL,FALSE);
 	}
 }
+*/
 
 void logVoltage() {
 	int i;
 	unsigned int sample;
 	char buffer[40];
-	unsigned long time = getRTCinSeconds();
-	APP_IRAM static unsigned long timeLastSample = -1;
+	/* XXX: David D. cast to get rid of compiler warning */
+	unsigned long time = (unsigned long)getRTCinSeconds();
+	/* XXX: David D. change of sign cast warning */
+	/* APP_IRAM static unsigned long timeLastSample = -1; */
+	static unsigned long timeLastSample = INT_MAX;
 	
 //	if ((context.isStopped || context.isPaused) && (time > (timeInitialized + 2)))     // 2-3 second delay)
 	if (VOLTAGE_SAMPLE_FREQ_SEC && (context.isStopped || context.isPaused) && time > (timeLastSample+VOLTAGE_SAMPLE_FREQ_SEC)) { 	
@@ -191,12 +234,14 @@ void logVoltage() {
 		buffer[i] = buffer[i-1];
 		buffer[i-1] = buffer[i-2];
 		buffer[i-2] = '.'; 
-		logString(buffer,ASAP);				
+		logString(buffer,FILE_ASAP);				
 	 	voltage = sample;			 		
 		timeLastSample = time;
 	}
 }
 
+/* XXX: David D. This is now handled by kernel */
+/*
 unsigned int
 getCurVoltageSample() {	
 	unsigned ret = 0xffff;
@@ -230,19 +275,26 @@ getCurVoltageSample() {
 	}
 	return(ret);
 }
+*/
 
 int keyCheck(int longCheck) {
 	// get key press or use macro
-	int i, keystroke;
+	/* XXX: David D. i no longer used */
+	int /*i,*/ keystroke;
 	
+	/* XXX: David D. No longer needed - Driver does debouncing */
+	/*
 	// loop allows time for service loop to stabilize on keys
 	// based on C_DebounceCnt = 8 in IOKeyScan.asm (i < 12 was too short)	
 	KeyScan_ServiceLoop();
 	if (longCheck)
 		for (i = 0; i < 15; i++)
 			KeyScan_ServiceLoop();
-		
-	keystroke = (int)SP_GetCh();
+	*/
+
+	/* XXX: David D. Replaced with our key reading function */
+	/* keystroke = (int)SP_GetCh(); */
+	keystroke = get_pressed();
 	// BUG: Combo keys are not working. Not sure why yet.
 //	if (keystroke == ADMIN_COMBO_KEYS)
 //		adminOptions();  //might also want to move this to control tracks
@@ -262,26 +314,46 @@ int waitForButton(int targetedButton) {
 	return pressedButton;
 }
 
+/* XXX: David D. May replace this with our timer wait, its more energy efficient */
 void wait(int t) { //t=time in msec
 	unsigned int i;
 	unsigned long j;
-	unsigned long int cyclesPerMilliSecond = (long)(*P_PLLN & 0x3f) * 1000L;  // 96000 at 96MHz	
+	/* XXX: David D. FIXME Temp this PLL variable does not exist */
+	unsigned long int cyclesPerMilliSecond = 50000L;
+	/* unsigned long int cyclesPerMilliSecond = (long)(*P_PLLN & 0x3f) * 1000L; // 96000 at 96MHz	 */
 	const unsigned int cyclesPerNOP = 70; // cycles for each no-operation instruction
 	const unsigned int NOPsPerMilliSecond = cyclesPerMilliSecond / cyclesPerNOP; // loop count per millisecond
 	for (i = 0; i < t; i++) 
 		for (j = 0; j < NOPsPerMilliSecond; j++)  
-			asm("nop\n");  // a CPU no-op instruction to pass the time
+			/* XXX: David D. FIXME Temp __NOP() solution */
+			__NOP();
+			/* asm("nop\n");  // a CPU no-op instruction to pass the time */
 }
 
+/* XXX: David D. FIXME We may need to more than this now... Possibly make into kernel function... */
 void resetSystem(void) {
 	// set watchdog timer to reset device; 0x780A (Watchdog Reset Control Register)
 	// see GPL Programmer's Manual (V1.0 Dec 20,2006), Section 3.5, page 18
 	stop(); 
-	logString((char *)"Reset",BUFFER);
+	logString((char *)"Reset",FILE_BUFFER);
 	logRTC();
-	fs_safexit(); // should close all open files
+
+	/* XXX: David D. TODO instead close the flash buffer */
+	/* flash_close(); */
+	/* fs_safexit(); // should close all open files */
+
+	/* XXX: David D. TODO Must mask all interrupts to ensure system can boot safely */
+
+	/* XXX: David D. TODO P_WatchDog_Ctrl no longer exists, replaced with our wdt functions */
+	/*
+	wdt_stop();
+	wdt_set_timeout(1);
+	wdt_start();
+	*/
+	/*
 	*P_WatchDog_Ctrl &= ~0x4001; // clear bits 14 and 0 for resetting system and time=0.125 sec 	
 	*P_WatchDog_Ctrl |= 0x8004; // set bits 2 and 15 for 0.125 sec, system reset, and enable watchdog
+	*/
 	while(1);	
 }
 
@@ -308,53 +380,64 @@ static void logKeystroke(int intKey) {
 			else if (intKey == KEY_STAR) str[i] = TEXT_EVENT_STAR;
 			else if (intKey == KEY_PLUS) str[i] = TEXT_EVENT_PLUS;
 			else if (intKey == KEY_MINUS) str[i] = TEXT_EVENT_MINUS;
-		logString(str,BUFFER);	
+		logString(str,FILE_BUFFER);	
 	}
 }
 
+/* XXX: David D. FIXME This may have to be altered as we now manage wait mode */
 void setOperationalMode(int newmode) {
   if(newmode == (int)P_WAIT) {
   	// stop();  --- should we see if we can WAIT while paused in an audio file?
-  	SysIntoWaitMode();
+		/* SysIntoWaitMode(); */
     // when leaving wait mode, next instruction is executed, so we return here
     return;
   } else {
      	// assume calling for sleep or halt
-		*P_Clock_Ctrl |= 0x200;	//bit 9 KCEN enable IOB0-IOB2 key change interrupt
+		/* XXX: David D. Not relevant on new architecture */
+		/* *P_Clock_Ctrl |= 0x200;	//bit 9 KCEN enable IOB0-IOB2 key change interrupt */
 		if (newmode == (int)P_HALT)
-			logString((char *)"Halting",BUFFER);
+			logString((char *)"Halting",FILE_BUFFER);
 		else // newmode == (int)P_SLEEP
-			logString((char *)"Sleeping",BUFFER);			
+			logString((char *)"Sleeping",FILE_BUFFER);			
 		logRTC();
 	  	stop();
 		setLED(LED_ALL,FALSE);
 	
+		/* XXX: David D. These no longer exist */
+		/*
 		turnAmpOff();
 		turnSDoff();
 		turnNORoff();
+		*/
 	  	
-	  	if (newmode == (int)P_HALT) 
+		/* XXX: David D. FIXME This doesn't exist, need kernel WIC controller for it */
+		/*
+		if (newmode == (int)P_HALT) 
 		  	SysIntoHaltMode();
 		else // newmode == (int)P_SLEEP
 			_SystemOnOff();
+		*/
 	
 		while(1);	
 	    // cpu reset on exiting halt/sleep mode, so nothing below here executes
      }
 }
 
+/* XXX: David D. The kernel now controls the clock */
 void
 Log_ClockCtrl() {
 	char buffer[80];
+	/*
  	unsigned int r1 = (unsigned int)*P_Clock_Ctrl;
  	strcpy(buffer, "P_Clock_Ctrl = 0x");
 	longToHexString((long)r1,buffer+strlen(buffer),1);
-	logString(buffer,ASAP);
+	logString(buffer,FILE_ASAP);
 	
  	strcpy(buffer, "P_IOB_Buffer = 0x");
  	r1 = *P_IOB_Buffer;
 	longToHexString((long)r1,buffer+strlen(buffer),1);
-	logString(buffer,ASAP);
+	logString(buffer,FILE_ASAP);
+	*/
 }
 
 int logLongHex(unsigned long data) {
@@ -417,6 +500,8 @@ set_voltmaxvolume()
 	}
 }
 
+/* XXX: David D. These no longer exist */
+/*
 void
 turnAmpOff(void) {
 	*P_IOA_Dir  |= 0x0800;
@@ -446,6 +531,7 @@ turnNORoff(void) {
  	*P_IOD_Attrib |= 0x0001;
     *P_IOD_Buffer  |= 0x0001;	
 }
+*/
 
 int
 SNexists(void) {
@@ -474,12 +560,17 @@ void writeVersionToDisk() {
 	strcpy(fileVersion,DEFAULT_SYSTEM_PATH  VERSION  FILE_VERSION_EXT);
 	
 	if (!fileExists((LPSTR)fileVersion)) {
-		logString(fileVersion,ASAP);
-		mkdir((LPSTR)DEFAULT_SYSTEM_PATH); 
+		logString(fileVersion,FILE_ASAP);
+		/* XXX: David D. We don't use LPSTR */
+		mkdir(/*(LPSTR)*/DEFAULT_SYSTEM_PATH); 
 		tbChdir((LPSTR)DEFAULT_SYSTEM_PATH);
-		ret =_findfirst((LPSTR)"*" FILE_VERSION_EXT, &file_info, D_FILE);
+		/* XXX: David D. We don't use LPSTR */
+		ret =_findfirst(/*(LPSTR)*/"*" FILE_VERSION_EXT, &file_info, D_FILE);
 		if (ret >= 0) {
-			ret = unlink((LPSTR)file_info.f_name);		
+			/* XXX: David D. We don't use LPSTR */
+			/* XXX: David D. f_name to fname */
+			/*ret = unlink((LPSTR)file_info.f_name);*/
+			ret = unlink(/*(LPSTR)*/file_info.fname);
 		}	
 		handle = tbOpen((LPSTR)fileVersion,O_CREAT|O_RDWR|O_TRUNC);
 		close(handle);	

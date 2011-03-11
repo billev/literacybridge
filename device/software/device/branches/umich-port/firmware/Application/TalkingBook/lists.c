@@ -9,6 +9,9 @@
 #include "Include/device.h"
 #include <ctype.h>
 
+/* XXX: David D. for INT_MAX */
+#include <limits.h>
+
 extern APP_IRAM unsigned int vCur_1;
 extern void refuse_lowvoltage(int);
 
@@ -70,7 +73,7 @@ char *getCurrentList(ListItem *list) {
 	const int MAX_ATTEMPTS = 3;
 	
 	buffer[READ_LENGTH] = '\0';
-	if (list->currentFilePosition == -1) {
+	if (list->currentFilePosition == INT_MAX) {
 		list->currentFilePosition = 0;		
 		for (attempt=0,goodPass=0;attempt < MAX_ATTEMPTS;attempt++) {
 			fileHandle = openList(list,NULL);
@@ -166,7 +169,7 @@ char *getPreviousList(ListItem *list) {
 	int attempt,goodPass;
 	const int MAX_ATTEMPTS = 3;
 	
-	if (list->currentFilePosition == -1)
+	if (list->currentFilePosition == INT_MAX)
 		ret = getCurrentList(list); 
 	else {
 		for (attempt=0,goodPass=0;attempt < MAX_ATTEMPTS && !goodPass;attempt++) {
@@ -286,27 +289,48 @@ int insertIntoList(ListItem *list, long posInsert, char * string) {
 		if (ret > 0) 
 			*(string + ret) = '\0';
 		if (posInsert) {
+			/* XXX: David D. addresses must be passed as addresses */
+			/*
 			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,posInsert % MAX_BYTES);
 			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
 			for (i=bytesToWrite; i < posInsert; i+= MAX_BYTES) {
 				bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
 				ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
 			}
+			*/
+			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),posInsert % MAX_BYTES);
+			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+			for (i=bytesToWrite; i < posInsert; i+= MAX_BYTES) {
+				bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
+				ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+			}
 		}
 		bytesToWrite = convertDoubleToSingleChar(tempLine,string,TRUE);
-		ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);		
+		/* XXX: David D. addresses must be passed as addresses */
+		/*
+		ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);
 		do {
 			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
 			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
 		} while (bytesToWrite == MAX_BYTES);
+		*/
+		ret = write(wHandle,(const void *)((unsigned long)tempLine<<1),bytesToWrite);
+		do {
+			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
+			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+		} while (bytesToWrite == MAX_BYTES);
+		
 		close(wHandle);
 		close(rHandle);
-		i = unlink((LPSTR)rFilepath);
+		/* XXX: David D. We don't use LPSTR */
+		i = unlink(/*(LPSTR)*/rFilepath);
 		if (i != -1) {
 			//todo: change this to rename instead of copy and unlink
-			i = _copy((LPSTR)wFilepath,(LPSTR)rFilepath);
-			if (i != -1)
-				i = unlink((LPSTR)wFilepath);
+			/* XXX: David D. We don't use LPSTR */
+			i = _copy(/*(LPSTR)*/wFilepath,/*(LPSTR)*/rFilepath);
+			if (i != -1) {
+				i = unlink(/*(LPSTR)*/wFilepath);
+			}
 		}
 		ret = i;
 	}
