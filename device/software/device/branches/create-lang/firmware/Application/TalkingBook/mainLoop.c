@@ -38,6 +38,7 @@ static void keyResponse(void);
 int checkInactivity(BOOL);
 static void takeAction (Action *, EnumAction);
 static void finishTranslation(void);
+static void wrapTranslation(void);
 static void createTranslateDir (void);
 
 extern APP_IRAM unsigned int vCur_1;
@@ -598,6 +599,7 @@ void mainLoop (void) {
 }
 
 static void createTranslateDir () {
+	
 	//If temp dir doesn't exist, create it.
 	char filepath[PATH_LENGTH],tempPath[PATH_LENGTH];
 	unsigned int len;
@@ -609,6 +611,8 @@ static void createTranslateDir () {
 		mkdir((LPSTR)filepath);
 		strcat(filepath,"/");
 		len = strlen(filepath);
+		
+		/*
 		//Temporary code until figure out how to copy directories recursively
 		
 		//Create topics subfolder
@@ -631,13 +635,66 @@ static void createTranslateDir () {
 		
 		//Todo: copy topics.txt
 		//Todo: copy contents of messages/lists/copy-for-new-language/
+		*/
 		
 		//Original code:
-		//strcpy(tempPath,LANGUAGES_PATH);
-		//strcat(tempPath,"copy-for-new-language/");
-		//dirCopy(tempPath,filepath);
+		strcpy(tempPath,LANGUAGES_PATH);
+		strcat(tempPath,"copy-for-new-language/");
+		//strcpy(filepath,LANGUAGES_PATH);
+		//strcat(filepath,"try_copy/");
+		dirCopy(tempPath,filepath);
 	}
 	
+}
+
+static void wrapTranslation() {
+	char filepath[PATH_LENGTH],tempPath[PATH_LENGTH];
+	long maxFileIdx,i;
+	unsigned int len;
+	int ret;
+	
+	//Number of files to translate is pkgSystem.countFiles - 1;
+	maxFileIdx = pkgSystem.countFiles - 2;
+	
+	//Move to new name
+	strcpy(tempPath,LANGUAGES_PATH);
+	strcat(tempPath,"translation_");
+	strcat(tempPath,getDeviceSN(0));
+	strcat(tempPath,"_");
+	len = strlen(tempPath);
+	
+	i=0;
+	do {
+		tempPath[len]=0;
+		longToDecimalString(i,tempPath+len,2);
+		i++;
+	} while( dirExists((LPSTR)tempPath) );
+	
+	//Rename directory from temp name to serial-number based
+	strcpy(filepath,LANGUAGES_PATH);
+	strcat(filepath,TRANSLATE_TEMP_DIR);
+	ret = rename((LPSTR)filepath, (LPSTR)tempPath);
+	
+	//Append string to system names file
+	strcpy( tempPath,tempPath+strlen((char *)LANGUAGES_PATH) );
+	strcpy(filepath,LANGUAGES_PATH);
+	strcat(filepath,SYSTEM_ORDER_FILE);
+	strcat(filepath,".txt");
+	appendStringToFile(filepath, tempPath);
+	
+	//Remove binary for storing translation list
+	strcpy(filepath,LANGUAGES_PATH);
+	strcat(filepath,TRANSLATE_FILENAME_BIN);
+	unlink((LPSTR)filepath);
+		
+	//Reset translation list	
+	for(i = 0; i <= maxFileIdx; i++){
+		context.transList.translatedFileMarker[i] = '0';
+	}
+	context.transList.currFileIdx = -1;
+	context.transList.mode = '0';
+	
+	loadSystemNames();
 }
 
 //static void finishTranslation(BOOL forceDone){
@@ -648,6 +705,19 @@ static void finishTranslation(){
 	long maxFileIdx, i;
 	int handle, ret;
 	
+	//Persist transList into memory
+	strcpy(filepath,LANGUAGES_PATH);
+	strcat(filepath,TRANSLATE_FILENAME_BIN);
+	
+	handle = tbOpen((LPSTR)(filepath),O_CREAT|O_RDWR);
+	if (handle != -1) {
+		ret = write(handle, (unsigned long)&context.transList<<1, sizeof(TranslationList)<<1);
+		close(handle);
+	}
+	else {
+		logException(99,"Can't persist translate list",USB_MODE);
+	}
+
 	//Number of files to translate is pkgSystem.countFiles - 1;
 	maxFileIdx = pkgSystem.countFiles - 2;
 	
@@ -656,68 +726,14 @@ static void finishTranslation(){
 		if(context.transList.translatedFileMarker[i] == '0')
 			break;
 	}*/
-	
+	i=0;
 	//For testing only, finish if translated 37 and 38.
 	if(context.transList.translatedFileMarker[38] == '1' && context.transList.translatedFileMarker[39] == '1')
 		i = maxFileIdx+1;
-	
+		
 	//If Done translation
-	if(i > maxFileIdx){
-		
-		//Move to new name
-		strcpy(tempPath,LANGUAGES_PATH);
-		i=0;
-		strcat(tempPath,"translation_");
-		strcat(tempPath,getDeviceSN(0));
-		strcat(tempPath,"_");
-		len = strlen(tempPath);
-		do {
-			tempPath[len]=0;
-			longToDecimalString(i,tempPath+len,2);
-			i++;
-		} while( dirExists((LPSTR)tempPath) );
-		
-		//Rename directory from temp name to serial-number based
-		strcpy(filepath,LANGUAGES_PATH);
-		strcat(filepath,TRANSLATE_TEMP_DIR);
-		ret = rename((LPSTR)filepath, (LPSTR)tempPath);
-		
-		//Append string to system names file
-		strcpy( tempPath,tempPath+strlen((char *)LANGUAGES_PATH) );
-		strcpy(filepath,LANGUAGES_PATH);
-		strcat(filepath,SYSTEM_ORDER_FILE);
-		strcat(filepath,".txt");
-		appendStringToFile(filepath, tempPath);
-		
-		//Remove binary for storing translation list
-		strcpy(filepath,LANGUAGES_PATH);
-		strcat(filepath,TRANSLATE_FILENAME_BIN);
-		unlink((LPSTR)filepath);
-			
-		//Reset translation list	
-		for(i = 0; i <= maxFileIdx; i++){
-			context.transList.translatedFileMarker[i] = '0';
-		}
-		context.transList.currFileIdx = -1;
-		context.transList.mode = '0';
-		
-		loadSystemNames();
-	
-	}
-	else {
-		//Persist transList into memory
-		strcpy(filepath,LANGUAGES_PATH);
-		strcat(filepath,TRANSLATE_FILENAME_BIN);
-		
-		handle = tbOpen((LPSTR)(filepath),O_CREAT|O_RDWR);
-		if (handle != -1) {
-			ret = write(handle, (unsigned long)&context.transList<<1, sizeof(TranslationList)<<1);
-			close(handle);
-		}
-		else {
-			logException(99,"Can't persist translate list",USB_MODE);
-		}
-	}
+	if(i > maxFileIdx)
+		insertSound(&pkgSystem.files[POST_TRANSLATE_FILE_IDX],NULL,TRUE);
 }
 
 static void takeAction (Action *action, EnumAction actionCode) {
@@ -758,6 +774,95 @@ static void takeAction (Action *action, EnumAction actionCode) {
 	}
 		
 	switch (actionCode) {
+		case DELETE_TRANSLATION:
+			stop();
+			context.idxActiveList = -1;
+			transList = &context.transList;
+			tempInt = pkgSystem.countFiles - 1;
+			for(i=0; i < tempInt; i++)
+				transList->translatedFileMarker[i]='0';
+			transList->currFileIdx = -1;
+			transList->mode = '0';
+			
+			//Remove binary for storing translation list
+			strcpy(tempPath,LANGUAGES_PATH);
+			strcat(tempPath,TRANSLATE_FILENAME_BIN);
+			unlink((LPSTR)tempPath);
+
+			//Jump to destination block after deleting 
+			newBlock = &context.package->blocks[destination];
+			newTime = newBlock->startTime;
+			reposition = TRUE;
+			transList = NULL;
+			break;
+		case TRANSLATE_DELETE_FINISH:
+			//3 situations: no files translated, some files translated, all files translated
+			stop();
+		
+			tempInt = pkgSystem.countFiles - 1;
+			i = 0;
+			l = 0;
+			transList = &context.transList;
+			//while (i < tempInt) {
+			//	if(transList->translatedFileMarker[i]=='1')
+			//		l++;
+			//	i++;
+			//}
+			if(transList->translatedFileMarker[38] == '1' && transList->translatedFileMarker[39] == '1')
+				l = tempInt;
+			else
+			{
+				while (i < tempInt) {
+					if(transList->translatedFileMarker[i]=='1')
+						l++;
+					i++;
+				}
+			}
+			if(l == 0){
+				//None translated: insert sound 
+				insertSound(&pkgSystem.files[NO_TRANSLATION_FILE_IDX],NULL,TRUE);
+			}
+			else if(l == tempInt) {
+				//All translated: jump to block delete or finish
+				//Jump to destination block after deleting 
+				newBlock = &context.package->blocks[aux];
+				newTime = newBlock->startTime;
+				reposition = TRUE;
+				context.idxActiveList = -1;
+			}
+			else {
+				//Some translated: jump to block confirm delete
+				newBlock = &context.package->blocks[destination];
+				newTime = newBlock->startTime;
+				reposition = TRUE;
+				context.idxActiveList = -1;
+			}
+			transList = NULL;
+			break;
+		case WRAP_TRANSLATION:
+			stop();
+			context.idxActiveList = -1;
+			l = pkgSystem.countFiles - 2;
+			/*for(i = 0; i <= maxFileIdx; i++){
+				//Check if all files have been translated
+				if(context.transList.translatedFileMarker[i] == '0')
+					break;
+			}*/
+			
+			//For testing only, finish if translated 37 and 38.
+			if(context.transList.translatedFileMarker[38] == '1' && context.transList.translatedFileMarker[39] == '1')
+				i = l+1;
+			
+			if(i > l){
+				stop();
+				wrapTranslation();
+			}
+			//Jump to destination block after deleting 
+			newBlock = &context.package->blocks[destination];
+			newTime = newBlock->startTime;
+			reposition = TRUE;
+			transList = NULL;
+			break;
 		case TRANSLATED_LIST:
 			stop();
 			transList = &context.transList;

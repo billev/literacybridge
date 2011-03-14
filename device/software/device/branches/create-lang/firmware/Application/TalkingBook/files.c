@@ -526,19 +526,17 @@ int fileCopy(char * from, char * to) {
 }
 
 //dirCopy slightly modified version of copydir from inbox.c.  Modified so doesn't delete original files.
-int dirCopy(char *fromdir, char *todir) {
+void dirCopy(char *fromdir, char *todir) {
 // 	copy directory tree below fromdir (all subdirectories and files at all levels)
-	int ret, r1, len_from, len_to, len, fret;
-	BOOL first_pass = TRUE;	
-	char from[PATH_LENGTH], fromfind[PATH_LENGTH], to[PATH_LENGTH], lastdir[FILE_LENGTH], first_dir[PATH_LENGTH], temp[PATH_LENGTH];
-
+	int ret, r1, len_from, len_to, len;
+	char from[PATH_LENGTH], fromfind[PATH_LENGTH], to[PATH_LENGTH], lastdir[FILE_LENGTH], first_dir[PATH_LENGTH];
+	//char temp[PATH_LENGTH];
+	unsigned int i, k;
 	struct f_info fi;
 	
-	fret = 0;
-	
-	logString((char *)"Enter dirCopy",BUFFER);
-	strcpy(temp,fromdir);
-	logString(temp,ASAP);
+	//logException(6,(const char *)"Enter dirCopy",0);
+	//strcpy(temp,fromdir);
+	//logException(6,(const char *)temp,0);
 	
 	strcpy(from, fromdir);
 	len_from = strlen(from);
@@ -557,26 +555,31 @@ int dirCopy(char *fromdir, char *todir) {
 		len_to++;
 	}
 	strcpy(fromfind,from);
-	ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);
+	/*ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);
 	while (ret >= 0) {
 		strcpy(temp,fi.f_name);
-		logString((char *)"Iter:",BUFFER);
-		logString(temp,ASAP);
+		//logString((char *)"Iter:",BUFFER);
+		//logString(temp,ASAP);
+		logException(6,(const char*)temp,0);
 		ret = _findnext(&fi);
-	}
+	}*/
+	
+	
 	ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);
 	from[len_from] = 0;
 	lastdir[0] = 0;
 	strcpy(first_dir,fi.f_name);
 	
-	strcpy(temp,fi.f_name);
-	logString((char *)"First:",BUFFER);
-	logString(temp,ASAP);
+	//strcpy(temp,"Iter:");
+	//strcat(temp,fi.f_name);
+	//logException(6,(const char*)temp,0);
+	i=0;
 	while (ret >= 0) {
 	//while(1) {
-		
-		if((fi.f_attrib & D_DIR) && fi.f_name[0]!='.') {
-
+		i++;
+		k=0;
+		//if((fi.f_attrib & D_DIR) && fi.f_name[0]!='.') {
+		if(fi.f_name[0]!='.') {
 		
 			from[len_from] = 0;
 			to[len_to]= 0;
@@ -586,65 +589,66 @@ int dirCopy(char *fromdir, char *todir) {
 			
 			r1 = mkdir((LPSTR)to);
 			
-			strcpy(temp,from);
-			logString((char *)"From:",BUFFER);
-			logString(temp,ASAP);
+			//strcpy(temp,from);
+			//logException(6,(const char*)temp,0);
 			
-			strcpy(temp,to);
-			logString((char *)"To:",BUFFER);
-			logString(temp,ASAP);
+			/*strcpy(temp,"Descend:");
+			strcat(temp,to);
+			logException(6,(const char*)temp,0);*/
 			
-			fret += dirCopy (from, to);
-			ret = rmdir((LPSTR)from);
-					
-			fret++;
+			dirCopy (from, to);
+			//ret = rmdir((LPSTR)from);
+			
 			//ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);  //necessary to reset after rmdir? 
 			
 		}
-		//ret = _findnext(&fi);
+
 		ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);  //necessary to reset after rmdir? 
-		
-		strcpy(temp,fi.f_name);
-		logString((char *)"Next:",BUFFER);
-		logString(temp,ASAP);
+		while(k < i){
+			ret = _findnext(&fi);
+			k++;
+		}
+		//ret = _findnext(&fi);
+		/*strcpy(temp,"Iter:");
+		strcat(temp,fi.f_name);
+		logException(6,(const char*)temp,0);*/
 		//if(strcmp(first_dir,fi.f_name)==0)
 		//	break;
-		first_pass = FALSE;
+		//first_pass = FALSE;
 	} 
 	
 	from[len_from] = 0;
 	to[len_to]= 0;
-	fret += copyAllFiles(from, to);
-	cpyTopicPath(from);
-	strcpy(lastdir,from+2);
-	if ((len = strlen(lastdir)))
-		lastdir[len-1] = 0; // remove last '\'
-	if (strstr(fromdir,lastdir))
-		fret = 0; // prevents system reset if only copying list files
-	logString((char *)"Leave dirCopy",BUFFER);
-	strcpy(temp,fromdir);
-	logString(temp,ASAP);
-	
-	return(fret);
+	copyAllFiles(from, to);
+	//cpyTopicPath(from);
+	//strcpy(lastdir,from+2);
+	//if ((len = strlen(lastdir)))
+	//	lastdir[len-1] = 0; // remove last '\'
+	//if (strstr(fromdir,lastdir))
+	//	fret = 0; // prevents system reset if only copying list files
+	//logString((char *)"Leave dirCopy",BUFFER);
+	//return(fret);
 
 
 }
 //copyAllFiles slightly modified version of copyfiles from inbox.c.  Modified so doesn't check for path "a:"
-int copyAllFiles(char *fromdir, char *todir)
+void copyAllFiles(char *fromdir, char *todir)
 {
-	int ret, r1, len_from, len_to, fret;
-	char from[80], to[80], temp[80];
+	int ret, r1, len_from, len_to;
+	//int fret;
+	char from[80], to[80];
+	//char temp[80];
 	struct f_info fi;
 	
-	fret = 0;
+	//fret = 0;
 	
-	strcpy(temp,fromdir);
+	/*strcpy(temp,fromdir);
 	logString((char *)"Frrom:",BUFFER);
 	logString(temp,ASAP);
 	
 	strcpy(temp,todir);
 	logString((char *)"Too:",BUFFER);
-	logString(temp,ASAP);
+	logString(temp,ASAP);*/
 	
 	strcpy(from, fromdir);
 	
@@ -672,35 +676,35 @@ int copyAllFiles(char *fromdir, char *todir)
 			strcat(from, fi.f_name);
 			strcat(to, fi.f_name);
 			
-			strcpy(temp,from);
+			/*strcpy(temp,from);
 			logString((char *)"Copyf",BUFFER);
 			logString(temp,ASAP);
 
 			strcpy(temp,to);
 			logString((char *)"Copyt",BUFFER);
-			logString(temp,ASAP);
+			logString(temp,ASAP);*/
 
 
-			if((lower(from[0]) == 'a') && (lower(to[0]) == 'a')) {
-				unlink((LPSTR)to);
-				r1 = rename((LPSTR)from, (LPSTR)to);
-			} else {
-				setLED(LED_GREEN,FALSE);
-				setLED(LED_RED,TRUE);
-				r1 = _copy((LPSTR)from, (LPSTR)to);
-				wait (500);
-				setLED(LED_RED,FALSE);
-				if (r1 != -1) {
-					setLED(LED_GREEN,TRUE);
-					wait(500);
-				}
+			//if((lower(from[0]) == 'a') && (lower(to[0]) == 'a')) {
+			//	unlink((LPSTR)to);
+			//	r1 = rename((LPSTR)from, (LPSTR)to);
+			//} else {
+			setLED(LED_GREEN,FALSE);
+			setLED(LED_RED,TRUE);
+			r1 = _copy((LPSTR)from, (LPSTR)to);
+			wait (500);
+			setLED(LED_RED,FALSE);
+			if (r1 != -1) {
+				setLED(LED_GREEN,TRUE);
+				wait(500);
 			}
+			//}
 //			logString((char *)"FROM/TO:",BUFFER);
 //			logString(from,BUFFER);
 //			logString(to,ASAP);
 		}
 		ret = _findnext(&fi);
-		fret++;
+		//fret++;
 	}
-	return(fret);
+	//return(fret);
 }
