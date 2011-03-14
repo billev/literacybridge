@@ -107,6 +107,7 @@ P
       A*:El
       A>:Ln
       A<:Lo
+      Ao:L? [translate-delete] [translate-branch]
   F:39
     B:0- [start-translation]
       A$:I[right-new help]
@@ -122,7 +123,7 @@ P
       A>:Lo
       A^:L-[translate-list]
       Av:L+[translate-list]
-      Ao:~
+      Ao:L? [translate-delete] [translate-branch]
       A*:~
   F:17
     B:0- [center-starts-stops]
@@ -264,3 +265,31 @@ P
     B:0- [faster]    
   F:38
     B:0- [slower]
+  F:confirm_wrap_translation
+    B:0- [translate-finish]
+      Ao:W [welcome]
+      A<:[translation-options]
+      A>:~
+      Av:~
+      A^:~
+      A*:~
+  F:confirm_delete_translation
+    B:0- [translate-delete]
+      Ao:Dt [translation-options]
+      A<:[translation-options]
+      A>:~
+      Av:~
+      A^:~
+      A*:~
+  F:delete_or_wrap_translation
+    B:0- [translate-branch]
+      A>:[translate-delete]
+      A<:[translate-finish]
+      A*:[translation-options]
+      Av:~
+      A^:~
+      Ao:~
+  F:wrap_translation
+    B:0- [wrap-translation]
+  F:no_translation
+    B:0- [no-translation]
