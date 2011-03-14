@@ -58,16 +58,6 @@ static int getIndexFromLine(char *line, char *symbolMapStart) {
 	return index;
 }
 
-// copied from above for reference
-// EnumEvent {LEFT, RIGHT, UP, DOWN, SELECT, HOME, PLAY, STAR, PLUS, MINUS, BUTTON_MARKER, START, END};
-// EnumAction {NOP = 0, STOP, PAUSE, JUMP_BLOCK, RETURN, INSERT_SOUND, START_END_MARKER,			
-//				PLAY_PAUSE, COPY, RECORD_TITLE, RECORD_MSG, PACKAGE_RECORDING, TRIM,
-//              FWD, BACK, JUMP_TIME, CALL_BLOCK, JUMP_PACKAGE, JUMP_LIST, DELETE, 
-//              ENTER_EXIT_MARKER, VOLUME_UP, VOLUME_DOWN, VOLUME_NORMAL, SPEED_UP, SPEED_DOWN, SPEED_NORMAL,  
-//				USB_MARKER, USB_DEVICE_ON, USB_HOST_ON, USB_DEVICE_OFF, USB_HOST_OFF,  
-//              LED_MARKER, LED_RED_ON, LED_GREEN_ON, LED_ALL_ON, LED_RED_OFF, LED_GREEN_OFF, LED_ALL_OFF, 
-//				HALT, SLEEP, TEST_PCB};
-
 static int getEventEnumFromChar (char *c) {
 	int ret = -1;
 	const char *EVENT_CODES = "<>^vohp*+-_!$";   // '_' is placeholder for BUTTON_MARKER
@@ -78,7 +68,7 @@ static int getEventEnumFromChar (char *c) {
 
 static int getActionEnumFromChar (char *c) {
 	int ret = -1;
-	const char *ACTION_CODES = "~.,[)I_PCEEEEMFBT(<LLLD_VVVSSS_UUUU_RGARGAHZX";  // '_' is placeholder for marker codes
+	const char *ACTION_CODES = "~.,[)I_PCEEEEMFBT(<LLLLDDW_VVVSSS_UUUU_RGARGAHZX";  // '_' is placeholder for marker codes
 	// note that E is for rEcord since R should represent Red
 	// only first instance of action code is found, others are placeholders as dealt with below
 	
@@ -114,7 +104,13 @@ static int getActionEnumFromChar (char *c) {
 			ret += 1;
 		else if (*(c+1) == 'o')
 			ret += 2;
+		else if (*(c+1) == '?')
+			ret += 3;
 	
+	}
+	else if (ret == DELETE) {
+		if (*(c+1) == 't')
+			ret += 1;
 	}
 	return ret;	
 }
@@ -372,6 +368,10 @@ static BOOL parseCreateAction (char *line, Action *action, int *actionCount, cha
 			index = getIndexFromLine(strAction,symbolMapStart);
 			if (index != -1)
 				action[*actionCount].destination = index; 
+			//else {
+			//	ret = FALSE;
+			//	logException(6,strAction,0);  // todo:invalid internal reference in control track file
+			//}
 // TODO:If (index==-1), there was no destination ("[]"), which is ok for now -- and ret=FALSE was ignored anyway   
 //			else
 //				ret = FALSE;
@@ -435,6 +435,75 @@ static BOOL parseCreateAction (char *line, Action *action, int *actionCount, cha
 				ret = FALSE;
 				logException(6,strAction,0);  // todo:invalid internal reference in control track file 
 			}
+		}
+		if (actionCode == DELETE_TRANSLATION || actionCode == WRAP_TRANSLATION) {
+			//strAction = strAction+3;
+			index = getIndexFromLine(strAction,symbolMapStart);
+			if (index != -1)	
+				action[*actionCount].destination = index; 
+			else {
+				ret = FALSE;
+				logException(6,strAction,0);  // todo:invalid internal reference in control track file 
+			}
+		}
+		if (actionCode == TRANSLATE_DELETE_FINISH) {
+			//Get first block and store in destination
+			//Move past ?
+			strAction=strAction+2;
+			while (*strAction && isspace(*strAction))
+				strAction++;
+			
+			if (*strAction == '[') { 
+				cursor = strchr(strAction,']');
+				//if (cursor)
+				//	*cursor = 0;			
+				//else {
+				//	logException(8,strAction,0);  // syntax error in control track
+				//	ret = FALSE;
+				//}
+				//strAction++;
+				index = getIndexFromLine(strAction,symbolMapStart);
+				if (index != -1) {
+					action[*actionCount].destination = index; 
+					strAction = cursor+1;
+				}
+				else {
+					ret = FALSE;
+					logException(6,(char *)"here1",0);  // todo:invalid internal reference in control track file
+				}
+			}
+			else {
+				ret = FALSE;
+				logException(8,strAction,0);  // syntax error in control track
+			}
+			// Store second block name in aux
+			while (*strAction && isspace(*strAction))
+				strAction++;
+			
+			if (*strAction == '[') { 
+				//cursor = strchr(strAction,']');
+				//if (cursor)
+				//	*cursor = 0;			
+				//else {
+				//	logException(8,strAction,0);  // syntax error in control track
+				//	ret = FALSE;
+				//}
+				//strAction++;
+				index = getIndexFromLine(strAction,symbolMapStart);
+				if (index != -1) {
+					action[*actionCount].aux = index; 
+				}
+				else {
+					ret = FALSE;
+					logException(6,(char *)"here1",0);  // todo:invalid internal reference in control track file
+				}
+			}
+			else {
+				ret = FALSE;
+				logException(8,strAction,0);  // syntax error in control track
+			}	
+		
+			/////////
 		}
 	}		
 	if ((block || list || transList) && actionCode != -1) {
