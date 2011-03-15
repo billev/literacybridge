@@ -40,7 +40,7 @@ static void takeAction (Action *, EnumAction);
 static void finishTranslation(void);
 static void wrapTranslation(void);
 static void createTranslateDir (void);
-
+static void jumpTransList (int, CtnrFile**, unsigned int*, BOOL*);
 extern APP_IRAM unsigned int vCur_1;
 extern void refuse_lowvoltage(int);
 extern void set_voltmaxvolume();
@@ -700,8 +700,9 @@ static void wrapTranslation() {
 //static void finishTranslation(BOOL forceDone){
 static void finishTranslation(){
 	
-	char filepath[PATH_LENGTH],tempPath[PATH_LENGTH];
-	unsigned int len,len1;
+	char filepath[PATH_LENGTH];
+	//char tempPath[PATH_LENGTH];
+	//unsigned int len,len1;
 	long maxFileIdx, i;
 	int handle, ret;
 	
@@ -736,6 +737,33 @@ static void finishTranslation(){
 		insertSound(&pkgSystem.files[POST_TRANSLATE_FILE_IDX],NULL,TRUE);
 }
 
+static void jumpTransList (int listRotation, CtnrFile** p_newFile, unsigned int* p_newTime, BOOL* p_reposition) {
+	TranslationList *transList;
+	BOOL playBipSound = FALSE;
+		
+	transList = &context.transList;
+	
+	if (transList->currFileIdx == -1)
+		playBipSound = getNextTransList(transList,TRUE,&pkgSystem);
+	else {
+		switch (listRotation) {
+			case 1:
+				playBipSound = getNextTransList(transList,TRUE,&pkgSystem);
+				break;
+			case -1:
+				playBipSound = getNextTransList(transList,FALSE,&pkgSystem);
+				break;
+			case 0:
+				break;
+		}
+	}
+	*p_newFile = &pkgSystem.files[transList->currFileIdx+1];
+	*p_newTime = 0;
+	*p_reposition = TRUE;
+	if(playBipSound)
+		playBip();
+
+}
 static void takeAction (Action *action, EnumAction actionCode) {
 	unsigned int newTime, oldTime, tempInt; 
 	unsigned long longNewTime, longOldTime;
@@ -750,7 +778,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 	int status;
 	BOOL reposition = FALSE;
 	BOOL isTooFar = FALSE;
-	BOOL playBipSound = FALSE;
+	//BOOL playBipSound = FALSE;
 	ListItem *list, *tempList;
 	TranslationList *transList;
 	char filename[PATH_LENGTH],filepath[PATH_LENGTH],tempPath[PATH_LENGTH];
@@ -871,16 +899,63 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			//Can go to translated only if something has been translated.
 			while (i < tempInt && transList->translatedFileMarker[i]=='0')
 				i++;
+			
 			if (transList->translatedFileMarker[i]=='1')
 				transList->mode = '1';
 			else
+			{
+				//Insert sound saying no translations
 				transList->mode = '0';
+				insertSound(&pkgSystem.files[PLS_RECORD_TRANSLATION_FILE_IDX],NULL,TRUE);
+			}
 			
+			//New
+			//Set idxActiveList in case this is first time entering translation app
+			context.idxActiveList = MAX_LISTS;
+			
+			//Check if the current pointed to file has been translated
+			if(transList->mode == '1'){
+				
+				//If file pointer is not initialized, go to first translated file
+				if(transList->currFileIdx == -1) {
+					//transList->currFileIdx = i;
+					jumpTransList(1, &newFile, &newTime, &reposition);
+					//Switch to '0' so that insertSound can find the file 
+					transList->mode = '0';
+					insertSound(&pkgSystem.files[NEW_RECORDING_FILE_IDX],NULL,TRUE);
+				}
+				else if(transList->translatedFileMarker[transList->currFileIdx] == '1') {
+					//Decrement currFileIdx because jumpTRansList will advance it again
+					transList->currFileIdx--;
+					jumpTransList(1, &newFile, &newTime, &reposition);
+					//Switch to '0' so that insertSound can find the file 
+					transList->mode = '0';
+					insertSound(&pkgSystem.files[NEW_RECORDING_FILE_IDX],NULL,TRUE);
+				}
+				else {
+					//Current file pointer points to file that hasn't been translated
+					//Play file saying press up/down to browse translated files or press left to go back to original files
+					//Switch to '0' so that insertSound can find the file 
+					transList->mode = '0';
+					insertSound(&pkgSystem.files[NOT_YET_TRANSLATED_FILE_IDX],NULL,TRUE);
+				}
+				//switch back after done with inserting sound
+				transList->mode = '1';
+			}
+
 			break;
 		case NOT_TRANSLATED_LIST:
 			stop();
 			transList = &context.transList;
 			transList->mode = '0';
+			
+			//New:
+			//Set idxActiveList in case this is first time entering translation app
+			context.idxActiveList = MAX_LISTS;
+			//Pass zero to not rotate list
+			jumpTransList(0, &newFile, &newTime, &reposition);
+			insertSound(&pkgSystem.files[ORIG_RECORDING_FILE_IDX],NULL,TRUE);
+			
 			break;
 		case RECORD_TRANSLATION:
 			stop();
@@ -932,6 +1007,16 @@ static void takeAction (Action *action, EnumAction actionCode) {
 			context.idxActiveList = destination;
 			
 			if (transList) {
+				jumpTransList(getListRotation(aux), &newFile, &newTime, &reposition);
+				/*if(transList->mode == '0'){
+					insertSound(&pkgSystem.files[ORIG_RECORDING_FILE_IDX],NULL,TRUE);
+				}
+				else if(transList->mode == '1'){
+					transList->mode = '0';
+					insertSound(&pkgSystem.files[NEW_RECORDING_FILE_IDX],NULL,TRUE);
+					transList->mode = '1';
+				}*/
+				/*
 				if (transList->currFileIdx == -1)
 					playBipSound = getNextTransList(transList,TRUE,&pkgSystem);
 				else {
@@ -950,7 +1035,7 @@ static void takeAction (Action *action, EnumAction actionCode) {
 				newTime = 0;
 				reposition = TRUE;
 				if(playBipSound)
-					playBip();
+					playBip();*/
 			}
 			else {
 				switch (getListRotation(aux)) {

@@ -229,6 +229,7 @@ extern void setEventCodes(Action *, EnumEvent, BOOL);
 extern void setEndOfActions(Action *, BOOL);
 extern Action *getBlockActions(CtnrBlock *);
 extern Action *getListActions(ListItem *);
+extern Action *getTransListActions(TranslationList *);
 extern int replaceStack (char *, CtnrPackage *);
 extern CtnrFile *getListFile(char *); 
 extern CtnrFile *getListFileLong(char *);
