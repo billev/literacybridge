@@ -528,7 +528,7 @@ int fileCopy(char * from, char * to) {
 //dirCopy slightly modified version of copydir from inbox.c.  Modified so doesn't delete original files.
 void dirCopy(char *fromdir, char *todir) {
 // 	copy directory tree below fromdir (all subdirectories and files at all levels)
-	int ret, r1, len_from, len_to, len;
+	int ret, r1, len_from, len_to;
 	char from[PATH_LENGTH], fromfind[PATH_LENGTH], to[PATH_LENGTH], lastdir[FILE_LENGTH], first_dir[PATH_LENGTH];
 	//char temp[PATH_LENGTH];
 	unsigned int i, k;

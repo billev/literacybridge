@@ -521,10 +521,11 @@ static int recordAudio(char *pkgName, char *cursor) {
 		setLED(LED_RED,FALSE);
 		turnAmpOn();
 		playDing();
-		insertSound(&pkgSystem.files[POST_REC_FILE_IDX],NULL,TRUE);
-		
-		if (strcmp(cursor,TRANSLATE_TEMP_DIR) != 0) 					
+	
+		if (strcmp(cursor,TRANSLATE_TEMP_DIR) != 0) {
+			insertSound(&pkgSystem.files[POST_REC_FILE_IDX],NULL,TRUE);
 			insertSound(file,NULL,TRUE);  // replay subject
+		}
 
 		strcpy(temp,"TIME RECORDED (secs): ");
 		longToDecimalString((long)end-start,temp+strlen(temp),4);
