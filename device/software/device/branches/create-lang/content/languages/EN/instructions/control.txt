@@ -119,8 +119,8 @@ P
       A*:~
   F:40
     B:0- [translation-options]
-      A<:Ln
-      A>:Lo
+      A<:Lo
+      A>:Ln
       A^:L-[translate-list]
       Av:L+[translate-list]
       Ao:L? [translate-delete] [translate-branch]
@@ -293,3 +293,11 @@ P
     B:0- [wrap-translation]
   F:no_translation
     B:0- [no-translation]
+  F:sorry_not_translated
+    B:0- [not-translated]
+  F:pls_record_translation
+    B:0- [pls-record-translation]
+  F:new_recording
+    B:0- [new-recording]
+  F:original_recording
+    B:0- [orig-recording]
