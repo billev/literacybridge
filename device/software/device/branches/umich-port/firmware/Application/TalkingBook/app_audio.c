@@ -15,6 +15,7 @@
 
 /* XXX: David D. for gain control */
 #include "device/adc.h"
+#include "Include/port.h"
 
 /* XXX: David D. for our audio interface */
 audio_t __gaudio;
@@ -25,14 +26,6 @@ APP_IRAM struct ondisk_filestats gFileStats;
 APP_IRAM int statINIT = 0;
 
 static char STAT_FN[FILE_LENGTH];
-
-/* XXX: David D. FIXME This should be changed to a define? */
-extern const char *RES_DING_A18_SA;
-extern const char *RES_BIP_A18_SA;
-
-extern unsigned long User_GetCurDecodeLength(void);
-extern int SACMFileHandle;
-extern void User_SetDecodeLength(unsigned long);
 
 static int getFileHandle (CtnrFile *);
 static void playLongInt(CtnrFile *, unsigned long);
@@ -116,11 +109,16 @@ int gotoFrame(unsigned long frameDest) {
 	/* XXX: David D. FIXME changing to our encodings words per frame */
 	/* unsigned long wordsPerFrame = SACM_A1800_Mode / 800; */
 	unsigned long wordsPerFrame = 24/sizeof(int);
-		
+	unsigned long timeDest;
+	unsigned long sampleDest;
+
+	/*
 	unsigned long byteCurrent;
 	unsigned long wordDiff;  ///, timeDiff;
 	unsigned long wordCurrent, wordDest, frames; 
-//	unsigned long timeNow, timeDest;
+	unsigned long sampleDest;
+	unsigned long timeNow, timeDest;
+	*/
 	
 /*	timeNow = Snd_A1800_GetCurrentTime();	
 	timeDest = frameDest * 20;
@@ -131,19 +129,26 @@ int gotoFrame(unsigned long frameDest) {
 		SACM_A1800FAT_SeekTime(timeDiff,1);
 */	
 	pause();
-	byteCurrent = lseek(SACMFileHandle,0,SEEK_CUR);
+	/* 20 ms/frame */
+	timeDest = frameDest * 20;
+	/* 16 sample/ms */
+	sampleDest = timeDest * 16;
+	audio_seek(&__gaudio, sampleDest, SEEK_SET);
+	/*
+	byteCurrent = audio_tell(&__gaudio);
 	wordCurrent = ( unsigned long )User_GetCurDecodeLength();
 	frames = wordCurrent / wordsPerFrame;
 	wordCurrent = frames * wordsPerFrame;
 	wordDest = frameDest * wordsPerFrame;
 	if (wordDest > wordCurrent) {
 		wordDiff = wordDest - wordCurrent;	
-		byteCurrent = lseek(SACMFileHandle,wordDiff<<1,SEEK_CUR);
+		byteCurrent = audio_seek(&__gaudio,wordDiff<<1,SEEK_CUR);
 	} else {
 		wordDiff = wordCurrent - wordDest;	
-		byteCurrent = lseek(SACMFileHandle,-wordDiff<<1,SEEK_CUR);
+		byteCurrent = audio_seek(&__gaudio,-wordDiff<<1,SEEK_CUR);
 	}
 	User_SetDecodeLength(wordDest);
+	*/
 	resume();	
 	return 0;
 }
@@ -160,8 +165,7 @@ unsigned long setFileHeader(char *filePath, unsigned long frames) {
 	bytes += 2; // for extra SACM Mode word
 	header = (char *)&bytes;
 	lseek(handle,0,SEEK_SET);
-	/* XXX: David D. Addresses should be passed in the form of addresses */
-	write(handle,(char *)((unsigned long)header<<1),4);
+	write(handle, header, 4);
 	close(handle);
 	return bytes;
 }
@@ -317,7 +321,9 @@ static void playLongInt(CtnrFile *file, unsigned long lTimeNew) {
 			SACMGet_A1800FAT_Mode(iFileHandle,0);
 			Snd_SACM_PlayFAT(iFileHandle, C_CODEC_AUDIO1800);	
 			*/
-			audio_play_speex_fd(&__gaudio, iFileHandle);
+			audio_destroy_audio(&__gaudio);
+			audio_init_speex_fd(&__gaudio, iFileHandle);
+			audio_play(&__gaudio);
 			if (lTimeNew) {
 				/* SACM_A1800FAT_SeekTime(lTimeNew,FORWARD_SKIP); */
 				audio_seek(&__gaudio, lTimeNew, SEEK_SET);
@@ -468,7 +474,9 @@ static int recordAudio(char *pkgName, char *cursor) {
 		turnAmpOff();
 		Snd_SACM_RecFAT(handle, C_CODEC_AUDIO1800, BIT_RATE);
 		*/
-		audio_record_fd(&__gaudio, handle);
+		audio_destroy_audio(&__gaudio);
+		audio_init_file_fd(&__gaudio, handle);
+		audio_record(&__gaudio);
 		low_voltage = 0;
 		do {
 			end = getRTCinSeconds();	
@@ -502,7 +510,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 //		while ((end - start) < 3) { // must be at least 2.0 second recording
 //			end = getRTCinSeconds();			
 //		}
-		SACM_Stop();		//Snd_Stop(); // no need to call stop() and flush the log
+		audio_stop(&__gaudio);
 		//lseek(handle, 6, SEEK_SET );			//Seek to the start of the file input
 		//write(handle,(LPSTR)header<<1,6);
  
@@ -690,9 +698,7 @@ int writeLE32(int handle, long value, long offset) {
         wrkl = lseek(handle, offset, SEEK_SET);
     }
     
-	/* XXX: David D. addresses should be passed as addresses */
-    /*ret += write(handle, (unsigned long) &value << 1, 4);*/
-    ret += write(handle, (const void *)((unsigned long) &value << 1), 4);
+    ret += write(handle, &value, 4);
    
  	if(offset != CURRENT_POS) {
     	lseek(handle, curpos, SEEK_SET);
@@ -708,9 +714,7 @@ int writeLE16(int handle, unsigned int value, long offset) {
 		wrkl = lseek(handle, offset, SEEK_SET);
 	}
 	
-	/* XXX: David D. addresses should be passed as addresses */
-    /*ret += write(handle, (unsigned long) &value << 1, 2);*/
-    ret += write(handle, (const void *)((unsigned long) &value << 1), 2);
+    ret += write(handle, &value, 2);
     
  	if(offset != CURRENT_POS) {
     	lseek(handle, curpos, SEEK_SET);
@@ -731,15 +735,11 @@ int addField(int handle, unsigned int field_id, char *field_value, int numfieldv
 
     field_length -= 3;
 
-	/* XXX: David D. addresses must be passed as addresses */
-    /*ret += write(handle, (unsigned long)&numfieldvalues << 1, 1);  //numfields the 01 above*/
-    ret += write(handle, (const void *)((unsigned long)&numfieldvalues << 1), 1);  //numfields the 01 above*/
+    ret += write(handle, &numfieldvalues, 1);  //numfields the 01 above*/
 
     ret = writeLE16(handle, field_length, CURRENT_POS);
     for(i=0; i<field_length; i++) {
-		/* XXX: David D. addresses must be passed as addresses */
-       /*write(handle, (unsigned long)&field_value[i] << 1, 1);*/
-       write(handle, (const void *)((unsigned long)&field_value[i] << 1), 1);
+       write(handle, &field_value[i], 1);
        ret += 1;
    }
 //    ret += write(handle, (unsigned long) &field_value << 1, field_length + 1);
@@ -759,9 +759,7 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 		if(misc > PKG_SYS) {
 			statINIT = 1;
 
-			/* XXX: David D. addresses must be passed as addresses */
-			/*read(handle, (unsigned long)&stat_audio_length << 1, 4);*/
-			read(handle, (void *)((unsigned long)&stat_audio_length << 1), 4);
+			read(handle, &stat_audio_length, 4);
 
 			lseek(handle, 0L, SEEK_SET);
 			stat_pkg_type = misc;
@@ -779,7 +777,7 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 		break;
 	case STAT_CLOSE:
 		if(statINIT > 0) {
-			wrk = lseek(SACMFileHandle, 0L, SEEK_CUR);
+			wrk = audio_tell(&__gaudio);
 /*
 			sprintf(msg, "StatLog CLOSE: handle=%ld: position=%d; ", misc, wrk);
 			strcat(msg, STAT_FN);
@@ -795,17 +793,13 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 						
 				stathandle = tbOpen((LPSTR)statpath, O_CREAT|O_RDWR);
 				if(stathandle >= 0) {
-					/* XXX: David D. addresses must be passed as addresses */
-					/*ret = read(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);*/
-					ret = read(stathandle, (void *)((unsigned long) &(tmp_file_stats) << 1), STATSIZE);
+					ret = read(stathandle, &tmp_file_stats, STATSIZE);
 					lseek(stathandle, 0L, SEEK_SET);
 					tmp_file_stats.stat_num_opens += 1; 
 					if(wrk >= stat_audio_length) {
 						tmp_file_stats.stat_num_completions += 1;
 					}
-					/* XXX: David D. addresses must be passed as addresses */
-					/*ret = write(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);*/
-					ret = write(stathandle, (void *)((unsigned long) &(tmp_file_stats) << 1), STATSIZE);
+					ret = write(stathandle, &tmp_file_stats, STATSIZE);
 					close(stathandle);
 				}
 			}
@@ -832,14 +826,10 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 		
 		stathandle = tbOpen((LPSTR)statpath, O_CREAT|O_RDWR);
 		if(stathandle >= 0) {
-			/* XXX: David D. addresses must be passed as addresses */
-			/*ret = read(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);*/
-			ret = read(stathandle, (void *)((unsigned long) &(tmp_file_stats) << 1), STATSIZE);
+			ret = read(stathandle, &tmp_file_stats, STATSIZE);
 			lseek(stathandle, 0L, SEEK_SET);
 			tmp_file_stats.stat_num_copies += 1; 
-			/* XXX: David D. addresses must be passed as addresses */
-			/*ret = write(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);*/
-			ret = write(stathandle, (const void *)((unsigned long) &(tmp_file_stats) << 1), STATSIZE);
+			ret = write(stathandle, &tmp_file_stats, STATSIZE);
 			close(stathandle);
 		}
 		break;

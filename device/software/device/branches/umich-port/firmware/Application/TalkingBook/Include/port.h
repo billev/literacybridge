@@ -11,6 +11,9 @@
 /* 1/16 MS per sample */
 #define msToSample(X) (X<<4)
 
+#define RES_DING_A18_SA "ding.spx"
+#define RES_BIP_A18_SA "bip.spx"
+
 /*
  * Header to facilitate the talkingbook v2 port, please see port.c for
  * information

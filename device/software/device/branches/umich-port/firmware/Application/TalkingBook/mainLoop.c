@@ -1195,9 +1195,7 @@ void loadPackage(int pkgType, const char * pkgName) {
 		}
 		pkg = context.package;
 		if (handle != -1) {
-			/* XXX: David D. addresses must be passed as addresses */
-			/*ret = read(handle,(unsigned long)pkg<<1,sizeof(CtnrPackage)<<1);*/
-			ret = read(handle,(void *)((unsigned long)pkg<<1),sizeof(CtnrPackage)<<1);
+			ret = read(handle,pkg,sizeof(CtnrPackage));
 			close (handle);
 		} else if (flagParse) {
 			// no binary control track, so must parse the text file		
@@ -1220,8 +1218,7 @@ void loadPackage(int pkgType, const char * pkgName) {
 			strcpy(temp,PKG_CONTROL_FILENAME_BIN);
 			handle = tbOpen((LPSTR)(filePath),O_CREAT|O_RDWR);
 			if (handle != -1) {
-				/* XXX: David D. addresses should be passed as addresses */
-				ret = write(handle, (const void *)((unsigned long)pkg<<1), sizeof(CtnrPackage)<<1);
+				ret = write(handle, pkg, sizeof(CtnrPackage));
 				close(handle);
 			}
 		} else {

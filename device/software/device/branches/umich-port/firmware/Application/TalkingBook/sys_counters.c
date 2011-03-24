@@ -33,9 +33,7 @@ void saveSystemCounts() {
 	
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_CREAT|O_RDWR);
 	if (handle != -1) {
-		/* XXX: David D. addresses must be passed as addresses */
-		/*ret = write(handle, (unsigned long)&systemCounts<<1, sizeof(SystemCounts)<<1);*/
-		ret = write(handle, (const void *)((unsigned long)&systemCounts<<1), sizeof(SystemCounts)<<1);
+		ret = write(handle, systemCounts, sizeof(SystemCounts)<<1);
 	} else {
 		if (ret)
 			logString((char *)"failed unlink of system var file",FILE_BUFFER);
@@ -50,9 +48,7 @@ int loadSystemCounts() {
 
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_RDONLY);
 	if (handle != -1) {
-		/* XXX: David D. addresses must be passed as addresses */
-		/*ret = read(handle,(unsigned long)&systemCounts<<1,sizeof(SystemCounts)<<1);*/
-		ret = read(handle,(void *)((unsigned long)&systemCounts<<1),sizeof(SystemCounts)<<1);
+		ret = read(handle, systemCounts, sizeof(SystemCounts)<<1);
 	} else
 		ret = -1;
 	close(handle);

@@ -30,7 +30,6 @@ static int loopClip(void);
 
 int edit(char *lFilePath) {
 		
-	SetSystemClockRate(MAX_CLOCK_SPEED); // might help to catch ending frames without going over; generally better precision
 	/* XXX: David D. Adjusting interfaces to our interfaces */
 	/* Snd_Stop(); */
 	audio_stop(&__gaudio);
@@ -54,7 +53,8 @@ int edit(char *lFilePath) {
    		playDing();
 	} else
 		playBip();
-	SetSystemClockRate(CLOCK_RATE);
+		
+	return 0;
 }
 
 int loopClip(void) {
@@ -83,7 +83,9 @@ int loopClip(void) {
 				SACMGet_A1800FAT_Mode(handle,0);
 				Snd_SACM_PlayFAT(handle, C_CODEC_AUDIO1800);
 				*/
-				audio_play_speex_fd(&__gaudio, handle);
+				audio_destroy_audio(&__gaudio);
+				audio_init_speex_fd(&__gaudio, handle);
+				audio_play(&__gaudio);
 				
 				justStarted = 1;
 			}
@@ -141,7 +143,6 @@ int loopClip(void) {
 					if (clipEndFrame < clipStartFrame)
 						clipEndFrame = clipStartFrame;
 				} else {
-					/* XXX: David D. TODO This looks like a bug, report it */
 					clipStartFrame -= adjustmentFrames;
 					if (clipStartFrame < 0)
 							clipStartFrame = 0;
