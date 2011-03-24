@@ -19,7 +19,6 @@
 #include <stdlib.h>
 
 extern int testPCB(void);
-extern unsigned int SetSystemClockRate(unsigned int);
 /* XXX: David D. No more USB/SD */
 /* extern int SystemIntoUDisk(unsigned int); */
 /* extern INT16 SD_Initial(void); */
@@ -124,8 +123,6 @@ void startUp(void) {
 	char buffer[200];
 	char strCounts[20];
 	int key;
-	
-	SetSystemClockRate(MAX_CLOCK_SPEED); // to speed up initial startup -- set CLOCK_RATE later
 
 	setDefaults();
 	setLED(LED_RED,FALSE);  // red light can be left on after reprog restart
@@ -214,7 +211,6 @@ void startUp(void) {
 //#endif
 	loadSystemNames(); 
 	loadPackage(PKG_SYS,currentSystem());	
-	SetSystemClockRate(CLOCK_RATE); // either set in config file or the default 48 MHz set at beginning of startUp()
 
 	/* XXX: David D. We don't use LPSTR */
 	unlink (/*(LPSTR)*/ (STAT_DIR SNCSV));
@@ -230,9 +226,7 @@ void startUp(void) {
 		ret = open(/*(LPSTR)*/(STAT_DIR SNCSV), O_RDWR|O_CREAT);
 		if (ret >= 0) {
 			bytesToWrite = convertDoubleToSingleChar(line,buffer,TRUE);
-			/* XXX: David D. addresses must be passed as addresses */
-			/* write(ret, (unsigned long)line<<1, bytesToWrite); */
-			write(ret, (const void *)((unsigned long)line<<1), bytesToWrite);
+			write(ret, line, bytesToWrite);
 			close(ret);
 		}
 	}

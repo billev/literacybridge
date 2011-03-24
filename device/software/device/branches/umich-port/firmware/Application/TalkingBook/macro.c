@@ -156,7 +156,7 @@ int nextMacroKey (int keystroke) {
 	if (keystroke == KEY_PLUS || keystroke == KEY_MINUS)
 		return keystroke; // pass through to allow volume change
 
-	if (keystroke == KEY_PLAY && SACM_Status() && !context.isPaused) {
+	if (keystroke == KEY_PLAY && !audio_is_playing(&__gaudio) && !context.isPaused) {
 		secNow = getRTCinSeconds();
 		pause();
 		do {

@@ -47,17 +47,13 @@ void clearStaleLog() {
 			logException(13,0,0); 
 		else {
 			lseek(handle,-LOG_CARRYOVER_BYTES,SEEK_END);
-			/* XXX: David D. addresses must be passed as addresses */
-			/*ret = read(handle,(unsigned long)&buffer<<1,LOG_CARRYOVER_BYTES);*/
-			ret = read(handle,(void *)((unsigned long)&buffer<<1),LOG_CARRYOVER_BYTES);
+			ret = read(handle,buffer,LOG_CARRYOVER_BYTES);
 			close(handle);
 			/* XXX: David D. We don't use LPSTR */
 			unlink(/*(LPSTR)*/(LOG_FILE));
 			handle = tbOpen((LPSTR)(LOG_FILE),O_CREAT|O_RDWR|O_TRUNC);
 			if (handle != -1) {
-				/* XXX: David D. addresses must be passed as addresses */
-				/*write(handle,(unsigned long)&buffer<<1,LOG_CARRYOVER_BYTES);*/
-				write(handle,(const void *)((unsigned long)&buffer<<1),LOG_CARRYOVER_BYTES);
+				write(handle,buffer,LOG_CARRYOVER_BYTES);
 				close(handle);
 			} else
 				logException(13,0,0); 
@@ -132,36 +128,19 @@ int insertStringInFile(const char * filename, char * strText, long posInsert) {
 		if (ret > 0) 
 			*(strText + ret) = '\0';
 		if (posInsert) {
-			/* XXX: David D. addresses must be passed as addresses */
-			/*
-			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,posInsert % MAX_BYTES);
-			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
-			*/
-			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),posInsert % MAX_BYTES);
-			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+			bytesToWrite = read(rHandle,buffer,posInsert % MAX_BYTES);
+			ret = write(wHandle,buffer,bytesToWrite);
 
 			for (i=bytesToWrite; i < posInsert; i+= MAX_BYTES) {
-				/* XXX: David D. addresses must be passed as addresses */
-				/*
-				bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
-				ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
-				*/
-				bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
-				ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+				bytesToWrite = read(rHandle, buffer, MAX_BYTES);
+				ret = write(wHandle, buffer, bytesToWrite);
 			}
 		}
 		bytesToWrite = convertDoubleToSingleChar(tempLine,strText,TRUE);
-		/* XXX: David D. addresses must be passed as addresses */
-		/*
-		ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);		
+		ret = write(wHandle, tempLine, bytesToWrite);		
 		do {
-			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
-			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
-			*/
-		ret = write(wHandle,(const void *)((unsigned long)tempLine<<1),bytesToWrite);		
-		do {
-			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
-			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+			bytesToWrite = read(rHandle, buffer, MAX_BYTES);
+			ret = write(wHandle, buffer, bytesToWrite);
 		} while (bytesToWrite == MAX_BYTES);
 		close(wHandle);
 		close(rHandle);
@@ -283,9 +262,7 @@ int findDeleteStringFromFile(char *path, char *filename, const char * string, BO
 			unequal = strcmp(rCursor, string);
 			if (unequal && shouldDelete) {
 				bytesToWrite = convertDoubleToSingleChar(tempLine,rCursor,TRUE);
-				/* XXX: David D. addresses must be passed as addresses */
-				/*ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);*/
-				ret = write(wHandle,(const void *)((unsigned long)tempLine<<1),bytesToWrite);
+				ret = write(wHandle, tempLine, bytesToWrite);
 			}
 			if (!unequal) {
 				ret = 0;
@@ -344,27 +321,15 @@ void trimFile(char * filePath, unsigned long frameStart, unsigned long frameEnd)
 	
 	/* XXX: David D. We don't use LPSTR */
 	wHandle = open(/*(LPSTR)*/tempFilename,O_CREAT|O_RDWR|O_TRUNC);	
-	/* XXX: David D. addresses must be passed as addresses */
-	/*ret = write(wHandle,(unsigned long)pHeader<<1,6);*/
-	ret = write(wHandle,(const char *)((unsigned long)pHeader<<1),6);
+	ret = write(wHandle, pHeader, 6);
 	
 	for(wordsRemaining=wordsNewSize;wordsRemaining > bigBufferSize;wordsRemaining -= bigBufferSize) {
-		/* XXX: David D. addresses must be passed as addresses */
-		/*
-		ret = read(rHandle,(unsigned long)pBuffer<<1,bigBufferSize<<1);
-		ret = write(wHandle,(unsigned long)pBuffer<<1,bigBufferSize<<1);
-		*/
-		ret = read(rHandle,(void *)((unsigned long)pBuffer<<1),bigBufferSize<<1);
-		ret = write(wHandle,(const void *)((unsigned long)pBuffer<<1),bigBufferSize<<1);
+		ret = read(rHandle, pBuffer, bigBufferSize);
+		ret = write(wHandle, pBuffer, bigBufferSize);
 	}
 	for(;wordsRemaining > 0; wordsRemaining -= wordsPerFrame) {
-		/* XXX: David D. addresses must be passed as addresses */
-		/*
-		ret = read(rHandle,(unsigned long)pBuffer<<1,wordsPerFrame<<1);
-		ret = write(wHandle,(unsigned long)pBuffer<<1,wordsPerFrame<<1);
-		*/
-		ret = read(rHandle,(void *)((unsigned long)pBuffer<<1),wordsPerFrame<<1);
-		ret = write(wHandle,(const void *)((unsigned long)pBuffer<<1),wordsPerFrame<<1);
+		ret = read(rHandle, pBuffer, wordsPerFrame);
+		ret = write(wHandle, pBuffer, wordsPerFrame);
 	}
 	ret = close(rHandle);
 	ret = close(wHandle);
@@ -385,8 +350,7 @@ BOOL readBuffer(int handle, char *buffer, int bytesToRead) {
 	int i, bytesRead, wordsRead;
 	BOOL ret;
 	
-	/* XXX: David D. addresses must be passed as addresses */
-	bytesRead = read(handle, (void *)((unsigned long)buffer<<1),bytesToRead);
+	bytesRead = read(handle, buffer, bytesToRead);
 	wordsRead = bytesRead / 2;
 	
 	if ((bytesRead % 2) == 1) // odd
@@ -482,8 +446,6 @@ INT16 tbOpen(LPSTR path, INT16 open_flag) {
 	//todo: move number of attempts into config file, but have fall back number in define (since config has to be open)
 
 	for (i = 0; i < RETRIES; i++) { 
-		/* XXX: David D. addresses must be passed as addresses */
-		/*handle = open(path, open_flag);*/
 		handle = open((char *)path, open_flag);
 		if (handle < 0)
 			logException(22,(const char *)path,0);
@@ -501,8 +463,6 @@ INT16 tbChdir(LPSTR path) {
 	//todo: move number of attempts into config file, but have fall back number in define (since config has to be open)
 
 	for (i = 0; i < RETRIES; i++) { 
-		/* XXX: David D. addresses must be passed as addresses */
-		/* ret = chdir(path);*/
 		ret = chdir((char *)path);
 		
 		if (ret < 0)
@@ -520,8 +480,6 @@ int fileExists(LPSTR name) {
 	int ret;
 	struct stat_t statbuf;
 	
-	/* XXX: David D. addresses must be passed as addresses */
-	/*ret = stat(name, &statbuf);*/
 	ret = stat((char *)name, &statbuf);
 //	if((ret == 0) && !(statbuf.st_mode & 0x10)) //exists and not a dir
 	if(ret == 0)  // it exists - could be a directory - use line above for file only test
@@ -538,7 +496,6 @@ int dirExists(LPSTR name) {
 	
 //	ret = _findfirst(name, &f_info, D_DIR);
 //	if (ret >= 0)
-	/* XXX: David D. addresses must be passed as addresses */
 	/* XXX: David D. fixed dir check to work with new file_info struct */
 	/*
 	ret = stat(name, &statbuf);
@@ -571,13 +528,9 @@ int fileCopy(char * from, char * to) {
 //			*P_WatchDog_Clear = 0xA005; 	
 			if (!(loopCount % 64))
 				playBip();
-			/* XXX: David D. addresses must be passed as addresses */
-			/*rCount = read(rHandle,(unsigned long)&buffer<<1,COPY_BUFFER_SIZE<<2);*/
-			rCount = read(rHandle,(void *)((unsigned long)&buffer<<1),COPY_BUFFER_SIZE<<2);
+			rCount = read(rHandle, buffer, COPY_BUFFER_SIZE<<2);
 			if (rCount > 0) {
-				/* XXX: David D. addresses must be passed as addresses */
-				/*wCount = write(wHandle,(unsigned long)&buffer<<1,rCount);*/
-				wCount = write(wHandle,(const void *)((unsigned long)&buffer<<1),rCount);
+				wCount = write(wHandle, buffer, rCount);
 				if (wCount == -1 || (wCount != rCount)) {
 					ret = -1;
 					break;

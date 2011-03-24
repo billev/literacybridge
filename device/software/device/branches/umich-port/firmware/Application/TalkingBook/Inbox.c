@@ -635,64 +635,40 @@ int getMetaCat(char *filename, char *category)
 {
 	int ret = 0;
 	long wrk, numfields, fieldlen;
-	unsigned int nret, fd;
+	unsigned int nret;
+	int fd;
 	int fid;
 	unsigned char nfv;
 	unsigned char buf[128];
 	int i, j;
 
-	/* XXX: David D. FIXME */
-	/*fd = open((char *)filename, 0);*/
+	fd = open((char *)filename, 0);
 	if(fd < 0) {
 		return(ret);
 	}
 	
-	/* XXX: David D. addresses must be passed as addresses */
-	/*
-	nret = read(fd, (unsigned long)&wrk <<1, 4);
+	nret = read(fd, &wrk, 4);
 	wrk = lseek(fd, wrk + 4, SEEK_SET);
-	nret = read(fd, (unsigned long)&wrk << 1, 4);
-	*/
-	nret = read(fd, (void *)((unsigned long)&wrk << 1), 4);
-	wrk = lseek(fd, wrk + 4, SEEK_SET);
-	nret = read(fd, (void *)((unsigned long)&wrk << 1), 4);
+	nret = read(fd, &wrk, 4);
 	//printf("meta data version=%ld\n", wrk);
 	if(wrk == 0 || wrk > META_CURRENT_VERSION) {
 		return(ret);
 	}
-	/* XXX: David D. addresses must be passed as addresses */
-	/*nret = read(fd, (unsigned long)&numfields << 1, 4);*/
-	nret = read(fd, (void *)((unsigned long)&numfields << 1), 4);
+	nret = read(fd, &numfields, 4);
 	//printf("num fields=%ld\n", numfields);
 
 	for(i=0; i<(int)numfields; i++) {
-		/* XXX: David D. addresses must be passed as addresses */
-		/*
-		nret = read(fd, (unsigned long)&fid << 1, 2);
+		nret = read(fd, &fid, 2);
 		//printf("\n  field id=%d\n",fid);
-		nret = read(fd, (unsigned long)&fieldlen << 1, 4);
+		nret = read(fd, &fieldlen, 4);
 		//printf("    filed length=%d\n", fieldlen);
-		nret = read(fd, (unsigned long)&nfv << 1, 1);
+		nret = read(fd, &nfv, 1);
 		//printf("    num field values=%d\n", nfv);
 		for(j=0; j<nfv; j++) {
 			short fl;
-			nret = read(fd, (unsigned long)&fl << 1, 2);
+			nret = read(fd, &fl, 2);
 			//printf("    field value length[%d]=%d\n",j,fl);
-			nret = read(fd, (unsigned long)buf << 1, fl);
-			buf[fl] = 0;
-			//printf("    field value[%d]=",j);
-		*/
-		nret = read(fd, (void *)((unsigned long)&fid << 1), 2);
-		//printf("\n  field id=%d\n",fid);
-		nret = read(fd, (void *)((unsigned long)&fieldlen << 1), 4);
-		//printf("    filed length=%d\n", fieldlen);
-		nret = read(fd, (void *)((unsigned long)&nfv << 1), 1);
-		//printf("    num field values=%d\n", nfv);
-		for(j=0; j<nfv; j++) {
-			short fl;
-			nret = read(fd, (void *)((unsigned long)&fl << 1), 2);
-			//printf("    field value length[%d]=%d\n",j,fl);
-			nret = read(fd, (void *)((unsigned long)buf << 1), fl);
+			nret = read(fd, buf, fl);
 			buf[fl] = 0;
 			//printf("    field value[%d]=",j);
 /*			for(k=0; k<fl; k++) {

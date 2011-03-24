@@ -52,3 +52,10 @@ static void button_checker(void *unused) {
 	}
 }
 
+int getCurVoltageSample(void) {
+	return 190;
+}
+
+int f_getcwd() {
+	return NULL;
+}

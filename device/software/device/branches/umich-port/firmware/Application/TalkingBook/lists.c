@@ -289,35 +289,18 @@ int insertIntoList(ListItem *list, long posInsert, char * string) {
 		if (ret > 0) 
 			*(string + ret) = '\0';
 		if (posInsert) {
-			/* XXX: David D. addresses must be passed as addresses */
-			/*
-			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,posInsert % MAX_BYTES);
-			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
+			bytesToWrite = read(rHandle, buffer, posInsert % MAX_BYTES);
+			ret = write(wHandle, buffer, bytesToWrite);
 			for (i=bytesToWrite; i < posInsert; i+= MAX_BYTES) {
-				bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
-				ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
-			}
-			*/
-			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),posInsert % MAX_BYTES);
-			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
-			for (i=bytesToWrite; i < posInsert; i+= MAX_BYTES) {
-				bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
-				ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+				bytesToWrite = read(rHandle, buffer, MAX_BYTES);
+				ret = write(wHandle, buffer, bytesToWrite);
 			}
 		}
 		bytesToWrite = convertDoubleToSingleChar(tempLine,string,TRUE);
-		/* XXX: David D. addresses must be passed as addresses */
-		/*
-		ret = write(wHandle,(unsigned long)tempLine<<1,bytesToWrite);
+		ret = write(wHandle, tempLine, bytesToWrite);
 		do {
-			bytesToWrite = read(rHandle,(unsigned long)buffer << 1,MAX_BYTES);
-			ret = write(wHandle,(unsigned long)buffer << 1,bytesToWrite);
-		} while (bytesToWrite == MAX_BYTES);
-		*/
-		ret = write(wHandle,(const void *)((unsigned long)tempLine<<1),bytesToWrite);
-		do {
-			bytesToWrite = read(rHandle,(void *)((unsigned long)buffer << 1),MAX_BYTES);
-			ret = write(wHandle,(const void *)((unsigned long)buffer << 1),bytesToWrite);
+			bytesToWrite = read(rHandle, buffer, MAX_BYTES);
+			ret = write(wHandle, buffer, bytesToWrite);
 		} while (bytesToWrite == MAX_BYTES);
 		
 		close(wHandle);

@@ -319,9 +319,7 @@ void exchangeStatsCSV() {
 		/* XXX: David D. We don't use LPSTR */
 		rHandle = open(/*(LPSTR)*/filename,O_RDONLY);	
 		if(rHandle >= 0) {
-			/* XXX: David D. addresses should be passed as addresses */
-			/*retCopy = read(rHandle, (UINT32)&tmpstats << 1, sizeof(tmpstats));*/
-			retCopy = read(rHandle, (void *)((UINT32)&tmpstats << 1), sizeof(tmpstats));
+			retCopy = read(rHandle, tmpstats, sizeof(tmpstats));
 			close(rHandle);
 //			sprintf(to,"%s,%lu,%lu,%lu",
 //					file_info.f_name,
@@ -346,9 +344,7 @@ void exchangeStatsCSV() {
 					
 			bytesToWrite = convertDoubleToSingleChar(filename,to,TRUE);
 			
-			/* XXX: David D. addresses must be passed as addresses */
-			/*retCopy = write(hoststats, (UINT32)filename << 1, bytesToWrite);*/
-			retCopy = write(hoststats, (const void *)((UINT32)filename << 1), bytesToWrite);
+			retCopy = write(hoststats, filename, bytesToWrite);
 		}
 			
 		logString(to,FILE_BUFFER);		
@@ -372,9 +368,7 @@ void exchangeStatsCSV() {
 		logString(strLog ,FILE_ASAP);
 		return;
 	}
-	/* XXX: David D. addresses should be used as addresses */
-	/*wrk = read(ret, (unsigned long)&strLog << 1, sizeof(strLog));*/
-	wrk = read(ret, (void *)((unsigned long)&strLog << 1), sizeof(strLog));
+	wrk = read(ret, strLog, sizeof(strLog));
 	close(ret);
 	
 	if(wrk <= 0) {
@@ -439,9 +433,7 @@ void exchangeStatsCSV() {
 		/* XXX: David D. We don't use LPSTR */
 		rHandle = open(/*(LPSTR)*/filename,O_RDONLY);	
 		if(rHandle >= 0) {
-			/* XXX: David D. addresses must be passed as addresses */
-			/*retCopy = read(rHandle, (UINT32)&tmpstats << 1, sizeof(tmpstats));*/
-			retCopy = read(rHandle, (void *)((UINT32)&tmpstats << 1), sizeof(tmpstats));
+			retCopy = read(rHandle, tmpstats, sizeof(tmpstats));
 			close(rHandle);
 //			sprintf(to,"%s,%lu,%lu,%lu",
 //					file_info.f_name,
@@ -466,9 +458,7 @@ void exchangeStatsCSV() {
 					
 			bytesToWrite = convertDoubleToSingleChar(filename,to,TRUE);
 
-			/* XXX: David D.  addresses must be passed as addresses */
-			/*retCopy = write(clientstats, (UINT32)filename << 1, bytesToWrite);*/
-			retCopy = write(clientstats, (const char *)((UINT32)filename << 1), bytesToWrite);
+			retCopy = write(clientstats, filename, bytesToWrite);
 		}	
 				
 		logString(to,FILE_BUFFER);
