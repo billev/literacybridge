@@ -106,8 +106,7 @@ unsigned long getCurrentFrame(void) {
 
 int gotoFrame(unsigned long frameDest) {
 	//const int bytesHeaderSize = 6;
-	/* XXX: David D. FIXME changing to our encodings words per frame */
-	/* unsigned long wordsPerFrame = SACM_A1800_Mode / 800; */
+	/* XXX: David D. changing to our encodings words per frame */
 	unsigned long wordsPerFrame = 24/sizeof(int);
 	unsigned long timeDest;
 	unsigned long sampleDest;
@@ -469,11 +468,6 @@ static int recordAudio(char *pkgName, char *cursor) {
 	if (handle != -1) {
 		setLED(LED_RED,TRUE);
 		playBip();
-		/* XXX: David D. FIXME Switching to our interface */
-		/* 
-		turnAmpOff();
-		Snd_SACM_RecFAT(handle, C_CODEC_AUDIO1800, BIT_RATE);
-		*/
 		audio_destroy_audio(&__gaudio);
 		audio_init_file_fd(&__gaudio, handle);
 		audio_record(&__gaudio);

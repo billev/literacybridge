@@ -319,7 +319,7 @@ void exchangeStatsCSV() {
 		/* XXX: David D. We don't use LPSTR */
 		rHandle = open(/*(LPSTR)*/filename,O_RDONLY);	
 		if(rHandle >= 0) {
-			retCopy = read(rHandle, tmpstats, sizeof(tmpstats));
+			retCopy = read(rHandle, &tmpstats, sizeof(tmpstats));
 			close(rHandle);
 //			sprintf(to,"%s,%lu,%lu,%lu",
 //					file_info.f_name,
@@ -433,7 +433,7 @@ void exchangeStatsCSV() {
 		/* XXX: David D. We don't use LPSTR */
 		rHandle = open(/*(LPSTR)*/filename,O_RDONLY);	
 		if(rHandle >= 0) {
-			retCopy = read(rHandle, tmpstats, sizeof(tmpstats));
+			retCopy = read(rHandle, &tmpstats, sizeof(tmpstats));
 			close(rHandle);
 //			sprintf(to,"%s,%lu,%lu,%lu",
 //					file_info.f_name,

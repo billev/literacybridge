@@ -33,7 +33,7 @@ void saveSystemCounts() {
 	
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_CREAT|O_RDWR);
 	if (handle != -1) {
-		ret = write(handle, systemCounts, sizeof(SystemCounts)<<1);
+		ret = write(handle, &systemCounts, sizeof(SystemCounts));
 	} else {
 		if (ret)
 			logString((char *)"failed unlink of system var file",FILE_BUFFER);
@@ -48,7 +48,7 @@ int loadSystemCounts() {
 
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_RDONLY);
 	if (handle != -1) {
-		ret = read(handle, systemCounts, sizeof(SystemCounts)<<1);
+		ret = read(handle, &systemCounts, sizeof(SystemCounts));
 	} else
 		ret = -1;
 	close(handle);

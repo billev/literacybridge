@@ -38,9 +38,7 @@ int edit(char *lFilePath) {
 	if (handle < 0) 
 		return -1; 
 	clipStartFrame = 0;
-	/* XXX: David D. FIXME Converting to our audio interface */
-	/* clipOriginalLengthFrames = framesFromMSec(Snd_A1800FAT_GetTotalTime(handle)); */
-	clipOriginalLengthFrames = framesFromMSec(sampleToMs(audio_tell(&__gaudio)));
+	clipOriginalLengthFrames = framesFromMSec(audio_tell(&__gaudio));
 	
 	clipEndFrame = clipOriginalLengthFrames;
 	if (loopClip() != -1) {
