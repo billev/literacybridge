@@ -84,7 +84,7 @@ long getRTCinSeconds(void) {
 	/*
 	unsigned long ret, secH;
 	unsigned int secM, sec;
-		
+
 	sec = (unsigned int)*P_Second;
 	secM = (unsigned int)*P_Minute * 60;
 	secH = (unsigned long)*P_Hour * 3600;
@@ -97,6 +97,7 @@ long getRTCinSeconds(void) {
 }
 
 void setLED(unsigned int color, BOOL on) {
+	/*
 	struct GPIO {
 		unsigned int nData;
 		unsigned int nBuffer;
@@ -104,6 +105,7 @@ void setLED(unsigned int color, BOOL on) {
 		unsigned int nAttrib;
 		unsigned int nDrv;
 	};
+	*/
 	/* XXX: David D. FIXME LED ports? */
 	/*
 	struct GPIO *LEDPort = (struct GPIO *)P_IOB_Data;
@@ -118,7 +120,7 @@ void setLED(unsigned int color, BOOL on) {
 
 int restoreVolume(BOOL normalVolume) {
 	int ret;
-	
+
 	if (normalVolume)
 		ret = adjustVolume(NORMAL_VOLUME,FALSE,FALSE);
 	else
@@ -211,8 +213,6 @@ void logVoltage() {
 	char buffer[40];
 	/* XXX: David D. cast to get rid of compiler warning */
 	unsigned long time = (unsigned long)getRTCinSeconds();
-	/* XXX: David D. change of sign cast warning */
-	/* APP_IRAM static unsigned long timeLastSample = -1; */
 	static unsigned long timeLastSample = INT_MAX;
 	
 //	if ((context.isStopped || context.isPaused) && (time > (timeInitialized + 2)))     // 2-3 second delay)
@@ -314,23 +314,16 @@ int waitForButton(int targetedButton) {
 	return pressedButton;
 }
 
-/* XXX: David D. May replace this with our timer wait, its more energy efficient */
 void wait(int t) { //t=time in msec
-	unsigned int i;
-	unsigned long j;
-	/* XXX: David D. FIXME Temp this PLL variable does not exist */
-	unsigned long int cyclesPerMilliSecond = 50000L;
-	/* unsigned long int cyclesPerMilliSecond = (long)(*P_PLLN & 0x3f) * 1000L; // 96000 at 96MHz	 */
-	const unsigned int cyclesPerNOP = 70; // cycles for each no-operation instruction
-	const unsigned int NOPsPerMilliSecond = cyclesPerMilliSecond / cyclesPerNOP; // loop count per millisecond
-	for (i = 0; i < t; i++) 
-		for (j = 0; j < NOPsPerMilliSecond; j++)  
-			/* XXX: David D. FIXME Temp __NOP() solution */
-			__NOP();
-			/* asm("nop\n");  // a CPU no-op instruction to pass the time */
+	timer_req_t req;
+
+	/* Wait for t jiffies */
+	timer_init_req(&req, t, NULL);
+
+	/* Wait for the request to finish */
+	req_finish(&req.req);
 }
 
-/* XXX: David D. FIXME We may need to more than this now... Possibly make into kernel function... */
 void resetSystem(void) {
 	// set watchdog timer to reset device; 0x780A (Watchdog Reset Control Register)
 	// see GPL Programmer's Manual (V1.0 Dec 20,2006), Section 3.5, page 18
@@ -338,22 +331,7 @@ void resetSystem(void) {
 	logString((char *)"Reset",FILE_BUFFER);
 	logRTC();
 
-	/* XXX: David D. TODO instead close the flash buffer */
-	/* flash_close(); */
-	/* fs_safexit(); // should close all open files */
-
-	/* XXX: David D. TODO Must mask all interrupts to ensure system can boot safely */
-
-	/* XXX: David D. TODO P_WatchDog_Ctrl no longer exists, replaced with our wdt functions */
-	/*
-	wdt_stop();
-	wdt_set_timeout(1);
-	wdt_start();
-	*/
-	/*
-	*P_WatchDog_Ctrl &= ~0x4001; // clear bits 14 and 0 for resetting system and time=0.125 sec 	
-	*P_WatchDog_Ctrl |= 0x8004; // set bits 2 and 15 for 0.125 sec, system reset, and enable watchdog
-	*/
+	kernel_reset();
 	while(1);	
 }
 
@@ -387,29 +365,25 @@ static void logKeystroke(int intKey) {
 /* XXX: David D. FIXME This may have to be altered as we now manage wait mode */
 void setOperationalMode(int newmode) {
   if(newmode == (int)P_WAIT) {
+		/* 
+		 * XXX: David D. Kernel controls wait mode, code will have to be reworked
+		 * around this
+		 */
   	// stop();  --- should we see if we can WAIT while paused in an audio file?
 		/* SysIntoWaitMode(); */
     // when leaving wait mode, next instruction is executed, so we return here
     return;
   } else {
-     	// assume calling for sleep or halt
-		/* XXX: David D. Not relevant on new architecture */
-		/* *P_Clock_Ctrl |= 0x200;	//bit 9 KCEN enable IOB0-IOB2 key change interrupt */
+		// assume calling for sleep or halt
 		if (newmode == (int)P_HALT)
 			logString((char *)"Halting",FILE_BUFFER);
 		else // newmode == (int)P_SLEEP
 			logString((char *)"Sleeping",FILE_BUFFER);			
+
 		logRTC();
-	  	stop();
+		stop();
 		setLED(LED_ALL,FALSE);
-	
-		/* XXX: David D. These no longer exist */
-		/*
-		turnAmpOff();
-		turnSDoff();
-		turnNORoff();
-		*/
-	  	
+
 		/* XXX: David D. FIXME This doesn't exist, need kernel WIC controller for it */
 		/*
 		if (newmode == (int)P_HALT) 
@@ -417,10 +391,8 @@ void setOperationalMode(int newmode) {
 		else // newmode == (int)P_SLEEP
 			_SystemOnOff();
 		*/
-	
-		while(1);	
-	    // cpu reset on exiting halt/sleep mode, so nothing below here executes
-     }
+		kernel_deep_sleep();
+	}
 }
 
 /* XXX: David D. The kernel now controls the clock */

@@ -48,7 +48,7 @@ Things we need to port:
 			stat - NOTE: Compatibility layer should just return elm FILINFO and change
 							Cliff's code to use that
 
-	Cliff's audio calls:
+	Cliff's audio calls: -- Done!
 		SACM*
 		Snd_*
 		NOTE: I emailed Cliff about this, I'm unsure of the interface difference, 
@@ -64,17 +64,17 @@ Things we need to remove/defer: -- David Working on
 	Wait-state management - NOTE: I emailed Cliff, further updates coming
 
 Kernel functions we still need to implement:
-	flash_close()
-	wdt_*()
+	wdt_*() - Done, needs testing - David D.
 		wdt_start();
 		wdt_ping();
 		wdt_stop();
 		wdt_set_max();
-	reset()
-	Kernel WIC Controller...
+	reset() - Done, needs testing - David D.
+	Kernel WIC Controller... - Done, needs testing - David D.
+	GPIO
 
 Wrapper functions we need to implement:
-	get_pressed() - returns a bitmask of currently pressed keys - Done (untested) -David D
+	get_pressed() - returns a bitmask of currently pressed keys - Done (untested) - David D
 	unix file wrapper (see file changes) - Done (untested) - David D.
 
 Things we need to figure out:

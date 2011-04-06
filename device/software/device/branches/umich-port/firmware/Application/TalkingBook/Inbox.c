@@ -162,7 +162,7 @@ processNewPackages(void) {
 		ret =_findfirst(/*(LPSTR)*/fbuf, &file_info, D_DIR);
 		
 		for (; ret >= 0; ret = _findnext(&file_info)) {
-			/* XXX: David D. FIXME: This is no longer needed, _findnext filters it */
+			/* XXX: David D. This is no longer needed, _findnext filters it */
 			/* XXX: David D. f_attrib to fattrib, D_DIR to AM_DIR, f_name to fname */
 			/* 
 			if(file_info.f_attrib & D_DIR) {

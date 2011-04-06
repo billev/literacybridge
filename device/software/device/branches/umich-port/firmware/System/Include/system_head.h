@@ -1,6 +1,7 @@
 #ifndef _SYSTEM_HEAD_H_
 #define _SYSTEM_HEAD_H_
 
+/*
 #include ".\System\include\system\GPL162002.h"
 #include ".\System\include\system\GPL162001ISR.h"
 #include ".\System\include\system\SysException.h"
@@ -13,4 +14,6 @@
 
 unsigned int ServiceLoop(void);
 unsigned int CheckSystemStatus(void);
+*/
+
 #endif
