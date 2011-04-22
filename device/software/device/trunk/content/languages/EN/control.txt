@@ -71,12 +71,12 @@ P
      A<:L+[subject-list]
      Ao:~
      A*:Em
-  F:13
-    B:0- [up-down]
   L:P/{[subject-list]} [title-list]
      A^:L-[title-list]
      Av:L+[title-list]
      A*:~
+  F:13
+    B:0- [up-down]
   F:14
     B:0- [right-new help]
       A>:[turnoffon]
@@ -91,7 +91,7 @@ P
     B:0- [turnoffon]
       A$:I[right new help-home begin]
       A<:[right-new help]
-      A>:[center-starts-stops]
+      A>:[start-translation]
       A^:[testPCB]
       Av:Z
       Ao:~
@@ -104,12 +104,36 @@ P
       A^:[turnoffon]
       Av:Z
       Ao:X
-      A*:~    
+      A*:~
+  L:T [translate-list]
+      A^:L-[translate-list]
+      Av:L+[translate-list]
+      A*:El
+      A>:Ln
+      A<:Lo
+      Ao:L? [translate-delete] [translate-branch]
+  F:39
+    B:0- [start-translation]
+      A$:I[right-new help]
+      A<:[turnoffon]
+      A>:[center-starts-stops]
+      A^:~
+      Av:~
+      Ao:[translation-options]
+      A*:~
+  F:40
+    B:0- [translation-options]
+      A<:Lo
+      A>:Ln
+      A^:L-[translate-list]
+      Av:L+[translate-list]
+      Ao:L? [translate-delete] [translate-branch]
+      A*:~
   F:17
     B:0- [center-starts-stops]
       A$:I[right-new help]
       Av:H
-      A<:[turnoffon]
+      A<:[start-translation]
       A>:[star-record]
       A^:~
       Av:~
@@ -248,4 +272,40 @@ P
   F:37
     B:0- [faster]    
   F:38
-    B:0- [slower]    
+    B:0- [slower]
+  F:confirm_wrap_translation
+    B:0- [translate-finish]
+      Ao:W [welcome]
+      A<:[translation-options]
+      A>:~
+      Av:~
+      A^:~
+      A*:~
+  F:confirm_delete_translation
+    B:0- [translate-delete]
+      Ao:Dt [translation-options]
+      A<:[translation-options]
+      A>:~
+      Av:~
+      A^:~
+      A*:~
+  F:delete_or_wrap_translation
+    B:0- [translate-branch]
+      A>:[translate-delete]
+      A<:[translate-finish]
+      A*:[translation-options]
+      Av:~
+      A^:~
+      Ao:~
+  F:wrap_translation
+    B:0- [wrap-translation]
+  F:no_translation
+    B:0- [no-translation]
+  F:sorry_not_translated
+    B:0- [not-translated]
+  F:pls_record_translation
+    B:0- [pls-record-translation]
+  F:new_recording
+    B:0- [new-recording]
+  F:original_recording
+    B:0- [orig-recording]
