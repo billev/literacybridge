@@ -119,8 +119,8 @@ P
       A>:[center-starts-stops]
       A^:~
       Av:~
-      Ao:[translation-options]
-      A*:~
+      Ao:Lc [translation-options]
+      A*:L! [translation-options]
   F:40
     B:0- [translation-options]
       A<:Lo
