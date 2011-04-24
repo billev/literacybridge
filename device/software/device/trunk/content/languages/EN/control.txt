@@ -16,7 +16,7 @@ P
       A*:Em
       Ao:[context-menu]
       Ao|:<%+>
-  F:bell
+  F:0
     B:0-1000. [short-bell]
   F:1
     B:0- [record prompt]
