@@ -44,7 +44,7 @@ P
       A^:~
       Av:~
       Ao:<%+>
-      A*:~
+      A*:[start-translation]
   F:11
     B:0- [right-subjects]
       A>:L-[subject-list]
@@ -74,6 +74,8 @@ P
       Ao:L? [translate-delete] [translate-branch]
   F:39
     B:0- [start-translation]
+      A>:[start-translation]
+      A<:[start-translation]
       A^:~
       Av:~
       Ao:Lc [translation-options]
@@ -157,3 +159,43 @@ P
     B:0- [new-recording]
   F:original_recording
     B:0- [orig-recording]
+  F:AGRIC
+    B:0-
+  F:AGRIC-LONG
+    B:0-
+  F:BIZ
+    B:0-
+  F:BIZ-LONG
+    B:0-
+  F:EDU
+    B:0-
+  F:EDU-LONG
+    B:0-
+  F:FISH
+    B:0-
+  F:FISH-LONG
+    B:0-
+  F:HEALTH
+    B:0-
+  F:HEALTH-LONG
+    B:0-
+  F:$HELP
+    B:0-
+  F:$HELP-LONG
+    B:0-
+  F:LIVESTOCK
+    B:0-
+  F:LIVESTOCK-LONG
+    B:0-
+  F:OTHER
+    B:0-
+  F:OTHER-LONG
+    B:0-
+  F:STORY
+    B:0-
+  F:STORY-LONG
+    B:0-
+  F:USERS
+    B:0-
+  F:USERS-LONG
+    B:0-
