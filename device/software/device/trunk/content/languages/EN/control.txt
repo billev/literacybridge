@@ -36,6 +36,22 @@ P
    B:0- [file now copied]
   F:9
    B:0- [press up for msg star to record]
+  F:wrap_translation
+    B:0- [wrap-translation]
+  F:no_translation
+    B:0- [no-translation]
+  F:sorry_not_translated
+    B:0- [not-translated]
+  F:pls_record_translation
+    B:0- [pls-record-translation]
+  F:new_recording
+    B:0- [new-recording]
+  F:original_recording
+    B:0- [orig-recording]
+  F:please_wait
+    B:0- [please-wait]
+  F:overwrite_warning
+    B:0- [overwrite-warning]
   F:10
     B:0- [welcome]
       A$:[right-subjects]
@@ -147,18 +163,6 @@ P
       Av:~
       A^:~
       Ao:~
-  F:wrap_translation
-    B:0- [wrap-translation]
-  F:no_translation
-    B:0- [no-translation]
-  F:sorry_not_translated
-    B:0- [not-translated]
-  F:pls_record_translation
-    B:0- [pls-record-translation]
-  F:new_recording
-    B:0- [new-recording]
-  F:original_recording
-    B:0- [orig-recording]
   F:AGRIC
     B:0-
   F:AGRIC-LONG
