@@ -4,18 +4,22 @@ TIME-PRECISION:128
 P
       A!:[welcome]
       Ah:<%>
-      A+|:I[faster] S+
-      A-|:I[slower] S-
+      Ah_:H
+      A+_:I[faster] SM
+      A-_:I[slower] S-
       A+:I[louder] V+
       A-:I[quieter] V-
       Ap:P
+      Ap_:H
       A^:L-[title-list]
       Av:L+[title-list]
       A<:L+[subject-list]
       A>:L-[subject-list]
+      A>_:SM
+      A<_:T-7000
       A*:Em
       Ao:[context-menu]
-      Ao|:<%+>
+      Ao_:<%+>
   F:0
     B:0-1000. [short-bell]
   F:1
@@ -59,15 +63,18 @@ P
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%+>
-      A*:[start-translation]
+      Ao:~
+      Ao_:<%+>
+      A*:~
+      A*_:[start-translation]
   F:11
     B:0- [right-subjects]
       A>:L-[subject-list]
       A<:L+[subject-list]
       A^:~
       Av:~
-      Ao:<%+>
+      Ao:~
+      Ao_:<%+>
       A*:~
   L:L [subject-list]
      Ah:<%>
