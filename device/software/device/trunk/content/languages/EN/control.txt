@@ -77,6 +77,7 @@ P
       Ao_:<%+>
       A*:~
   L:L [subject-list]
+     A$:I[right-for-different]
      Ah:<%>
      A>:L-[subject-list]
      A<:L+[subject-list]
@@ -146,6 +147,8 @@ P
     B:0- [faster]    
   F:38
     B:0- [slower]
+  F:41
+    B:0- [right-for-different]
   F:confirm_wrap_translation
     B:0- [translate-finish]
       Ao:W [welcome]
