@@ -15,13 +15,43 @@ P
       Av:L+[title-list]
       A<:L+[subject-list]
       A>:L-[subject-list]
-      A>_:SM
+      A>_:T+60000
       A<_:T-7000
       A*:Em
-      Ao:[context-menu]
+      Ao:[context-msg]
       Ao_:<%+>
   F:0
     B:0-1000. [short-bell]
+  F:10
+    B:0- [welcome]
+      A$:[right-subjects]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:~
+      Ao_:<%+>
+      A*:~
+      A*_:[expert mode]
+  F:11
+    B:0- [right-subjects]
+      A>:L-[subject-list]
+      A<:L+[subject-list]
+      A^:~
+      Av:~
+      Ao:~
+      Ao_:<%+>
+      A*:~
+  F:41
+    B:0- [right-for-different]
+  F:35
+    B:0- [louder]
+  F:36
+    B:0- [quieter]
+  F:37
+    B:0- [faster]    
+  F:38
+    B:0- [slower]
   F:1
     B:0- [record prompt]
   F:2
@@ -29,7 +59,7 @@ P
   F:3
     B:0- [recording complete found in-]
   F:4
-   B:0-  [turn me off]
+   B:0-  [batts almost dead]
   F:5
    B:0- [empty-list]
   F:6
@@ -39,7 +69,7 @@ P
   F:8
    B:0- [file now copied]
   F:9
-   B:0- [press up for msg star to record]
+   B:0- [up for msg,right for else]
   F:wrap_translation
     B:0- [wrap-translation]
   F:no_translation
@@ -56,39 +86,17 @@ P
     B:0- [please-wait]
   F:overwrite_warning
     B:0- [overwrite-warning]
-  F:10
-    B:0- [welcome]
-      A$:[right-subjects]
-      A>:L-[subject-list]
-      A<:L+[subject-list]
-      A^:~
-      Av:~
-      Ao:~
-      Ao_:<%+>
-      A*:~
-      A*_:[start-translation]
-  F:11
-    B:0- [right-subjects]
-      A>:L-[subject-list]
-      A<:L+[subject-list]
-      A^:~
-      Av:~
-      Ao:~
-      Ao_:<%+>
-      A*:~
   L:L [subject-list]
      A$:I[right-for-different]
      Ah:<%>
      A>:L-[subject-list]
      A<:L+[subject-list]
-     Ao:~
+     Ao:[context-subject]
      A*:Em
   L:P/{[subject-list]} [title-list]
      A^:L-[title-list]
      Av:L+[title-list]
      A*:~
-  F:13
-    B:0- [up-down]
   L:T [translate-list]
       A^:L-[translate-list]
       Av:L+[translate-list]
@@ -96,83 +104,6 @@ P
       A>:Ln
       A<:Lo
       Ao:L? [translate-delete] [translate-branch]
-  F:39
-    B:0- [start-translation]
-      A>:[start-translation]
-      A<:[start-translation]
-      A^:~
-      Av:~
-      Ao:Lc [translation-options]
-      A*:L! [translation-options]
-  F:40
-    B:0- [translation-options]
-      A<:Lo
-      A>:Ln
-      A^:L-[translate-list]
-      Av:L+[translate-list]
-      Ao:L? [translate-delete] [translate-branch]
-      A*:~
-  F:29
-    B:0- [context-menu]
-      A>:[context-copy]
-      A<:[context-delete]
-  F:30
-    B:0- [context-copy]
-      A>:[context-delete]
-      A<:[context-menu]
-      Ao:[copy1]
-  F:31
-    B:0- [copy1]
-      Ao:[copy2]
-  F:32
-    B:0- [copy2]
-      Ao:C{[title-list]} [subject-list]
-  F:33
-    B:0- [context-delete]
-      A<:[context-copy]
-      A>:[context-menu]
-      Av:[context-trim]
-      Ah:<%>
-      Ao:D{[title-list]} [subject-list]
-  F:34
-    B:0- [context-trim]
-      A>:[context-menu]
-      A<:[context-delete]
-      Ao:M{[title-list]} 
-  F:35
-    B:0- [louder]
-  F:36
-    B:0- [quieter]
-  F:37
-    B:0- [faster]    
-  F:38
-    B:0- [slower]
-  F:41
-    B:0- [right-for-different]
-  F:confirm_wrap_translation
-    B:0- [translate-finish]
-      Ao:W [welcome]
-      A<:[translation-options]
-      A>:~
-      Av:~
-      A^:~
-      A*:~
-  F:confirm_delete_translation
-    B:0- [translate-delete]
-      Ao:Dt [translation-options]
-      A<:[translation-options]
-      A>:~
-      Av:~
-      A^:~
-      A*:~
-  F:delete_or_wrap_translation
-    B:0- [translate-branch]
-      A>:[translate-delete]
-      A<:[translate-finish]
-      A*:[translation-options]
-      Av:~
-      A^:~
-      Ao:~
   F:AGRIC
     B:0-
   F:AGRIC-LONG
@@ -213,3 +144,205 @@ P
     B:0-
   F:USERS-LONG
     B:0-
+  F:FAVORITES
+    B:0-
+  F:FAVORITES-LONG
+    B:0-
+  F:29
+    B:0- [context-msg]
+      A>:[record ideas about msg, circle]
+      A<:[context-trim]
+  F:65
+    B:0- [record ideas about msg, circle]
+      A>:[to take survey, circle]
+      A<:[context-msg]
+      Ao:[not working]
+  F:63
+    B:0- [to take survey, circle]
+      A>:[context-copy]
+      A<:[record ideas about msg, circle] 
+      Ao:[up for apply;down for useless;or home]
+  F:62
+    B:0- [up for apply;down for useless;or home]
+      A>:[add-favorite]
+      A<:[context-delete]
+      A^:[thanks for feedback]
+      Av:[thanks for feedback]
+  F:61
+    B:0- [thanks for feedback]
+      A$:<%+>
+  F:30
+    B:0- [context-copy]
+      A>:[context-delete]
+      A<:[to take survey, circle]
+      Ao:[copy1]
+  F:31
+    B:0- [copy1]
+      Ao:[copy2]
+  F:32
+    B:0- [copy2]
+      Ao:C{[title-list]} [subject-list]
+  F:33
+    B:0- [context-delete]
+      A<:[context-copy]
+      A>:[add-favorite]
+      Ao:D{[title-list]} [subject-list]
+  F:13
+    B:0- [add-favorite]
+      A>:[to move this msg to first, circle]
+      A<:[context-delete]
+      Ao:[not working]
+  F:64
+    B:0- [to move this msg to first, circle]
+      A>:[context-trim]
+      A<:[add-favorite]
+      Ao:[not working]
+  F:34
+    B:0- [context-trim]
+      A>:[context-msg]
+      A<:[to move this msg to first, circle]
+      Ao:M{[title-list]} 
+
+  F:66
+    B:0- [context-subject]
+      A>:[remove all msgs this subj, circle]
+      A<:[set this subject as first, circle]
+      Ao:[not working]
+   F:59
+    B:0- [remove all msgs this subj, circle]
+      A>:[remove this subject, circle]
+      A<:[set this subject as first, circle]
+      Ao:[not working]
+   F:58
+    B:0- [remove this subject, circle]
+      A>:[copy all subj msgs, circle]
+      A<:[remove all msgs this subj, circle]
+      Ao:[not working]
+  F:60
+    B:0- [copy all subj msgs, circle]
+      A>:[set this subject as first, circle]
+      A<:[remove this subject, circle]
+      Ao:[not working]
+  F:57
+    B:0- [set this subject as first, circle]
+      A>:[context-subject]
+      A<:[copy all subj msgs, circle]
+      Ao:[not working]
+
+
+
+
+  F:17
+    B:0- [stop start w/center]
+  F:16
+    B:0- [wake with center]
+  F:28
+    B:0- [to sleep]
+  F:26
+    B:0- [black circle when playing a msg]
+  F:20
+    B:0- [to quiet]
+  F:21
+    B:0- [to loud] 
+  F:24
+    B:0- [batts quickly used when loud]
+  F:18 
+    B:0- [to record]
+  F:19
+    B:0- [pause record]
+  F:22
+    B:0- [to slower]
+  F:23
+    B:0- [to faster]
+  F:25
+    B:0- [hold left to repeat]
+  F:54
+    B:0- [skip-right]
+  F:27
+    B:0- [to change languages]
+  F:14 
+    B:0- [copy subject]
+  F:55
+    B:0- [to clear msgs in subject]
+
+
+
+
+  F:47
+    B:0- [expert mode]
+      A$:I[right arrow to hear options]
+      A>:[copy TB]
+      A<:[set start language]
+  F:44
+    B:0- [copy TB]
+      A>:[copy language]
+      A<:[expert mode]     
+      Ao:Cl[expert mode]
+  F:42
+    B:0- [copy language]
+      A>:[change language]
+      A<:[copy TB]     
+      Ao:[not working]
+  F:46
+    B:0- [change language]
+      Ao:L! [translation-options]
+      A>:[new language]
+      A<:[copy language]     
+  F:39
+    B:0- [new language]
+      A>:[set start language]
+      A<:[change language]
+      A^:~
+      Av:~
+      Ao:Lc [translation-options]
+  F:45
+    B:0- [set start language]
+      A>:[expert mode]
+      A<:[new language]     
+      Ao:[not working]
+  F:40
+    B:0- [translation-options]
+      A<:Lo
+      A>:Ln
+      A^:L-[translate-list]
+      Av:L+[translate-list]
+      Ao:L? [translate-delete] [translate-branch]
+      A*:~
+  F:confirm_wrap_translation
+    B:0- [translate-finish]
+      Ao:W [welcome]
+      A<:[translation-options]
+      A>:~
+      Av:~
+      A^:~
+      A*:~
+  F:confirm_delete_translation
+    B:0- [translate-delete]
+      Ao:Dt [translation-options]
+      A<:[translation-options]
+      A>:~
+      Av:~
+      A^:~
+      A*:~
+  F:delete_or_wrap_translation
+    B:0- [translate-branch]
+      A>:[translate-delete]
+      A<:[translate-finish]
+      A*:[translation-options]
+      Av:~
+      A^:~
+      Ao:~
+  F:53
+    B:0- [system update-thinking]
+  F:43
+    B:0- [not working]
+  F:48
+    B:0- [congrats]
+  F:49
+    B:0- [correct; try another]
+  F:50
+    B:0- [sorry; try again]
+  F:51
+    B:0- [black circle to select; or right]
+  F:52
+    B:0- [right arrow to hear options]
