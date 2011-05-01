@@ -205,29 +205,28 @@ P
 
   F:66
     B:0- [context-subject]
-      A>:[remove all msgs this subj, circle]
+      A>:[copy all subj msgs, circle]  
       A<:[set this subject as first, circle]
-      Ao:[not working]
+      Ao:~
+  F:60
+    B:0- [copy all subj msgs, circle]
+      A>:[remove all subj msgs, circle]
+      A<:[set this subject as first, circle]
+      Ao:[copy1]
    F:59
-    B:0- [remove all msgs this subj, circle]
+    B:0- [remove all subj msgs, circle]
       A>:[remove this subject, circle]
-      A<:[set this subject as first, circle]
+      A<:[copy all subj msgs, circle]
       Ao:[not working]
    F:58
     B:0- [remove this subject, circle]
-      A>:[copy all subj msgs, circle]
-      A<:[remove all msgs this subj, circle]
-      Ao:[not working]
-  F:60
-    B:0- [copy all subj msgs, circle]
       A>:[set this subject as first, circle]
-      A<:[remove this subject, circle]
+      A<:[remove all subj msgs, circle]
       Ao:[not working]
   F:57
     B:0- [set this subject as first, circle]
       A>:[context-subject]
-      A<:[copy all subj msgs, circle]
-      Ao:[not working]
+      A<:[remove this subject, circle]
 
 
 
