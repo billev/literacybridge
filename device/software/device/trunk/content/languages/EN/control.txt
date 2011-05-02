@@ -161,13 +161,13 @@ P
     B:0- [to take survey, circle]
       A>:[context-copy]
       A<:[record ideas about msg, circle] 
-      Ao:[up for apply;down for useless;or home]
+      Ao:Yt {[title-list]} [up for apply;down for useless;or home]
   F:62
     B:0- [up for apply;down for useless;or home]
       A>:[add-favorite]
       A<:[context-delete]
-      A^:[thanks for feedback]
-      Av:[thanks for feedback]
+      A^:Ya {[title-list]} [thanks for feedback]
+      Av:Yu {[title-list]} [thanks for feedback]
   F:61
     B:0- [thanks for feedback]
       A$:<%+>
