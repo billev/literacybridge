@@ -32,7 +32,7 @@ P
       Ao:~
       Ao_:<%+>
       A*:~
-      A*_:[expert mode]
+      A^_:[expert mode]
   F:11
     B:0- [right-subjects]
       A>:L-[subject-list]
