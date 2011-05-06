@@ -156,7 +156,7 @@ P
     B:0- [record ideas about msg, circle]
       A>:[to take survey, circle]
       A<:[context-msg]
-      Ao:[not working]
+      Ao:Ef{[title-list]}
   F:63
     B:0- [to take survey, circle]
       A>:[context-copy]
