@@ -353,12 +353,14 @@ BOOL readBuffer(int handle, char *buffer, int bytesToRead) {
 	bytesRead = read(handle, buffer, bytesToRead);
 	wordsRead = bytesRead / 2;
 	
+	/* XXX Zach Renner: We like our strings to be characters arrays, not word arrays */
+	/*
 	if ((bytesRead % 2) == 1) // odd
 		*(buffer + wordsRead*2) = *(buffer + wordsRead) & 0x00FF;	//   
 	for (i=wordsRead-1; i>=0; i--) {
 		*(buffer + (i*2+1)) = *(buffer + i)>>8;	// right shift word by a byte to get MSByte
 		*(buffer + i*2) = *(buffer + i) & 0x00FF;	// save LSByte
-	} 
+	} */
 
 	if (bytesRead < bytesToRead) {					// if we just read the last chunk of data from file
 		*(buffer + bytesRead) = 0x00;			
@@ -444,7 +446,6 @@ INT16 tbOpen(LPSTR path, INT16 open_flag) {
 	int i;
 	INT16 handle;
 	//todo: move number of attempts into config file, but have fall back number in define (since config has to be open)
-
 	for (i = 0; i < RETRIES; i++) { 
 		handle = open((char *)path, open_flag);
 		if (handle < 0)
