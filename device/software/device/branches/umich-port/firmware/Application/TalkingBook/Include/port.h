@@ -11,7 +11,7 @@
 /* 1/16 MS per sample */
 #define msToSample(X) (X<<4)
 
-#define RES_DING_A18_SA "ding.spx"
+#define RES_DING_A18_SA "/system/ding.raw"
 #define RES_BIP_A18_SA "bip.spx"
 
 /*

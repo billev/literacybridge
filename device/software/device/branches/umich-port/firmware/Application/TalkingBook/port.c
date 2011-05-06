@@ -54,4 +54,5 @@ static void button_checker(void *unused) {
 
 int getCurVoltageSample(void) {
 	return 190;
+	return 225;
 }

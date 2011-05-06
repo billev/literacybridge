@@ -121,15 +121,16 @@ void setDefaults(void) {
 
 void startUp(void) {
 	char buffer[200];
-	char strCounts[20];
+	char strCounts[32];
 	int key;
 
 	setDefaults();
 	setLED(LED_RED,FALSE);  // red light can be left on after reprog restart
 	setLED(LED_GREEN,TRUE);  // red light can be left on after reprog restart
-	
+
 	//to stop user from wondering if power is on and possibly cycling too quickly,
 	playDing();  // it is important to play a sound immediately 
+
 //	cleanUpOldRevs();	
 	key = keyCheck(1);  // long keycheck 
 	
@@ -171,8 +172,10 @@ void startUp(void) {
 	}
 	/* XXX: David D. Not sure what this does, but we're managing the kernel now */
 	/* SysDisableWaitMode(WAITMODE_CHANNEL_A); */
-	adjustVolume(NORMAL_VOLUME,FALSE,FALSE);
-	adjustSpeed(NORMAL_SPEED,FALSE);
+	/* XXX: Zach R. We can't set volume/speed before playing a sound, as the audio isn't initialied.
+			Once the ding plays properly, doing this would be fine */
+	/* adjustVolume(NORMAL_VOLUME,FALSE,FALSE); */
+	/* adjustSpeed(NORMAL_SPEED,FALSE); */
 	loadDefaultUserPackage();
 	if (MACRO_FILE)	
 		loadMacro();
@@ -263,7 +266,6 @@ int loadConfigFile(void) {
 	char buffer[READ_LENGTH+1];
 	int attempt, goodPass;
 	const int MAX_RETRIES = 3;
-
 	ret = 0;	
 	buffer[READ_LENGTH] = '\0'; //prevents readLine from searching for \n past buffer
 	
@@ -384,17 +386,18 @@ static void loadDefaultUserPackage(void) {
 }
 
 /* XXX: David D. CHECK: Now managed by kernel */
-/*
+/* XXX: Zach R. vCur_1 needs to be set for "sdcard write" */
 void initVoltage()
 {
 	extern void set_voltmaxvolume();
 	APP_IRAM static unsigned long timeInitialized = 0xFFFFFFFF;
 	int i, j, k, sumv;
-
+	/*
 	// init battery voltage sensing	
 	*P_ADC_Setup |= 0x8000;  // enable ADBEN
 	*P_MADC_Ctrl &= ~0x05;  // clear CHSEL (channel select)
 	*P_MADC_Ctrl |=  0x02;  // select LINEIN1 
+	*/
 	timeInitialized = 0;
 
 	for(i=0, j=0, sumv=0; i<8; ) {	//establish startup voltage
@@ -422,9 +425,8 @@ void initVoltage()
 		refuse_lowvoltage(1);
 		// not reached
 	}
-	set_voltmaxvolume();
+	//set_voltmaxvolume();
 }
-*/
 
 unsigned int GetMemManufacturer()
 {
