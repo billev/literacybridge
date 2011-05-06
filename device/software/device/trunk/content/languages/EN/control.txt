@@ -298,7 +298,7 @@ P
     B:0- [set start language]
       A>:[expert mode]
       A<:[new language]     
-      Ao:[not working]
+      Ao:O
   F:40
     B:0- [translation-options]
       A<:Lo
