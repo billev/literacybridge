@@ -196,7 +196,7 @@ P
     B:0- [to move this msg to first, circle]
       A>:[context-trim]
       A<:[add-favorite]
-      Ao:[not working]
+      Ao:O{[title-list]}
   F:34
     B:0- [context-trim]
       A>:[context-msg]
@@ -217,16 +217,17 @@ P
     B:0- [remove all subj msgs, circle]
       A>:[remove this subject, circle]
       A<:[copy all subj msgs, circle]
-      Ao:[not working]
+      Ao:Dm{[subject-list]}
    F:58
     B:0- [remove this subject, circle]
       A>:[set this subject as first, circle]
       A<:[remove all subj msgs, circle]
-      Ao:[not working]
+      Ao:D{[subject-list]}
   F:57
     B:0- [set this subject as first, circle]
       A>:[context-subject]
       A<:[remove this subject, circle]
+      Ao:O{[subject-list]}
 
 
 
