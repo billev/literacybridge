@@ -191,7 +191,7 @@ P
     B:0- [add-favorite]
       A>:[to move this msg to first, circle]
       A<:[context-delete]
-      Ao:[not working]
+      Ao:*{[title-list]}
   F:64
     B:0- [to move this msg to first, circle]
       A>:[context-trim]
