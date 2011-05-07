@@ -12,6 +12,7 @@
 #include "Include/audio.h"
 #include "Include/metadata.h"
 #include "Include/filestats.h"
+#include "Include/startup.h"
 
 APP_IRAM unsigned long stat_audio_length;
 APP_IRAM unsigned int  stat_pkg_type;
@@ -388,6 +389,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 	char *cp, category[9];
 	long metadata_start;
 	long metadata_numfields;
+	long previousBitRate;
 
 	if (strcmp(cursor,TRANSLATE_TEMP_DIR) == 0) {
 		strcpy(filepath,LANGUAGES_PATH);
@@ -395,6 +397,8 @@ static int recordAudio(char *pkgName, char *cursor) {
 		strcat(filepath,"/");
 		strcat(filepath,pkgName);
 		strcat(filepath,AUDIO_FILE_EXT);
+		previousBitRate = BIT_RATE;
+		BIT_RATE = MAX_BIT_RATE;
 	} else if (*cursor == SYS_MSG_CHAR) {
 		strcpy(filepath,LANGUAGES_PATH);
 		catLangDir(filepath);	
@@ -561,6 +565,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 	} else {
 		logException(16, filepath,RESET);  //can't open file for new recording
 	}
+	BIT_RATE = previousBitRate;
 	return ret;
 }	
 
