@@ -70,6 +70,8 @@ P
    B:0- [file now copied]
   F:9
    B:0- [up for msg,right for else]
+  F:53
+    B:0- [system update-thinking]
   F:wrap_translation
     B:0- [wrap-translation]
   F:no_translation
@@ -277,12 +279,12 @@ P
     B:0- [copy TB]
       A>:[copy language]
       A<:[expert mode]     
-      Ao:Cl[expert mode]
+      Ao:Cd[expert mode]
   F:42
     B:0- [copy language]
       A>:[change language]
       A<:[copy TB]     
-      Ao:[not working]
+      Ao:Cl[expert mode]
   F:46
     B:0- [change language]
       Ao:L! [translation-options]
@@ -332,8 +334,6 @@ P
       Av:~
       A^:~
       Ao:~
-  F:53
-    B:0- [system update-thinking]
   F:43
     B:0- [not working]
   F:48
