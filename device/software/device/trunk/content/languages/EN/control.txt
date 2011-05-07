@@ -277,12 +277,12 @@ P
     B:0- [copy TB]
       A>:[copy language]
       A<:[expert mode]     
-      Ao:Cl[expert mode]
+      Ao:Cd[expert mode]
   F:42
     B:0- [copy language]
       A>:[change language]
       A<:[copy TB]     
-      Ao:[not working]
+      Ao:Cl[expert mode]
   F:46
     B:0- [change language]
       Ao:L! [translation-options]
