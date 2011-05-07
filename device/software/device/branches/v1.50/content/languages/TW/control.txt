@@ -220,13 +220,13 @@ P
       Ao:~
       A*:~
   F:29
-    B:0- [context-menu]
+    B:0- [context-msg]
       A>:[context-copy]
       A<:[context-delete]
   F:30
     B:0- [context-copy]
       A>:[context-delete]
-      A<:[context-menu]
+      A<:[context-msg]
       Ao:[copy1]
   F:31
     B:0- [copy1]
@@ -237,13 +237,13 @@ P
   F:33
     B:0- [context-delete]
       A<:[context-copy]
-      A>:[context-menu]
+      A>:[context-msg]
       Av:[context-trim]
       Ah:<%>
       Ao:D{[title-list]} [subject-list]
   F:34
     B:0- [context-trim]
-      A>:[context-menu]
+      A>:[context-msg]
       A<:[context-delete]
       Ao:M{[title-list]} 
   F:35
