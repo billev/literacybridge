@@ -70,6 +70,8 @@ P
    B:0- [file now copied]
   F:9
    B:0- [up for msg,right for else]
+  F:53
+    B:0- [system update-thinking]
   F:wrap_translation
     B:0- [wrap-translation]
   F:no_translation
@@ -332,8 +334,6 @@ P
       Av:~
       A^:~
       Ao:~
-  F:53
-    B:0- [system update-thinking]
   F:43
     B:0- [not working]
   F:48
