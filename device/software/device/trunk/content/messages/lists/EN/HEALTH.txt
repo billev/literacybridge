@@ -1,4 +1,0 @@
-mansugo#HEALTH
-medications-user#HEALTH
-breastmilk#HEALTH
-sanitation-user#HEALTH
