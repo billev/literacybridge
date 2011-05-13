@@ -391,13 +391,13 @@ static int recordAudio(char *pkgName, char *cursor) {
 	long metadata_numfields;
 	long previousBitRate;
 
+	previousBitRate = BIT_RATE; // set to return BIT_RATE to orig value at end of fct, in case BIT_RATE is changed below
 	if (strcmp(cursor,TRANSLATE_TEMP_DIR) == 0) {
 		strcpy(filepath,LANGUAGES_PATH);
 		strcat(filepath,TRANSLATE_TEMP_DIR);
 		strcat(filepath,"/");
 		strcat(filepath,pkgName);
 		strcat(filepath,AUDIO_FILE_EXT);
-		previousBitRate = BIT_RATE;
 		BIT_RATE = MAX_BIT_RATE;
 	} else if (*cursor == SYS_MSG_CHAR) {
 		strcpy(filepath,LANGUAGES_PATH);
