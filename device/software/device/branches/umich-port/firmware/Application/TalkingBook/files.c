@@ -282,11 +282,19 @@ long getFilePosition() {
 }
 
 void trimFile(char * filePath, unsigned long frameStart, unsigned long frameEnd) {
+	#ifdef __CC_ARM
+	const char tempFilename[15] = "a:/trimmed.tmp";
+	#define wordsHeaderSize 3
+	#define wordsPerFrame  40
+	#define bigBufferSize wordsPerFrame * 10
+	#define sacm_mode 0x7d00
+	#else
 	const char tempFilename[15] = "a:/trimmed.tmp";
 	const int wordsHeaderSize = 3;
 	const int wordsPerFrame = 40;
 	const int bigBufferSize = wordsPerFrame * 10;
 	const int sacm_mode = 0x7d00;
+	#endif
 	int wHandle,rHandle;
 	int bufferBig[bigBufferSize];
 	int *pBuffer;

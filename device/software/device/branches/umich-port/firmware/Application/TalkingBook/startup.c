@@ -398,10 +398,17 @@ unsigned int GetMemManufacturer()
 {
 	flash  FL = {0};
 	int fl_size = USB_Flash_init((flash *)0, 0);
+	#ifdef __CC_ARM
+	int *flash_execution_buf = malloc(fl_size*sizeof(int));
+	#else
 	int flash_execution_buf[fl_size];
-	
+	#endif
 	FL.flash_exe_buf = (void *) &flash_execution_buf[0];
 	USB_Flash_init(&FL, 1);
+	
+	#ifdef __CC_ARM
+	free(flash_execution_buf);
+	#endif
 	
 	return(FL.Flash_type);
 
