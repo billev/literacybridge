@@ -9,21 +9,17 @@
 #include "Include/audio.h"
 #include "Include/pkg_ops.h"
 
-/* XXX: David D. For INT_MAX */
-#include <limits.h>
-
 void packageRecording(char * pkgName, char *listName) {
 	// adds name to current subject list
 	ListItem *tempList;	
 	long pos;
 
 	tempList = &context.package->lists[1]; // todo: this is a hack -- I shouldn't know it is list[1] 
-	/* XXX: David D. -1 to MAX_INT */
-	if (tempList->currentFilePosition == INT_MAX || strlen(tempList->currentString) == 0)
+	if (tempList->currentFilePosition == -1 || strlen(tempList->currentString) == 0)
 		pos = 0;
 	else 
 		pos = tempList->currentFilePosition + strlen(tempList->currentString) + 2;
-	insertIntoList(tempList,0,pkgName); //insert new recording at top of list
+	insertIntoList(tempList,pos,pkgName);
 	tempList->currentFilePosition = pos;
 	strcpy(tempList->currentString,pkgName); 
 }
@@ -76,39 +72,30 @@ int deletePackage(char * packageName) {
 			strcat(path,cursor);
 			strcat(path,"/");
 			strcat(strLog,cursor);
-			logString(strLog,FILE_ASAP);
+			logString(strLog,ASAP);
 			strcpy(filename,path);
 			strcat(filename,"*.*");
-			/* XXX: David D. We don't use LPSTR */
-			ret =_findfirst(/*(LPSTR)*/filename, &file_info, D_FILE);
+			ret =_findfirst((LPSTR)filename, &file_info, D_FILE);
 			while (ret >= 0) {
 				strcpy(filename,path);
-				/* XXX: David D. f_name to fname */
-				/*strcat(filename,file_info.f_name);*/
-				strcat(filename,file_info.fname);
-				/* XXX: David D. We don't use LPSTR */
-				ret = unlink(/*(LPSTR)*/filename);
-				if (ret != -1) {
-					/* XXX: David D. f_name to fname */
-					/* logString(file_info.f_name,BUFFER); */
-					logString(file_info.fname,FILE_BUFFER);
-				}
+				strcat(filename,file_info.f_name);
+				ret = unlink((LPSTR)filename);
+				if (ret != -1) 
+					logString(file_info.f_name,BUFFER);
 				ret = _findnext(&file_info);
 			}
-			/* XXX: David D. We don't use LPSTR */
-			ret = rmdir(/*(LPSTR)*/path);
+			ret = rmdir((LPSTR)path);
 		}
 		else {
 			cursor = packageName;
 			if (LBstrncat((char *)strLog,cursor,LOG_LENGTH) == LOG_LENGTH-1)
 				strLog[LOG_LENGTH-2] = '~';
-			logString(strLog,FILE_BUFFER);
+			logString(strLog,BUFFER);
 			strcpy(filename,USER_PATH);
 			strcat(filename,cursor);
 			strcat(filename,AUDIO_FILE_EXT);
 			for (attempt=0;attempt < MAX_RETRIES;attempt++) {			
-				/* XXX: David D. We don't use LPSTR */
-				ret = unlink(/*(LPSTR)*/filename);
+				ret = unlink((LPSTR)filename);
 				if (ret != -1)
 					break;
 				else

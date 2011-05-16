@@ -16,9 +16,6 @@
 #include "Include/Inbox.h"
 #include "Include/metadata.h"
 
-/* XXX: David D. for INT_MAX */
-#include <limits.h>
-
 struct newContent {
 	char newAudioFileCat  [FILE_LENGTH];
 	char newAudioFileName [FILE_LENGTH];
@@ -29,8 +26,7 @@ struct newContent {
 extern APP_IRAM char logBuffer[LOG_BUFFER_SIZE];
 extern APP_IRAM int idxLogBuffer;
 
-/* XXX: David D. We don't support USB */
-/* extern int setUSBHost(BOOL); */
+extern int setUSBHost(BOOL);
 
 static int processA18(struct f_info *, struct newContent *);
 static int processDir(char *, struct newContent *);
@@ -84,14 +80,12 @@ queueNewPackage(struct newContent nc) {
 	//flushLog();
 	if (fbuf[0]) {
 		context.package = &pkgSystem; // in case paused on content
-		/* XXX: David D. -1 to INT_MAX */
-		pkgSystem.lists[0].currentFilePosition = INT_MAX;
+		pkgSystem.lists[0].currentFilePosition = -1;
 		strList = getCurrentList(&pkgSystem.lists[0]);
 		while (strcmp(strList,fbuf)) {
 			strList = getPreviousList(&pkgSystem.lists[0]);
 		}
-		/* XXX: David D. -1 to INT_MAX */
-		pkgSystem.lists[1].currentFilePosition = INT_MAX;
+		pkgSystem.lists[1].currentFilePosition = -1;
 		strList = getCurrentList(&pkgSystem.lists[1]);
 		if (strList[0] == APP_PKG_CHAR) {
 			strList++;
@@ -123,15 +117,13 @@ processNewPackages(void) {
 		strNewPkgPath[len-1] = 0;
 		ret = fileExists((LPSTR)strNewPkgPath);
 		if(ret == 0) {
-			/* XXX: David D. We don't use LPSTR */
-			mkdir(/*(LPSTR)*/strNewPkgPath);
+			mkdir((LPSTR)strNewPkgPath);
 			strcpy(strLog, "no new packages");	
-			logString(strLog, FILE_ASAP);
+			logString(strLog, ASAP);
 			return nc;
-		}
-		/* XXX: David D. We don't use LPSTR */
-		ret = getcwd(/*(LPSTR)*/savecwd , sizeof(savecwd) - 1 );
-		ret = chdir(/*(LPSTR)*/strNewPkgPath);
+		}	
+		ret = getcwd((LPSTR)savecwd , sizeof(savecwd) - 1 );
+		ret = chdir((LPSTR)strNewPkgPath);
 		strcat(strNewPkgPath,"/");  // add back what was removed above
 	//  process *.a18 files in inbox - category in file name after # OR IN *.txt
 	//  this case may never happen
@@ -139,53 +131,36 @@ processNewPackages(void) {
 		strcpy(fbuf, strNewPkgPath);
 		strcat(fbuf, "*");
 		strcat(fbuf,AUDIO_FILE_EXT);
-		/* XXX: David D. We don't use LPSTR */
-		ret =_findfirst(/*(LPSTR)*/fbuf, &file_info, D_ALL);
+		ret =_findfirst((LPSTR)fbuf, &file_info, D_ALL);
 		while (ret >= 0) {
-			/* XXX: David D. f_name to fname */
-			/*strcpy(strLog, file_info.f_name);*/
-			strcpy(strLog, file_info.fname);
-			//logString(strLog,BUFFER);
+			strcpy(strLog, file_info.f_name);
+			//logString(strLog,BUFFER);		
 			fret += processA18(&file_info, &nc);
-			/* XXX: David D. f_name to fname */
-			/* XXX: David D. We don't use LPSTR */
-			/*ret = unlink((LPSTR)file_info.f_name);*/
-			ret = unlink(/*(LPSTR)*/file_info.fname);
+			ret = unlink((LPSTR)file_info.f_name);					
 			ret = _findnext(&file_info);
 		}
 	//
 	//  now process directories
 		strcpy(fbuf, strNewPkgPath);
 		strcat(fbuf, "*.*");
-
-		/* XXX: David D. We don't use LPSTR */
-		ret =_findfirst(/*(LPSTR)*/fbuf, &file_info, D_DIR);
+		
+		ret =_findfirst((LPSTR)fbuf, &file_info, D_DIR);
 		
 		for (; ret >= 0; ret = _findnext(&file_info)) {
-			/* XXX: David D. This is no longer needed, _findnext filters it */
-			/* XXX: David D. f_attrib to fattrib, D_DIR to AM_DIR, f_name to fname */
-			/* 
 			if(file_info.f_attrib & D_DIR) {
 				if(file_info.f_name[0] == '.')
-			*/
-			if(file_info.fattrib & AM_DIR) {
-				if(file_info.fname[0] == '.')
 					continue;
 				
-				/* XXX: David D. f_name to fname */
-				/*strcpy(fname, file_info.f_name);*/
-				strcpy(fname, file_info.fname);
-				//logString(fname,BUFFER);
+				strcpy(fname, file_info.f_name);	
+				//logString(fname,BUFFER);		
 				fret += processDir(fname, &nc);
 				  // RHM: something I do below makes this necessary
 				  //      upon return after _findnext returns -1 even if there are more dirs
-				/* XXX: David D. We don't use LPSTR */
-				ret = _findfirst(/*(LPSTR)*/fbuf, &file_info, D_ALL);
-			}
+				ret = _findfirst((LPSTR)fbuf, &file_info, D_ALL);
+			}	
 		}
 		
-		/* XXX: David D. We don't use LPSTR */
-		ret = chdir(/*(LPSTR)*/savecwd);
+		ret = chdir((LPSTR)savecwd);
 	}	// end of if: length of strNewPkgPath must be > 1
 	return nc;
 }
@@ -211,54 +186,29 @@ processA18(struct f_info *fip, struct newContent *pNC) {
 	int ret, len_fnbase, i, catidx, subidx, cat_base, fret;
 
 	category[0] = subcategory[0] = 0;
-	/* XXX: David D. f_name to fname */
-	/*cat_base = strIndex(fip->f_name, CATEGORY_DELIM);*/
-	cat_base = strIndex(fip->fname, CATEGORY_DELIM);
+	cat_base = strIndex(fip->f_name, CATEGORY_DELIM);
 	catidx = subidx = fret = 0;
 	if(cat_base >= 1) {	// category info in filename
-		/* XXX: David D. f_name to fname */
-		/*strcpy(fnbase, fip->f_name);*/
-		strcpy(fnbase, fip->fname);
+		strcpy(fnbase, fip->f_name);
 //	Commenting line below since we want to carry through category info
 //		fnbase[cat_base] = 0; 
-		/* XXX: David D. f_name to fname */
-		/*len_fnbase = strIndex(fip->f_name, '.');*/
-		len_fnbase = strIndex(fip->fname, '.');
+		len_fnbase = strIndex(fip->f_name, '.');
 		for(i=cat_base; ; i++ ) {
-			/* XXX: David D. f_name to fname */
-			/*if(fip->f_name[i] == '.')*/
-			if(fip->fname[i] == '.')
+			if(fip->f_name[i] == '.')
 				break;
 			// categories must be caps; subcategories must be lower; each can have digits but not in first position
-			/* XXX: David D. f_name to fname */
-			/*
 			if(isupper(fip->f_name[i]) || (catidx && isdigit(fip->f_name[i])) ) {
 				category[catidx++] = fip->f_name[i];
-			*/
-			if(isupper(fip->fname[i]) || (catidx && isdigit(fip->fname[i])) ) {
-				category[catidx++] = fip->fname[i];
 				continue;
 			}
-			/* XXX: David D. f_name to fname */
-			/*
 			if(islower(fip->f_name[i])|| (catidx && isdigit(fip->f_name[i])))
 				subcategory[subidx++] = fip->f_name[i]; 
-			*/
-
-			if(islower(fip->fname[i])|| (catidx && isdigit(fip->fname[i])))
-				subcategory[subidx++] = fip->fname[i]; 
-
 		}
 		category[catidx] = 0;
 		subcategory[subidx] = 0;
 	} else {
-		/* XXX: David D. f_name to fname */
-		/*
 		len_fnbase = strIndex(fip->f_name, '.');
 		strcpy(fnbase, fip->f_name);
-		*/
-		len_fnbase = strIndex(fip->fname, '.');
-		strcpy(fnbase, fip->fname);
 		fnbase[len_fnbase] = 0;
 		strcat(fnbase, ".txt");
 		ret = fileExists((LPSTR)fnbase);
@@ -275,12 +225,9 @@ processA18(struct f_info *fip, struct newContent *pNC) {
 				}
 			}
 			category[sizeof(category)-1] = 0;
-			/* XXX: David D. We don't use LSPTR */
-			unlink(/*(LPSTR)*/fnbase);
+			unlink((LPSTR)fnbase);		
 		} else { // .a18 file without category info
-			/* XXX: David D. f_name to fname */
-			/* getMetaCat(fip->f_name, category); */
-			getMetaCat(fip->fname, category);
+			getMetaCat(fip->f_name, category);
 			//or
 			// strcpy(category, "O");
 		}
@@ -291,9 +238,7 @@ processA18(struct f_info *fip, struct newContent *pNC) {
 
 	strcpy(tmpbuf,INBOX_PATH);
 	strcat(tmpbuf,NEW_PKG_SUBDIR);
-	/* XXX: David D. f_name to fname */
-	/* strcat(tmpbuf,fip->f_name); */
-	strcat(tmpbuf,fip->fname);
+	strcat(tmpbuf,fip->f_name);
 
 // TODO: should some other test be applied here??
 	if(0 == strncmp(fnbase,PKG_NUM_PREFIX,strlen(PKG_NUM_PREFIX))) {
@@ -313,19 +258,16 @@ processA18(struct f_info *fip, struct newContent *pNC) {
 //			logString(buffer,ASAP);
 		} while (ret);
 	} else {
-		/* XXX: David D. f_name to fname */
-		/* strcat(buffer, fip->f_name); */
-		strcat(buffer, fip->fname);
+		strcat(buffer, fip->f_name);
 		ret = rename((LPSTR)tmpbuf, (LPSTR)buffer);
 //			logString((char *)"Rename from/to",BUFFER);
 //			logString(tmpbuf,BUFFER);
 //			logString(buffer,ASAP);
 		if(ret) {
-			logString((char *)tmpbuf,FILE_BUFFER);
-			logString((char *)buffer,FILE_BUFFER);
-			logString((char *)"rename failed",FILE_ASAP);
-			/* XXX: David D. We don't use LSPTR */
-			unlink(/*(LPSTR)*/tmpbuf);	// rename failed, remove from inbox anyway
+			logString((char *)tmpbuf,BUFFER);
+			logString((char *)buffer,BUFFER);
+			logString((char *)"rename failed",ASAP);
+			unlink((LPSTR)tmpbuf);	// rename failed, remove from inbox anyway
 		} else {
 			fret++;
 		}
@@ -351,9 +293,8 @@ processDir(char *dirname, struct newContent *pNC) {
 	char fnbase[80], category[40], subcategory[40];
 	int ret, fret, catidx, subidx, len_fnbase, i, cat_base;
 
-	/* XXX: David D. We don't use LSPTR */
-	ret = getcwd(/*(LPSTR)*/savecwd , sizeof(savecwd) - 1 );
-	ret = chdir(/*(LPSTR)*/dirname);
+	ret = getcwd((LPSTR)savecwd , sizeof(savecwd) - 1 );
+	ret = chdir((LPSTR)dirname);
 	
 	category[0] = subcategory[0] = 0;
 	catidx = subidx = 0;
@@ -416,9 +357,9 @@ processDir(char *dirname, struct newContent *pNC) {
 		strcat(pNC->newAudioDirName, fnbase);
 	}
 
-	/* XXX: David D. We don't use LSPTR */
-	ret = chdir(/*(LPSTR)*/savecwd);	
-	ret = rmdir(/*(LPSTR)*/dirname);
+		
+	ret = chdir((LPSTR)savecwd);	
+	ret = rmdir((LPSTR)dirname);
 	
 	return (fret);
 }
@@ -449,8 +390,7 @@ updateCategory(char *category, char *fnbase, char prefix) {
 	strcat(buffer,".txt");
 	
 	if(!fileExists((LPSTR)buffer)) {  // if category.txt does not exist create it
-		/* XXX: David D. We don't use LSPTR */
-		ret = open(/*(LPSTR)*/buffer,O_CREAT|O_RDWR);
+		ret = open((LPSTR)buffer,O_CREAT|O_RDWR);
 		close(ret);
 	}
 	
@@ -473,14 +413,12 @@ extern void
 copyOutbox() {
 	char bInbox[PATH_LENGTH];
 	
-	/* XXX: David D. We don't support USB */
-	/* setUSBHost(TRUE); */
+	setUSBHost(TRUE);
 	strcpy(bInbox,INBOX_PATH);
 	bInbox[0] = 'b'; // changes a: to b:
 	
 	copydir(OUTBOX_PATH, bInbox);
-	/* XXX: David D. We don't support USB */
-	/* setUSBHost(FALSE); */
+	setUSBHost(FALSE);
 }
 
 static int 
@@ -504,51 +442,38 @@ copydir(char *fromdir, char *todir) {
 	
 	strcpy(to, todir);
 	len_to = strlen(to);
-	/* XXX: David D. We don't use LPSTR */
-	ret = mkdir(/*(LPSTR)*/to);	// just to be safe
+	ret = mkdir((LPSTR)to);	// just to be safe
 	if(to[len_to-1] != '/') {
 		strcat(to, "/");
 		len_to++;
 	}
 	strcpy(fromfind,from);
-	/* XXX: David D. We don't use LPSTR */
-	ret =_findfirst(/*(LPSTR)*/fromfind, &fi, D_DIR);
+	ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);
 	from[len_from] = 0;
 	lastdir[0] = 0;
 	
 	while (ret >= 0) {
-		/* XXX: David D. f_attrib to fattrib and D_DIR to AM_DIR */
-		/* if(! (fi.f_attrib & D_DIR)) { */
-		if(! (fi.fattrib & AM_DIR)) {
+		if(! (fi.f_attrib & D_DIR)) {
 			ret = _findnext(&fi);
 			continue;
 		}
 	
-		/* XXX: David D. f_name to fname */
-		/* if(fi.f_name[0]=='.') { */
-		if(fi.fname[0]=='.') {
+		if(fi.f_name[0]=='.') {
 			ret = _findnext(&fi);
 			continue;
 		}
 		from[len_from] = 0;
 		to[len_to]= 0;
 				
-		/* XXX: David D. f_name to fname */
-		/*
 		strcat(from, fi.f_name);
 		strcat(to, fi.f_name);
-		*/
-		strcat(from, fi.fname);
-		strcat(to, fi.fname);
 		
-		/* XXX: David D. We don't use LPSTR */
-		r1 = mkdir(/*(LPSTR)*/to);
+		r1 = mkdir((LPSTR)to);
 		fret += copydir (from, to);
-		ret = rmdir(/*(LPSTR)*/from);
-		
+		ret = rmdir((LPSTR)from);
+				
 		fret++;
-		/* XXX: David D. We don't use LPSTR */
-		ret =_findfirst(/*(LPSTR)*/fromfind, &fi, D_DIR);  //necessary to reset after rmdir? 
+		ret =_findfirst((LPSTR)fromfind, &fi, D_DIR);  //necessary to reset after rmdir? 
 	};
 	
 	from[len_from] = 0;
@@ -590,31 +515,21 @@ static int copyfiles(char *fromdir, char *todir)
 		strcat(to, "/");
 		len_to++;
 	}
-	
-	/* XXX: David D. We don't use LPSTR */
-	ret =_findfirst(/*(LPSTR)*/from, &fi, D_FILE);
+			
+	ret =_findfirst((LPSTR)from, &fi, D_FILE);
 	while(ret >= 0) {
-		/* XXX: David D. f_name to fname */
-		/*if(fi.f_name[0] != '.') {*/
-		if(fi.fname[0] != '.') {
+		if(fi.f_name[0] != '.') {
 			from[len_from] = 0;
 			to[len_to]= 0;
-			/* XXX: David D. f_name to fname */
-			/*
 			strcat(from, fi.f_name);
 			strcat(to, fi.f_name);
-			*/
-			strcat(from, fi.fname);
-			strcat(to, fi.fname);
 			if((lower(from[0]) == 'a') && (lower(to[0]) == 'a')) {
-				/* XXX: David D. We don't use LPSTR */
-				unlink(/*(LPSTR)*/to);
+				unlink((LPSTR)to);
 				r1 = rename((LPSTR)from, (LPSTR)to);
 			} else {
 				setLED(LED_GREEN,FALSE);
 				setLED(LED_RED,TRUE);
-				/* XXX: David D. We dont use LPSTR */
-				r1 = _copy(/*(LPSTR)*/from, /*(LPSTR)*/to);
+				r1 = _copy((LPSTR)from, (LPSTR)to);
 				wait (500);
 				setLED(LED_RED,FALSE);
 				if (r1 != -1) {
@@ -635,8 +550,7 @@ int getMetaCat(char *filename, char *category)
 {
 	int ret = 0;
 	long wrk, numfields, fieldlen;
-	unsigned int nret;
-	int fd;
+	unsigned int nret, fd;
 	int fid;
 	unsigned char nfv;
 	unsigned char buf[128];
@@ -646,29 +560,28 @@ int getMetaCat(char *filename, char *category)
 	if(fd < 0) {
 		return(ret);
 	}
-	
-	nret = read(fd, &wrk, 4);
+	nret = read(fd, (unsigned long)&wrk <<1, 4);
 	wrk = lseek(fd, wrk + 4, SEEK_SET);
-	nret = read(fd, &wrk, 4);
+	nret = read(fd, (unsigned long)&wrk << 1, 4);
 	//printf("meta data version=%ld\n", wrk);
 	if(wrk == 0 || wrk > META_CURRENT_VERSION) {
 		return(ret);
 	}
-	nret = read(fd, &numfields, 4);
+	nret = read(fd, (unsigned long)&numfields << 1, 4);
 	//printf("num fields=%ld\n", numfields);
 
 	for(i=0; i<(int)numfields; i++) {
-		nret = read(fd, &fid, 2);
+		nret = read(fd, (unsigned long)&fid << 1, 2);
 		//printf("\n  field id=%d\n",fid);
-		nret = read(fd, &fieldlen, 4);
+		nret = read(fd, (unsigned long)&fieldlen << 1, 4);
 		//printf("    filed length=%d\n", fieldlen);
-		nret = read(fd, &nfv, 1);
+		nret = read(fd, (unsigned long)&nfv << 1, 1);
 		//printf("    num field values=%d\n", nfv);
 		for(j=0; j<nfv; j++) {
 			short fl;
-			nret = read(fd, &fl, 2);
+			nret = read(fd, (unsigned long)&fl << 1, 2);
 			//printf("    field value length[%d]=%d\n",j,fl);
-			nret = read(fd, buf, fl);
+			nret = read(fd, (unsigned long)buf << 1, fl);
 			buf[fl] = 0;
 			//printf("    field value[%d]=",j);
 /*			for(k=0; k<fl; k++) {

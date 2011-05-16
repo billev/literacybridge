@@ -29,9 +29,9 @@ NOTE: All of Cliff's application code is in src/cliff/Application/TalkingBook/ D
 
 Things we need to port:
 	Any Assembly listing:
-		device.c asm(nop) - Asking Cliff, may be able to use our timer
+		device.c asm(nop) - ported to our timer
 
-	All of Cliff's FS Calls to elm: -- Implementation - Done, TODO: testing
+	All of Cliff's FS Calls to elm: -- Implementation - Done
 		Should Make compatibility layer for
 			open
 			close
@@ -44,9 +44,8 @@ Things we need to port:
 			lseek
 			_findfirst (traversing directories)
 			_findnext (traversing directories)
-			_copy (file to file copy)
-			stat - NOTE: Compatibility layer should just return elm FILINFO and change
-							Cliff's code to use that
+			_copy (file to file copy) - Untested
+			stat
 
 	Cliff's audio calls: -- Done!
 		SACM*
@@ -64,7 +63,7 @@ Things we need to remove/defer: -- David Working on
 	Wait-state management - NOTE: I emailed Cliff, further updates coming
 
 Kernel functions we still need to implement:
-	wdt_*() - Done, needs testing - David D.
+	wdt_*() - Done - David D.
 		wdt_start();
 		wdt_ping();
 		wdt_stop();
@@ -75,7 +74,7 @@ Kernel functions we still need to implement:
 
 Wrapper functions we need to implement:
 	get_pressed() - returns a bitmask of currently pressed keys - Done (untested) - David D
-	unix file wrapper (see file changes) - Done (untested) - David D.
+	unix file wrapper (see file changes) - Done - David D.
 
 Things we need to figure out:
 	None Currently
@@ -130,3 +129,41 @@ Sleep:
 ALL POINTERS ARE WORD BASED
 
 jira.literacybridge.org
+
+PORT ATTEMPT 2
+
+interface?
+	- Change instances of {open,read,write,close}() calls to some port_{open,read,write,close}() call - THINK ABOUT THIS
+		- Take in logical word/byte address depending on arch
+		- All sizes in byte (for ease of porting)
+			- shim_open()
+			- shim_write()
+			- shim_read()
+			- shim_close()
+
+	- Generate different sound abstraction which Cliff's code may be ported to
+		- Simple shim layer
+			- sound_start()
+			- sound_start_async()
+			- sound_is_playing()
+			- sound_stop()
+			- sound_set_volume()
+			- sound_set_speed()
+			- sound_pause() - ?
+			- sound_tell() - ?
+	- define porting constants
+			- LPSTR == char*
+	- devices.c file?
+			- wait()?
+
+	- Cliff's button input
+		--- SP_GetCh() - ?
+		--- KeyScan_ServiceLoop() - ?
+		- get_key() - No Debounce
+		- get_key_debounce() - Debounce and sync
+		- get_key_async() - Debounce and async
+
+
+ASK CLIFF
+	User_GetDecodeLength() vs Snd_A1800_GetCurrentTime() - Uses both to get audio time, whats the diff? - 
+

@@ -4,14 +4,12 @@
 #ifndef	__FILES_h__
 #define	__FILES_h__
 
-/* XXX: David D. replaced with our fs wrapper */
-/* #include ".\Component\Include\FS\vfs.h" */
-#include "lib/stdfs.h"
+#include ".\Component\Include\FS\vfs.h"
 
 #define LOG_BUFFER_SIZE		512
 #define COPY_BUFFER_SIZE    1024
-#define FILE_ASAP				0
-#define FILE_BUFFER				1
+#define ASAP				0
+#define BUFFER				1
 
 extern void logString(char *, int);
 extern char *getLine (int, char *);

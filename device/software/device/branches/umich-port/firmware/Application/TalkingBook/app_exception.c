@@ -32,10 +32,10 @@ void logException(unsigned int errorCode, const char * pStrError, int takeAction
 			strcat(errorString,"-warning");
 
 		if (LOG_FILE) {
-			logString(errorString,FILE_ASAP);
+			logString(errorString,ASAP);
 			if (pStrError) {
 				LBstrncpy(errorString,pStrError,80);
-				logString(errorString,FILE_ASAP);
+				logString(errorString,ASAP);
 			}
 		}
 		else {
@@ -61,11 +61,9 @@ void logException(unsigned int errorCode, const char * pStrError, int takeAction
 				setLED(LED_GREEN,TRUE);
 				wait(500);
 			}
-		/* XXX: David D. No more USB */
-		/*
 		if (takeAction == USB_MODE) // can't load config
 			setUSBDevice (TRUE);
-		else */ if (takeAction == RESET)
+		else if (takeAction == RESET)
 			resetSystem();
 		else if (takeAction ==  SHUT_DOWN)
 			setOperationalMode((int)P_SLEEP);

@@ -7,14 +7,8 @@
 #include "Include/audio.h"
 #include "Include/containers.h"
 #include "Include/macro.h"
-/* XXX: David D. these are no longer used */
-/*
 extern void KeyScan_ServiceLoop(void);
 extern int SP_GetCh(void);
-*/
-
-/* XXX: David D for INT_MAX */
-#include <limits.h>
 
 #define MAX_MACRO_ITEMS     100
 #define MAX_MACRO_LOOPS     10
@@ -129,9 +123,9 @@ void loadMacro(void) {
 				}
 			}
 			if (idxMacro < MAX_MACRO_ITEMS)
-				macro[idxMacro].wait = INT_MAX; 	//indicates end of arrays
+				macro[idxMacro].wait = -1; 	//indicates end of arrays
 			if (idxLoop < MAX_MACRO_LOOPS)
-				loop[idxLoop].begin = INT_MAX; //ensures it never matches an idxMacro
+				loop[idxLoop].begin = -1; //ensures it never matches an idxMacro
 			close(handle);
 		}
 	}
@@ -156,16 +150,12 @@ int nextMacroKey (int keystroke) {
 	if (keystroke == KEY_PLUS || keystroke == KEY_MINUS)
 		return keystroke; // pass through to allow volume change
 
-	if (keystroke == KEY_PLAY && !audio_is_playing(&__gaudio) && !context.isPaused) {
+	if (keystroke == KEY_PLAY && SACM_Status() && !context.isPaused) {
 		secNow = getRTCinSeconds();
 		pause();
 		do {
-			/* XXX: David D. Replaced with our interface */
-			/*
 			KeyScan_ServiceLoop();
 			keystroke = (int)SP_GetCh();
-			*/
-			keystroke = get_pressed();
 		} while (keystroke != KEY_PLAY && keystroke != KEY_SELECT);					
 		if (keystroke == KEY_PLAY) {
 			secLastMacro += (getRTCinSeconds() - secNow); // don't count paused time in macro timeline
@@ -181,7 +171,7 @@ int nextMacroKey (int keystroke) {
 		pause();
 	}
 
-	if ((idxMacro >= MAX_MACRO_ITEMS) || (macro[idxMacro].wait == INT_MAX)) {
+	if ((idxMacro >= MAX_MACRO_ITEMS) || (macro[idxMacro].wait == -1)) {
 		MACRO_FILE = 0; // end of macros
 		keystroke = 0;
 	} else {
@@ -207,7 +197,7 @@ int nextMacroKey (int keystroke) {
  				}
 				strcat(buffer,"/T");   // log system time in seconds
 				longToDecimalString(secNow,buffer+strlen(buffer),5);
-				logString(buffer,FILE_ASAP);
+				logString(buffer,ASAP);
  			}	 				
 			if (!countLoop && (loop[idxLoop].begin == idxMacro))
 				countLoop = loop[idxLoop].times;

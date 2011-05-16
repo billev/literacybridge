@@ -13,22 +13,22 @@
 #include "Include/SD_reprog.h"
 #include "Include/mainLoop.h"
 #include "Include/startup.h"
-#include "Include/filestats.h"
 #include <ctype.h>
 
-#include <stdlib.h>
+#define SYSTEM_HEAP_SIZE 512	//config file values
+#define CONFIG_FILE		"a://system/config.txt"
+#define ALT_CONFIG_FILE		"a://config.txt"
 
 extern int testPCB(void);
-/* XXX: David D. No more USB/SD */
-/* extern int SystemIntoUDisk(unsigned int); */
-/* extern INT16 SD_Initial(void); */
+extern unsigned int SetSystemClockRate(unsigned int);
+extern int SystemIntoUDisk(unsigned int);
+extern INT16 SD_Initial(void);
 
 static char * addTextToSystemHeap (char *);
 static void loadDefaultUserPackage(void);
 static int loadConfigFile (void);
 static void loadSystemNames(void);
 static char *currentSystem(void);
-static void cleanUpOldRevs(void);
 
 // These capitalized variables are set in the config file.
 APP_IRAM int KEY_PLAY, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_SELECT, KEY_STAR, KEY_HOME, KEY_PLUS, KEY_MINUS;
@@ -121,31 +121,26 @@ void setDefaults(void) {
 
 void startUp(void) {
 	char buffer[200];
-	char strCounts[32];
+	char strCounts[20];
 	int key;
+	
+	SetSystemClockRate(MAX_CLOCK_SPEED); // to speed up initial startup -- set CLOCK_RATE later
 
 	setDefaults();
 	setLED(LED_RED,FALSE);  // red light can be left on after reprog restart
 	setLED(LED_GREEN,TRUE);  // red light can be left on after reprog restart
-
+	
 	//to stop user from wondering if power is on and possibly cycling too quickly,
 	playDing();  // it is important to play a sound immediately 
-
-//	cleanUpOldRevs();	
+	
 	key = keyCheck(1);  // long keycheck 
 	
 	// voltage checks in SystemIntoUSB.c
 	if (key == KEY_STAR || key == KEY_MINUS) {
 		// allows USB device mode no matter what is on memory card
-		/* XXX: David D. Change to our sound interface */
-		/* Snd_Stop(); */
-		audio_stop(&__gaudio);
-		/* XXX: David D. No more USB */
-		/* XXX: David D. SystemIntoUDisk? */
-		/*
+		Snd_Stop();
 		SystemIntoUDisk(1);	
 		SD_Initial();  // recordings are bad after USB device connection without this line (todo: figure out why)
-		*/
 		loadConfigFile();
 		processInbox();
 		resetSystem();
@@ -158,24 +153,18 @@ void startUp(void) {
 	
 	// check for new firmware first, but don't flash if voltage is low
 	if(V_MIN_SDWRITE_VOLTAGE <= vCur_1) {
-		/* XXX: David D. Do not support (yet) */
-		/* check_new_sd_flash(); */
+		check_new_sd_flash();
 	}
 	
 	if (loadConfigFile() == -1) // config.txt file not found
-		/* XXX: David D. Do not support (yet) */
-		/* testPCB();	 */
+		testPCB();	
 	if (!SNexists()) {
 		logException(32,(const char *)"no serial number",LOG_ONLY);
-		/* XXX: David D. Do not support (yet) */
-		/* testPCB();	*/
+		testPCB();	
 	}
-	/* XXX: David D. Not sure what this does, but we're managing the kernel now */
-	/* SysDisableWaitMode(WAITMODE_CHANNEL_A); */
-	/* XXX: Zach R. We can't set volume/speed before playing a sound, as the audio isn't initialied.
-			Once the ding plays properly, doing this would be fine */
-	/* adjustVolume(NORMAL_VOLUME,FALSE,FALSE); */
-	/* adjustSpeed(NORMAL_SPEED,FALSE); */
+	SysDisableWaitMode(WAITMODE_CHANNEL_A);
+	adjustVolume(NORMAL_VOLUME,FALSE,FALSE);
+	adjustSpeed(NORMAL_SPEED,FALSE);
 	loadDefaultUserPackage();
 	if (MACRO_FILE)	
 		loadMacro();
@@ -206,7 +195,7 @@ void startUp(void) {
 	strcat(buffer,"\x0d\x0a" "CYCLE "); //cycle number
 	longToDecimalString(systemCounts.powerUpNumber,(char *)(buffer+strlen(buffer)),4);
 	strcat(buffer,(const char *)" - version " VERSION);
-	logString(buffer,FILE_BUFFER);
+	logString(buffer,BUFFER);
 //#ifdef TB_CAN_WAKE
 	if(MEM_TYPE == MX_MID) {
 		logRTC();  
@@ -214,26 +203,7 @@ void startUp(void) {
 //#endif
 	loadSystemNames(); 
 	loadPackage(PKG_SYS,currentSystem());	
-
-	/* XXX: David D. We don't use LPSTR */
-	unlink (/*(LPSTR)*/ (STAT_DIR SNCSV));
-	strcpy(buffer,getDeviceSN(1));
-	strcat(buffer, ",");
-	longToDecimalString(systemCounts.powerUpNumber, strCounts, 4); 
-	strcat(buffer, strCounts);
-	
-	{
-		int ret, bytesToWrite;
-		char line[80];
-		/* XXX: David D. We don't use LPSTR */
-		ret = open(/*(LPSTR)*/(STAT_DIR SNCSV), O_RDWR|O_CREAT);
-		if (ret >= 0) {
-			bytesToWrite = convertDoubleToSingleChar(line,buffer,TRUE);
-			write(ret, line, bytesToWrite);
-			close(ret);
-		}
-	}
-	
+	SetSystemClockRate(CLOCK_RATE); // either set in config file or the default 48 MHz set at beginning of startUp()
 	mainLoop();
 }
 
@@ -253,7 +223,7 @@ static char * addTextToSystemHeap (char *line) {
 	startingHeap = cursorSystemHeap;
 	cursorSystemHeap = startingHeap + length;
 	if (cursorSystemHeap-systemHeap >= SYSTEM_HEAP_SIZE) {
-		logString(line,FILE_ASAP);
+		logString(line,ASAP);
 		logException(15,0,USB_MODE); //todo:system heap is full
 	}
 	strcpy(startingHeap,line);
@@ -266,6 +236,7 @@ int loadConfigFile(void) {
 	char buffer[READ_LENGTH+1];
 	int attempt, goodPass;
 	const int MAX_RETRIES = 3;
+
 	ret = 0;	
 	buffer[READ_LENGTH] = '\0'; //prevents readLine from searching for \n past buffer
 	
@@ -366,7 +337,7 @@ int loadConfigFile(void) {
 	}
 	if (!goodPass) {
 		ret = -1;
-		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",FILE_BUFFER);	  //logException(14,0,USB_MODE); 		
+		logString((char *)"CONFIG_FILE NOT READ CORRECTLY",BUFFER);	  //logException(14,0,USB_MODE); 		
 	}
 	close(handle);
 	LED_ALL = LED_GREEN | LED_RED;
@@ -384,20 +355,16 @@ static void loadDefaultUserPackage(void) {
 	pkgDefault.pkg_type = PKG_MSG;
 	parseControlFile (sTemp, &pkgDefault);
 }
-
-/* XXX: David D. CHECK: Now managed by kernel */
-/* XXX: Zach R. vCur_1 needs to be set for "sdcard write" */
 void initVoltage()
 {
 	extern void set_voltmaxvolume();
-	APP_IRAM static unsigned long timeInitialized = 0xFFFFFFFF;
+	APP_IRAM static unsigned long timeInitialized = -1;
 	int i, j, k, sumv;
-	/*
+
 	// init battery voltage sensing	
 	*P_ADC_Setup |= 0x8000;  // enable ADBEN
 	*P_MADC_Ctrl &= ~0x05;  // clear CHSEL (channel select)
 	*P_MADC_Ctrl |=  0x02;  // select LINEIN1 
-	*/
 	timeInitialized = 0;
 
 	for(i=0, j=0, sumv=0; i<8; ) {	//establish startup voltage
@@ -425,25 +392,19 @@ void initVoltage()
 		refuse_lowvoltage(1);
 		// not reached
 	}
-	//set_voltmaxvolume();
+	set_voltmaxvolume();
 }
-
 unsigned int GetMemManufacturer()
 {
-	/* XXX: David D. do not support! */
-	/*
 	flash  FL = {0};
 	int fl_size = USB_Flash_init((flash *)0, 0);
-	int *flash_execution_buf = malloc(fl_size * sizeof(int));
+	int flash_execution_buf[fl_size];
 	
 	FL.flash_exe_buf = (void *) &flash_execution_buf[0];
 	USB_Flash_init(&FL, 1);
 	
-	free(flash_execution_buf);
 	return(FL.Flash_type);
 
-	*/
-	return 0;
 
 }
 
@@ -493,21 +454,3 @@ char *prevSystem() {
 	return ret;
 }
 
-static void cleanUpOldRevs() {
-	int handle, ret;
-	struct f_info file_info;
-			
-	if (dirExists((LPSTR)"a://Firmware")) {
-		tbChdir((LPSTR)"a://Firmware");
-		/* XXX: David D. We don't use LPSTR */
-		ret =_findfirst(/*(LPSTR)*/"*.*", &file_info, D_FILE);
-		while (ret >= 0) {
-			/* XXX: David D. f_name to fname */
-			/*ret = unlink((LPSTR)file_info.f_name);*/
-			ret = unlink(/*(LPSTR)*/file_info.fname);
-			ret = _findnext(&file_info);	
-		}	
-		tbChdir((LPSTR)"a://");
-		rmdir(/*(LPSTR)*/"a://Firmware");
-	}
-}

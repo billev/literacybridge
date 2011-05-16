@@ -24,19 +24,18 @@ void saveSystemCounts() {
 		
 	i = 0;
 	do {
-		/* XXX: David D. We do not need LPSTR */
- 		ret = unlink(/*(LPSTR)*/(SYSTEM_VARIABLE_FILE));
+ 		ret = unlink((LPSTR)(SYSTEM_VARIABLE_FILE));
  		if (ret)
 	 		wait(100);
 	}
 	while (ret && ++i < 3);
 	
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_CREAT|O_RDWR);
-	if (handle != -1) {
-		ret = write(handle, &systemCounts, sizeof(SystemCounts));
-	} else {
+	if (handle != -1)
+		ret = write(handle, (unsigned long)&systemCounts<<1, sizeof(SystemCounts)<<1);
+	else {
 		if (ret)
-			logString((char *)"failed unlink of system var file",FILE_BUFFER);
+			logString((char *)"failed unlink of system var file",BUFFER);
 		close(handle);
 		logException(17,SYSTEM_VARIABLE_FILE,RESET); //can't save SYSTEM_VARIABLE_FILE;
 	}
@@ -47,9 +46,9 @@ int loadSystemCounts() {
 	int handle, ret;
 
 	handle = tbOpen((LPSTR)(SYSTEM_VARIABLE_FILE),O_RDONLY);
-	if (handle != -1) {
-		ret = read(handle, &systemCounts, sizeof(SystemCounts));
-	} else
+	if (handle != -1)
+		ret = read(handle,(unsigned long)&systemCounts<<1,sizeof(SystemCounts)<<1);
+	else
 		ret = -1;
 	close(handle);
 	return ret;

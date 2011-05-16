@@ -6,8 +6,6 @@
 #include "Include/containers.h"
 #include "Include/timeline.h"
 
-#include <limits.h>
-
 APP_IRAM BlockTimeline blockTimeline[MAX_STATES];
 
 static int getBlockIdx(CtnrBlock *);
@@ -49,7 +47,7 @@ int getIdxTimeline(unsigned int time) {
 	//search through all currently active block containers to get actions
 	if (time >= blockTimeline[0].time) {   // no active blocks if time < blockTimeline[0].time 
 		arrayIndex=1; // we now know time >= blockTimeline[0].time
-		while ((arrayIndex < MAX_STATES) && (blockTimeline[arrayIndex].time != INT_MAX)) {
+		while ((arrayIndex < MAX_STATES) && (blockTimeline[arrayIndex].time != -1)) {
 			if (blockTimeline[arrayIndex].time > time)
 				break;
 			else
@@ -169,6 +167,7 @@ void buildBlockTimelines(CtnrFile *newFile) {
 		idxBlockTimeline++;	
 	}  // while loop on starting/ending Next pointers
 	if (idxBlockTimeline < MAX_STATES)
-		blockTimeline[idxBlockTimeline].time = INT_MAX;  // indicate end of array
+		blockTimeline[idxBlockTimeline].time = -1;  // indicate end of array
 }
 
+	

@@ -2,9 +2,7 @@
 // CONFIDENTIAL -- Do not share without Literacy Bridge Non-Disclosure Agreement
 // Contact: info@literacybridge.org
 #include "Include/app_exception.h"
-/* XXX: David D. use our typedefs, they play nice with our os */
-/*#include "Component/Include/FS/typedef.h"*/
-#include "lib/typedefs.h"
+#include "typedef.h"
 #include <string.h>
 #include <ctype.h>
 
