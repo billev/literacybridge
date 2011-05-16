@@ -9,17 +9,11 @@
 #include "./System/Include/WaitMode/SysWaitMode.h"
 #include "Include/edit.h"
 
-/* XXX: David D. for button interfaces */
-#include "Include/port.h"
-
-/* XXX: David D. These no longer exist */
-/*extern unsigned long Snd_A1800FAT_GetTotalTime(int);*/
-/*extern void KeyScan_ServiceLoop(void);*/
-/*extern int SP_GetCh(void);*/
-/*extern void SACM_Resume();*/
-/*extern int Snd_Stop(void);*/
-
-/* XXX: David D. This may no longer exist? */
+extern unsigned long Snd_A1800FAT_GetTotalTime(int);
+extern void KeyScan_ServiceLoop(void);
+extern int SP_GetCh(void);
+extern void SACM_Resume();
+extern int Snd_Stop(void);
 extern unsigned int CLOCK_RATE;
 
 APP_IRAM static unsigned long clipStartFrame, clipEndFrame, clipOriginalLengthFrames;
@@ -30,29 +24,22 @@ static int loopClip(void);
 
 int edit(char *lFilePath) {
 		
-	/* XXX: David D. Adjusting interfaces to our interfaces */
-	/* Snd_Stop(); */
-	audio_stop(&__gaudio);
+	SetSystemClockRate(MAX_CLOCK_SPEED); // might help to catch ending frames without going over; generally better precision
+	Snd_Stop();
 	strcpy(filePath,lFilePath);
 	handle = tbOpen((LPSTR)(filePath),O_RDWR);
 	if (handle < 0) 
 		return -1; 
 	clipStartFrame = 0;
-	clipOriginalLengthFrames = framesFromMSec(audio_tell(&__gaudio));
-	
+	clipOriginalLengthFrames = framesFromMSec(Snd_A1800FAT_GetTotalTime(handle));
 	clipEndFrame = clipOriginalLengthFrames;
 	if (loopClip() != -1) {
-
-		/* XXX: David D. Converting to our audio interface */
-		/* Snd_Stop(); */
-		audio_stop(&__gaudio);
-
+		Snd_Stop();
    		trimFile((char *)filePath, clipStartFrame, clipEndFrame);
    		playDing();
 	} else
 		playBip();
-		
-	return 0;
+	SetSystemClockRate(CLOCK_RATE);
 }
 
 int loopClip(void) {
@@ -69,22 +56,12 @@ int loopClip(void) {
 			if (loopTimeFrames > clipEndFrame-clipStartFrame)
 					loopTimeFrames = clipEndFrame-clipStartFrame;
 			justStarted = 0;
-			/* XXX: David D. Changing to our sound interface */
-			/* wasStopped = (SACM_Status() == 0); */
-			wasStopped = (audio_is_playing(&__gaudio) == 0);
+			wasStopped = (SACM_Status() == 0);
 			if (wasStopped) {
 				close(handle);
 				handle = tbOpen((LPSTR)(filePath),O_RDONLY);
-				
-				/* XXX: David D. Changing to our sound interface */
-				/*
 				SACMGet_A1800FAT_Mode(handle,0);
 				Snd_SACM_PlayFAT(handle, C_CODEC_AUDIO1800);
-				*/
-				audio_destroy_audio(&__gaudio);
-				audio_init_speex_fd(&__gaudio, handle);
-				audio_play(&__gaudio);
-				
 				justStarted = 1;
 			}
 			if (loopEnding) {
@@ -97,33 +74,16 @@ int loopClip(void) {
 			}
 			do {
 				currentFrame = getCurrentFrame();
-				/* XXX: David D. switched to our button interface */
-				/*
 				KeyScan_ServiceLoop();
 				key = (int)SP_GetCh();		
-				*/
-				key = get_pressed();
-				/* XXX: David D. swtiching to our audio interface */
-			/* } while (SACM_Status() && !key && ((loopEnding && currentFrame < clipEndFrame) || (!loopEnding && currentFrame < tempFrame))); */
-			} while (audio_is_playing(&__gaudio) && !key && ((loopEnding && currentFrame < clipEndFrame) || (!loopEnding && currentFrame < tempFrame)));
-			if (currentFrame > clipOriginalLengthFrames) {
-				/* XXX: David D. changing to our audio interface */
-				/* Snd_Stop(); */
-				audio_stop(&__gaudio);
-			}
-
-			/* XXX: David D. converting to our audio interface */
-			/* if (SACM_Status()) */
-			if (audio_is_playing(&__gaudio))
+			} while (SACM_Status() && !key && ((loopEnding && currentFrame < clipEndFrame) || (!loopEnding && currentFrame < tempFrame)));	
+			if (currentFrame > clipOriginalLengthFrames)
+				Snd_Stop(); 
+			if (SACM_Status()) 
 				pause();
-
 			while (!key) {
-				/* XXX: David D. switched to our button interface */
-				/*
 				KeyScan_ServiceLoop();
 				key = (int)SP_GetCh();
-				*/
-				key = get_pressed();
 			}					
 			if (key == KEY_RIGHT) {
 				if (loopEnding) {

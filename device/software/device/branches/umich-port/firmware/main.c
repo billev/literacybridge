@@ -14,9 +14,18 @@
 #include "./Application/TalkingBook/Include/talkingbook.h"
 #include "./Application/TalkingBook/Include/startup.h"
 #include "./Application/TalkingBook/Include/device.h"
+#include "./Reprog/USB_Flash_reprog.h"
 
-int Cmain (void) {
-	/*
+extern long USB_ISR_PTR;
+extern long USB_INSERT_PTR;
+extern void USB_ISR(), USB_Insert_TimeOut();
+extern void initVoltage();
+
+void BodyInit(void);
+extern unsigned int CLOCK_RATE;
+extern unsigned int MEM_TYPE;
+
+int main (void) {
 	MEM_TYPE = GetMemManufacturer();
 	initVoltage();	// get initial voltage before SACM_Init in BodyInit - may never run BodyInit()
 	if(SYS_OFF!=SysGetState()) {
@@ -36,7 +45,6 @@ int Cmain (void) {
 
 	_devicemount(0);
 	ChangeCodePage(UNI_ENGLISH);
-	*/
 	
 	startUp();
 	return 0;

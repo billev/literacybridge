@@ -315,24 +315,23 @@ EnumAction getStartCode(CtnrBlock *block, int *idxAction, EnumBorderCrossing app
 	// This function returns an action based on a particular block, how its start event is being
 	// approached (playing, forward/backward jumping, and some rules embedded in the function.
 
-	int startEnd;
+	int startEnd, ret;
 	EnumAction startCode;
-	EnumAction ret;
 	BOOL returnAction;
 	Action *actions, *cursor;
-	ret = (EnumAction)0;
+	ret = 0;
 	*idxAction = -1;
 
 	if (approach == BACKWARD_JUMPING) {
 		// Start event is never triggered when playing or jumping forward.
 		// Inserted sound may still occur, but there is a separate fct for checking that.
 		startEnd = block->actionStartEnd;
-		startCode = (EnumAction)(startEnd & 0x00FF);
+		startCode = startEnd & 0x00FF;
 		returnAction = (startCode & 0x04);  // check bit 2 is set
 		if (returnAction && !isStackEmpty())  // only give return if there's something to pop from the stack
 			ret = RETURN;
 		else {	
-			ret = (EnumAction)(startCode & 0x03); // just bits 0 and 1
+			ret = startCode & 0x03; // just bits 0 and 1
 			if (ret == JUMP_BLOCK) {
 				// find action index for JUMP_BLOCK
 				actions =(Action *)&context.package->actions;
@@ -359,23 +358,22 @@ EnumAction getEndCode(CtnrBlock *block, int *idxAction, EnumBorderCrossing appro
 	// This function returns an action based on a particular block, how its end event is being
 	// approached (playing, forward/backward jumping, and some rules embedded in the function.
 
-	int startEnd;
-	EnumAction ret;
+	int startEnd, ret;
 	EnumAction endCode;
 	BOOL returnAction;
 	Action *actions, *cursor;
-	ret = (EnumAction)0;
+	ret = 0;
 	*idxAction = -1;
 
 	if (approach != BACKWARD_JUMPING) {
 		// End event is never triggered when jumping backward.
 		startEnd = block->actionStartEnd;
-		endCode = (EnumAction)(startEnd >> 8);
+		endCode = startEnd >> 8;
 		returnAction = (endCode & 0x04);  // check bit 2 is set
 		if (returnAction && !isStackEmpty())  // only give return if there's something to pop from the stack
 			ret = RETURN;
 		else {	
-			ret = (EnumAction)(endCode & 0x03); // just bits 0 and 1
+			ret = endCode & 0x03; // just bits 0 and 1
 			if (ret == PAUSE) {
 				*idxAction = -1;
 				if (approach != PLAYING)
@@ -424,7 +422,7 @@ BOOL isEventInAction(Action *action, EnumEvent checkEvent, BOOL whenPaused) {
 	BOOL ret;
 	
 	eventAction = action->eventAction;
-	eventCode = (EnumEvent)(eventAction & 0x00FF); 
+	eventCode = eventAction & 0x00FF; 
 	ret = ((eventCode & 0x0F) == checkEvent);
 	if (ret && !whenPaused) // device is playing or stopped (not paused)
 		ret = !(eventCode & 0x10); // event does not apply if set only for paused state
@@ -434,11 +432,11 @@ BOOL isEventInAction(Action *action, EnumEvent checkEvent, BOOL whenPaused) {
 EnumAction getActionCode(Action *action) {
 	// action is MSB; see bit map for Action
 	unsigned int eventAction;
-	int actionCode;
+	EnumAction actionCode;
 
 	eventAction = action->eventAction;
 	actionCode = eventAction >> 8;
-	return (EnumAction)(actionCode & 0x3F);  // removes highest two bits
+	return (actionCode & 0x3F);  // removes highest two bits
 }
 
 void setActionCode(Action *action, EnumAction actionCode) {
