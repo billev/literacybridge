@@ -1,6 +1,6 @@
 // Copyright 2009,2010 Literacy Bridge
 // CONFIDENTIAL -- Do not share without Literacy Bridge Non-Disclosure Agreement
-// Contact info@literacybridge.org
+// Contact: info@literacybridge.org
 #include "./system/include/system_head.h"
 #include "./driver/include/driver_head.h"
 #include "./component/include/component_head.h"
@@ -13,17 +13,18 @@
 #include "Include/metadata.h"
 #include "Include/filestats.h"
 
-/* XXX: David D. for gain control */
-#include "arch/sound.h"
-#include "Include/port.h"
-
-
 APP_IRAM unsigned long stat_audio_length;
 APP_IRAM unsigned int  stat_pkg_type;
 APP_IRAM struct ondisk_filestats gFileStats;
 APP_IRAM int statINIT = 0;
 
 static char STAT_FN[FILE_LENGTH];
+
+extern unsigned long RES_DING_A18_SA;
+extern unsigned long RES_BIP_A18_SA;
+extern unsigned long User_GetCurDecodeLength(void);
+extern int SACMFileHandle;
+extern void User_SetDecodeLength(unsigned long);
 
 static int getFileHandle (CtnrFile *);
 static void playLongInt(CtnrFile *, unsigned long);
@@ -35,12 +36,13 @@ extern APP_IRAM SystemCounts systemCounts;
 // end meta data additions
 
 void playDing(void) {
-	/* XXX: David D. Converted G+ audio into our audio */
-	sound_play_memory(RES_DING_A18_SA);
+	Snd_SACM_PlayMemory(C_CODEC_AUDIO1800,RES_DING_A18_SA);	
+	while (SACM_Status());
 }
 
 void playBip(void) {
-	sound_play_memory(RES_BIP_A18_SA);
+	Snd_SACM_PlayMemory(C_CODEC_AUDIO1800,RES_BIP_A18_SA);	
+	while (SACM_Status());
 }
 
 void playBips(int count) {
@@ -62,7 +64,7 @@ unsigned long wordsFromFrames(unsigned long frames) {
 }
 
 unsigned long framesFromBytes(unsigned long bytes) {
-	unsigned long frames = bytes / 80;
+	unsigned long frames = bytes / 80;	
 	return frames;
 }
 
@@ -77,33 +79,19 @@ unsigned long framesFromMSec(unsigned long msec) {
 }
 
 unsigned long getCurrentFrame(void) {
-	/* XXX David D. switching audio interfaces */
-	/*
 	unsigned long wordsPerFrame = SACM_A1800_Mode / 800;
 	unsigned long word = ( unsigned long )User_GetCurDecodeLength();
 	unsigned long frame = word / wordsPerFrame;
-	*/
-
-	int frame = sound_tell_frame();
-
 	return frame;	
 }
 
 int gotoFrame(unsigned long frameDest) {
 	//const int bytesHeaderSize = 6;
-	/*
-	unsigned long wordsPerFrame = sound_words_per_frame();
-	unsigned long timeDest;
-	long sampleDest;
-	*/
-
-	/*
+	unsigned long wordsPerFrame = SACM_A1800_Mode / 800;
 	unsigned long byteCurrent;
 	unsigned long wordDiff;  ///, timeDiff;
 	unsigned long wordCurrent, wordDest, frames; 
-	unsigned long sampleDest;
-	unsigned long timeNow, timeDest;
-	*/
+//	unsigned long timeNow, timeDest;
 	
 /*	timeNow = Snd_A1800_GetCurrentTime();	
 	timeDest = frameDest * 20;
@@ -114,28 +102,19 @@ int gotoFrame(unsigned long frameDest) {
 		SACM_A1800FAT_SeekTime(timeDiff,1);
 */	
 	pause();
-
-	/* 
-	 * XXX: David D. NOTE: I cast from a unsigned long to a off_t (32 bit signed).
-	 *   This assumes that the frame number will never exceed 2 GigaFrames.
-	 */
-	sound_seek_frame((off_t)frameDest, SEEK_SET);
-	/* Original attempt */
-	/*
-	byteCurrent = audio_tell(&__gaudio);
+	byteCurrent = lseek(SACMFileHandle,0,SEEK_CUR);
 	wordCurrent = ( unsigned long )User_GetCurDecodeLength();
 	frames = wordCurrent / wordsPerFrame;
 	wordCurrent = frames * wordsPerFrame;
 	wordDest = frameDest * wordsPerFrame;
 	if (wordDest > wordCurrent) {
 		wordDiff = wordDest - wordCurrent;	
-		byteCurrent = audio_seek(&__gaudio,wordDiff<<1,SEEK_CUR);
+		byteCurrent = lseek(SACMFileHandle,wordDiff<<1,SEEK_CUR);
 	} else {
 		wordDiff = wordCurrent - wordDest;	
-		byteCurrent = audio_seek(&__gaudio,-wordDiff<<1,SEEK_CUR);
+		byteCurrent = lseek(SACMFileHandle,-wordDiff<<1,SEEK_CUR);
 	}
 	User_SetDecodeLength(wordDest);
-	*/
 	resume();	
 	return 0;
 }
@@ -151,7 +130,7 @@ unsigned long setFileHeader(char *filePath, unsigned long frames) {
 	bytes += 2; // for extra SACM Mode word
 	header = (char *)&bytes;
 	lseek(handle,0,SEEK_SET);
-	shim_write(handle, header, 4);
+	write(handle,(unsigned long)header<<1,4);
 	close(handle);
 	return bytes;
 }
@@ -168,19 +147,19 @@ void playActionSound(EnumAction action) {
 }
 
 void pause(void) {
-	sound_pause();
+	SACM_Pause();
+	turnAmpOff();
 }	
 
 void resume(void) {
-	sound_resume();
+	turnAmpOn();
+	SACM_Resume();
 }
 
 void stop(void) {
 	context.isStopped = TRUE;
-
-	sound_stop();
-	sound_power_off();
-
+	Snd_Stop();
+	turnAmpOff();
 	if (GREEN_LED_WHEN_PLAYING) {	
 		setLED(LED_GREEN,FALSE);
 	}
@@ -222,10 +201,10 @@ static int getFileHandle (CtnrFile *newFile) {
 
 	ret = tbOpen((LPSTR)sTemp,O_RDONLY);
 	if (DEBUG_MODE) {
-		logString(sTemp,FILE_BUFFER);
+		logString(sTemp,BUFFER);
 		if (ret == -1) {
 			strcpy(sTemp,"last file not found");
-			logString(sTemp,FILE_ASAP);
+			logString(sTemp,ASAP);
 		}
 	}
 	
@@ -253,10 +232,7 @@ static void playLongInt(CtnrFile *file, unsigned long lTimeNew) {
 	long lDifference;
 	unsigned long ulDifference;
 	
-	/* XXX: David D. Changing audio interface to match ours */
-	if (context.lastFile && (context.lastFile->idxFilename == file->idxFilename && sound_status())) {
-		/* XXX: David D. Porting to our audio interface */
-		/*
+	if (context.lastFile && (context.lastFile->idxFilename == file->idxFilename && SACM_Status())) {
 		lTimeCurrent = Snd_A1800_GetCurrentTime();
 		lDifference = lTimeNew - lTimeCurrent;
 		if (lDifference >= 0)
@@ -265,13 +241,6 @@ static void playLongInt(CtnrFile *file, unsigned long lTimeNew) {
 			ulDifference = (unsigned long)-lDifference;
 			SACM_A1800FAT_SeekTime(ulDifference,BACKWARD_SKIP);
 		}
-		*/
-		/* 
-		 * XXX: David D. NOTE I cast to a off_t (32bit signed int), 
-		 * this assumes that the new seek time is not above 2 GigaMS
-		 */
-		sound_seek((off_t)lTimeNew, SEEK_SET);
-
 		if (context.isPaused) {
 			resume();  // todo: is it better to resume and then seek?
 			context.isPaused = FALSE;
@@ -294,14 +263,10 @@ static void playLongInt(CtnrFile *file, unsigned long lTimeNew) {
 			context.lastFile = NULL; // to force to assume new file when going back to non-list file
 		iFileHandle = getFileHandle(file);
 		if (iFileHandle >= 0) {  //allows mistakes or dummy files to pass without problem
-			sound_start_file();
-			if (lTimeNew) {
-				/* 
-				 * XXX: David D. NOTE I cast to a off_t (32bit signed int), 
-				 * this assumes that the new seek time is not above 2 GigaMS
-				 */
-				sound_seek((off_t)lTimeNew, SEEK_SET);
-			}
+			SACMGet_A1800FAT_Mode(iFileHandle,0);
+			Snd_SACM_PlayFAT(iFileHandle, C_CODEC_AUDIO1800);	
+			if (lTimeNew)
+				SACM_A1800FAT_SeekTime(lTimeNew,FORWARD_SKIP);
 			if (GREEN_LED_WHEN_PLAYING)
 				setLED(LED_GREEN,TRUE);
 			context.isStopped = FALSE;
@@ -316,7 +281,7 @@ void insertSound(CtnrFile *file, CtnrBlock *block, BOOL wait) {
 	CtnrFile *lastFilePlayed;
 	unsigned long lBlockEndPoint;
 	int keystroke = 0;
-	int isPlayerStopped = !sound_status();
+	int isPlayerStopped = !SACM_Status();
 	BOOL wasPaused;
 	
 	wasPaused = context.isPaused;
@@ -325,7 +290,7 @@ void insertSound(CtnrFile *file, CtnrBlock *block, BOOL wait) {
 	if (block)
 		lBlockEndPoint = extractTime(block->endTime,context.package->timePrecision);
 	if (!isPlayerStopped) {
-		lastPlayedPoint = (unsigned long)audio_tell();
+		lastPlayedPoint = Snd_A1800_GetCurrentTime();
 		if (lastPlayedPoint < INSERT_SOUND_REWIND_MS)
 			lastPlayedPoint = 0;
 		else
@@ -333,8 +298,8 @@ void insertSound(CtnrFile *file, CtnrBlock *block, BOOL wait) {
 		//context.file should not be changed until we need them again in a few lines	
 		play(context.file,block?block->startTime:0);
 		context.isPaused = FALSE;
-		while (audio_status() && !keystroke) {
-			if (block && lBlockEndPoint < sound_tell_ms()) {
+		while (SACM_Status() && !keystroke) {
+			if (block && lBlockEndPoint < Snd_A1800_GetCurrentTime()) {
 				stop();
 			 	break;
 			}
@@ -359,8 +324,8 @@ void insertSound(CtnrFile *file, CtnrBlock *block, BOOL wait) {
 	else {
 		play(file,block?block->startTime:0);
 		context.isPaused = FALSE;
-		while (sound_status() && !keystroke) {
-			if (block && lBlockEndPoint < sound_tell_ms()) {
+		while (SACM_Status() && !keystroke) {
+			if (block && lBlockEndPoint < Snd_A1800_GetCurrentTime()) {
 				stop();
 			 	break;
 			}
@@ -377,14 +342,10 @@ void insertSound(CtnrFile *file, CtnrBlock *block, BOOL wait) {
 		}
 		context.file = lastFilePlayed;
 	}
-	if (!sound_status()) {
+	if (!SACM_Status()) {
 		context.isStopped = TRUE;
 		context.isPaused = FALSE;
-		/* 
-		 * XXX: David D. This is now managed by the kernrel, have interface for
-		 * backwards compatibility, however 
-		 */
-		sound_power_off();
+		turnAmpOff();
 	}
 }
 
@@ -400,7 +361,6 @@ static int recordAudio(char *pkgName, char *cursor) {
 	long start, end, prev;
 	CtnrFile *file;
 	int key;
-	/* XXX: David D. get rid of compiler warning */
 	int low_voltage, v;
 	unsigned long wrk1;
 	char *cp, category[9];
@@ -420,7 +380,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 	LBstrncat(temp,pkgName,60);
 	LBstrncat(temp," -> ",60);
 	LBstrncat(temp,cursor,60);	
-	logString(temp,FILE_BUFFER);
+	logString(temp,BUFFER);
 	insertSound(&pkgSystem.files[SPEAK_SOUND_FILE_IDX],NULL,TRUE);
 	stop();
 	start = getRTCinSeconds();
@@ -430,9 +390,8 @@ static int recordAudio(char *pkgName, char *cursor) {
 	if (handle != -1) {
 		setLED(LED_RED,TRUE);
 		playBip();
-		audio_destroy_audio(&__gaudio);
-		audio_init_file_fd(&__gaudio, handle);
-		audio_record(&__gaudio);
+		turnAmpOff();
+		Snd_SACM_RecFAT(handle, C_CODEC_AUDIO1800, BIT_RATE);
 		low_voltage = 0;
 		do {
 			end = getRTCinSeconds();	
@@ -441,8 +400,6 @@ static int recordAudio(char *pkgName, char *cursor) {
 				setLED(LED_RED,FALSE);
 				wait (100);
 				setLED(LED_RED,TRUE);
-				/* XXX: David D TODO comparrison to 0xFFFF, is this a 16-32bit port
-				 * issue? -- more likely hardware issue, investegate */
 				while((v = getCurVoltageSample()) == 0xffff);
 				if(vCur_1 < V_MIN_SDWRITE_VOLTAGE) {
 					low_voltage = 1;
@@ -467,7 +424,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 //		while ((end - start) < 3) { // must be at least 2.0 second recording
 //			end = getRTCinSeconds();			
 //		}
-		audio_stop(&__gaudio);
+		SACM_Stop();		//Snd_Stop(); // no need to call stop() and flush the log
 		//lseek(handle, 6, SEEK_SET );			//Seek to the start of the file input
 		//write(handle,(LPSTR)header<<1,6);
  
@@ -547,11 +504,7 @@ static int recordAudio(char *pkgName, char *cursor) {
         
 //		*P_WatchDog_Ctrl &= ~0x8000; // clear bit 15 to disable
 		setLED(LED_RED,FALSE);
-		/* 
-		 * XXX: David D. this is now managed by the kernel, interface retained for
-		 * backwards compatibility 
-		 */
-		sound_power_on();
+		turnAmpOn();
 		playDing();
 		insertSound(&pkgSystem.files[POST_REC_FILE_IDX],NULL,TRUE); 					
 		insertSound(file,NULL,TRUE);  // replay subject
@@ -559,7 +512,7 @@ static int recordAudio(char *pkgName, char *cursor) {
 		strcpy(temp,"TIME RECORDED (secs): ");
 		longToDecimalString((long)end-start,temp+strlen(temp),4);
 		strcat(temp,"\x0d\x0a");
-		logString(temp,FILE_BUFFER);
+		logString(temp,BUFFER);
 
 		ret = 0;  // used to set this based on fileExists() check, but too slow
 	} else {
@@ -569,20 +522,32 @@ static int recordAudio(char *pkgName, char *cursor) {
 }	
 
 int createRecording(char *pkgName, int fromHeadphone, char *listName) {
+	int SPINS; //from page 102 of GPL Progammers Manual v1.0/Dec20,2006 
+	           //headphone amp audio driver input source select 
 	
 	markEndPlay(getRTCinSeconds());
-	
+		
 	if (fromHeadphone) {
-		sound_set_gain(MIC_GAIN_HEADPHONE);
+		SPINS = 2;
+		*P_HQADC_MIC_PGA &= 0xFFE0; // only first 5 bits for mic pre-gain; others reserved
+		*P_HQADC_MIC_PGA |= MIC_GAIN_HEADPHONE;
 	}
 	else {
-		sound_set_gain(MIC_GAIN_NORMAL);
+		SPINS = 0;
+		if (MIC_GAIN_NORMAL >= 0) {
+			*P_HQADC_MIC_PGA &= 0xFFE0; // only first 5 bits for mic pre-gain; others reserved
+			*P_HQADC_MIC_PGA |= MIC_GAIN_NORMAL;
+		}
+	}	
+	*P_HPAMP_Ctrl &= 0xFFF3; // zero bits 2 and 3
+	if (SPINS) { // no point in OR'ing with nothing
+		SPINS <<= 2; // move SPINS into bits 2 and 3 position
+		*P_HPAMP_Ctrl |= SPINS;	
 	}
 
 	recordAudio(pkgName,listName);
-
-	sound_clear_gain();
-
+	if (SPINS)
+		*P_HPAMP_Ctrl &= 0xFFF3; // zero bits 2 and 3, returning SPINS to 0
 	packageRecording(pkgName,listName); // packageRecording turns it into single byte characters
 
 	return 0;
@@ -604,7 +569,7 @@ void markEndPlay(long timeNow) {
 			strcat(log," sec at VOL=");
 			longToDecimalString((long)getVolume(),log+strlen(log),2);
 			strcat(log,"\x0d\x0a");
-			logString(log,FILE_BUFFER);
+			logString(log,BUFFER);
 		}
 	}
 }
@@ -620,7 +585,7 @@ void markStartPlay(long timeNow, const char * name) {
 	strcat((char *)log,(const char *)": PLAY ");
 	if (LBstrncat((char *)log,name,LOG_LENGTH) == LOG_LENGTH-1)
 		log[LOG_LENGTH-2] = '~';
-	logString(log,FILE_BUFFER);	
+	logString(log,BUFFER);	
 }
 
 int writeLE32(int handle, long value, long offset) {
@@ -631,7 +596,7 @@ int writeLE32(int handle, long value, long offset) {
         wrkl = lseek(handle, offset, SEEK_SET);
     }
     
-    ret += write(handle, &value, 4);
+    ret += write(handle, (unsigned long) &value << 1, 4);
    
  	if(offset != CURRENT_POS) {
     	lseek(handle, curpos, SEEK_SET);
@@ -646,8 +611,7 @@ int writeLE16(int handle, unsigned int value, long offset) {
 	if(offset != CURRENT_POS) {
 		wrkl = lseek(handle, offset, SEEK_SET);
 	}
-	
-    ret += write(handle, &value, 2);
+    ret += write(handle, (unsigned long) &value << 1, 2);
     
  	if(offset != CURRENT_POS) {
     	lseek(handle, curpos, SEEK_SET);
@@ -659,20 +623,14 @@ int addField(int handle, unsigned int field_id, char *field_value, int numfieldv
     int i;
 	int ret = 0;
     long field_length = strlen(field_value);
-
-	ret = writeLE16(handle, field_id, CURRENT_POS);
-
+    ret = writeLE16(handle, field_id, CURRENT_POS);
     field_length += 3;
-
-	ret += writeLE32(handle, field_length, CURRENT_POS);
-
+    ret += writeLE32(handle, field_length, CURRENT_POS);
     field_length -= 3;
-
-    ret += shim_write(handle, &numfieldvalues, 1);  //numfields the 01 above*/
-
+    ret += write(handle, (unsigned long)&numfieldvalues << 1, 1);  //numfields the 01 above
     ret = writeLE16(handle, field_length, CURRENT_POS);
     for(i=0; i<field_length; i++) {
-       shim_write(handle, &field_value[i], 1);
+       write(handle, (unsigned long)&field_value[i] << 1, 1);
        ret += 1;
    }
 //    ret += write(handle, (unsigned long) &field_value << 1, field_length + 1);
@@ -682,7 +640,7 @@ int addField(int handle, unsigned int field_id, char *field_value, int numfieldv
 void recordStats(char *filename, unsigned long handle, unsigned int why, unsigned long misc)
 {
 //	char msg[128];
-	char statpath[PATH_LENGTH], *cp;
+	char statpath[128], *cp;
 	int stathandle, ret;
 	unsigned long wrk;
 	struct ondisk_filestats tmp_file_stats = {0};
@@ -691,9 +649,7 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 	case STAT_OPEN:
 		if(misc > PKG_SYS) {
 			statINIT = 1;
-
-			shim_read(handle, &stat_audio_length, 4);
-
+			read(handle, (unsigned long)&stat_audio_length << 1, 4);
 			lseek(handle, 0L, SEEK_SET);
 			stat_pkg_type = misc;
 /*		
@@ -710,7 +666,7 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 		break;
 	case STAT_CLOSE:
 		if(statINIT > 0) {
-			wrk = audio_tell(&__gaudio);
+			wrk = lseek(SACMFileHandle, 0L, SEEK_CUR);
 /*
 			sprintf(msg, "StatLog CLOSE: handle=%ld: position=%d; ", misc, wrk);
 			strcat(msg, STAT_FN);
@@ -720,19 +676,19 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 			if(stat_pkg_type > PKG_SYS) {	
 				
 				strcpy(statpath, STAT_DIR);
-//				strcat(statpath, getDeviceSN(0));
-//				strcat(statpath, "~");
+				strcat(statpath, getDeviceSN(0));
+				strcat(statpath, "~");
 				strcat(statpath, STAT_FN); 
 						
 				stathandle = tbOpen((LPSTR)statpath, O_CREAT|O_RDWR);
 				if(stathandle >= 0) {
-					ret = shim_read(stathandle, &tmp_file_stats, STATSIZE);
+					ret = read(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);
 					lseek(stathandle, 0L, SEEK_SET);
 					tmp_file_stats.stat_num_opens += 1; 
 					if(wrk >= stat_audio_length) {
 						tmp_file_stats.stat_num_completions += 1;
 					}
-					ret = shim_write(stathandle, &tmp_file_stats, STATSIZE);
+					ret = write(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);
 					close(stathandle);
 				}
 			}
@@ -747,22 +703,22 @@ void recordStats(char *filename, unsigned long handle, unsigned int why, unsigne
 		cp = strrchr(STAT_FN, '.');
 		if(cp == NULL)
 			break;
-		if(strcmp("a18", cp+1))
+		if(strcmp(".a18", cp+1))
 			break;	// no a18 suffix
 		
 		STAT_FN[strlen(STAT_FN) - 4] = 0; //chop off ".a18"
 		
 		strcpy(statpath, STAT_DIR);
-//		strcat(statpath, getDeviceSN(0));
-//		strcat(statpath, "~");
+		strcat(statpath, getDeviceSN(0));
+		strcat(statpath, "~");
 		strcat(statpath, STAT_FN); 
 		
 		stathandle = tbOpen((LPSTR)statpath, O_CREAT|O_RDWR);
 		if(stathandle >= 0) {
-			ret = shim_read(stathandle, &tmp_file_stats, STATSIZE);
+			ret = read(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);
 			lseek(stathandle, 0L, SEEK_SET);
 			tmp_file_stats.stat_num_copies += 1; 
-			ret = shim_write(stathandle, &tmp_file_stats, STATSIZE);
+			ret = write(stathandle, (unsigned long) &(tmp_file_stats) << 1, STATSIZE);
 			close(stathandle);
 		}
 		break;

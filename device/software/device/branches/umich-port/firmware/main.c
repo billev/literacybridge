@@ -25,7 +25,11 @@ void BodyInit(void);
 extern unsigned int CLOCK_RATE;
 extern unsigned int MEM_TYPE;
 
-int main (void) {
+#ifdef __CC_ARM
+int Cmain (void) {
+#else
+int main(void){
+#endif
 	MEM_TYPE = GetMemManufacturer();
 	initVoltage();	// get initial voltage before SACM_Init in BodyInit - may never run BodyInit()
 	if(SYS_OFF!=SysGetState()) {

@@ -9,6 +9,8 @@
 #include "./System/Include/WaitMode/SysWaitMode.h"
 #include "Include/edit.h"
 
+#include "umich_fs_fix.h"
+
 extern unsigned long Snd_A1800FAT_GetTotalTime(int);
 extern void KeyScan_ServiceLoop(void);
 extern int SP_GetCh(void);
@@ -23,7 +25,6 @@ APP_IRAM int handle;
 static int loopClip(void);
 
 int edit(char *lFilePath) {
-		
 	SetSystemClockRate(MAX_CLOCK_SPEED); // might help to catch ending frames without going over; generally better precision
 	Snd_Stop();
 	strcpy(filePath,lFilePath);

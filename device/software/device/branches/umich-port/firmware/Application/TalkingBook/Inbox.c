@@ -556,7 +556,7 @@ int getMetaCat(char *filename, char *category)
 	unsigned char buf[128];
 	int i, j;
 
-	fd = open((char *)filename, 0);
+	fd = open((LPSTR)filename, 0);
 	if(fd < 0) {
 		return(ret);
 	}

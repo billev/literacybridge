@@ -3,6 +3,8 @@
 // Contact: info@literacybridge.org
 #ifndef	__TALKINGBOOK_h__
 #define	__TALKINGBOOK_h__
+ 
+#include "./Application/TalkingBook/Include/umich_fix.h"
 
 #define VERSION			"v1.50r152"
 #define TB_CAN_WAKE  // hardware that allows wake from sleep/halt
