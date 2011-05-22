@@ -7,8 +7,8 @@ P
       Ah_:H
       A+_:I[faster] S+
       A-_:I[slower] S-
-      A+:I[louder] V+
-      A-:I[quieter] V-
+      A+:I[short-bell] V+
+      A-:I[short-bell] V-
       Ap:P
       Ap_:H
       A^:L-[title-list]
