@@ -10,6 +10,7 @@ VOLUME_INCREMENT:1
 SYSTEM_ORDER_FILE:languages
 SYSTEM_PATH:a:/system/
 LANGUAGES_PATH:a:/languages/
+TOPICS_SUBDIR:cat/
 USER_PATH:a:/messages/audio/
 LISTS_PATH:a:/messages/lists/
 INBOX_PATH:a:/inbox/
