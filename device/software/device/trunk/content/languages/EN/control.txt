@@ -173,7 +173,7 @@ P
   F:29
     B:0- [context-msg]
       A>:[record ideas about msg, circle]
-      A<:[context-trim]
+      A<:[to move this msg to first, circle]
   F:65
     B:0- [record ideas about msg, circle]
       A>:[to take survey, circle]
@@ -216,7 +216,7 @@ P
       Ao:*{[title-list]}
   F:64
     B:0- [to move this msg to first, circle]
-      A>:[context-trim]
+      A>:[context-msg]
       A<:[add-favorite]
       Ao:O{[title-list]}
   F:34
