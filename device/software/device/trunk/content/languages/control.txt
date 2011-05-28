@@ -42,6 +42,7 @@ P
       Ao:~
       Ao_:<%+>
       A*:~
+      A^_:[expert mode]
   F:41
     B:0- [right-for-different]
   F:35
@@ -100,8 +101,8 @@ P
      Av:L+[title-list]
      A*:~
   L:T [translate-list]
-      A^:L-[translate-list]
-      Av:L+[translate-list]
+      A^:L+[translate-list]
+      Av:L-[translate-list]
       A*:El
       A>:Ln
       A<:Lo
