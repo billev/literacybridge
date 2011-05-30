@@ -1,7 +1,0 @@
-VERSION:0000
-TIME-PRECISION:128
----
-P:template                                                               
-  A!:[start]
-  F:----------
-    B:0- [start]
