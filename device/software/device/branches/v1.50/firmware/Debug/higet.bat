@@ -1,1 +1,0 @@
-dd if=system.bin of=himem.blk bs=32k count=2 skip=40

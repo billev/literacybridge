@@ -1,7 +1,0 @@
-intro1#OTHER
-intro2#OTHER
-lit1#OTHER
-lit2#OTHER
-lit3#OTHER
-lit4#OTHER
-^TB-quiz#OTHER
