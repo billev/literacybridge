@@ -187,8 +187,8 @@ P
       Ao:Yt {[title-list]} [up for apply;down for useless;or home]
   F:62
     B:0- [up for apply;down for useless;or home]
-      A>:[add-favorite]
-      A<:[context-delete]
+      A>:[context-copy]
+      A<:[record ideas about msg, circle]
       A^:Ya {[title-list]} [thanks for feedback]
       Av:Yu {[title-list]} [thanks for feedback]
   F:61
