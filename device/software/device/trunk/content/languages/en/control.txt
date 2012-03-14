@@ -261,7 +261,7 @@ P
     B:0- [lock/unlock subject]
       A>:[context-subject]
       A<:[set this subject as first, circle]
-      Ao:K{[subject-list]} [subject-list]
+      Ao:K{[subject-list]}
 
   F:17
     B:0- [stop start w/center]
