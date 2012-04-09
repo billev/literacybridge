@@ -1,5 +1,5 @@
 # The version of the talking book software
-LB_TALKINGBOOK_VERSION:1.50
+LB_TALKINGBOOK_VERSION:1.55
 
 MAX_SPEED:24
 NORMAL_SPEED:12
