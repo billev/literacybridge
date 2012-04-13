@@ -29,6 +29,6 @@ Sys_Exception(29); //delete failed
 Sys_Exception(30); // corrupted lists
 Sys_Exception(31); // corrupted macro file
 Sys_Exception(32); // no serial number
-Sys_Exception(33); // can't access system order file
+Sys_Exception(33); // profile list overflow or file access error
 Sys_Exception(34); // too many translate files for array size 
 Sys_Exception(35); // can't open a system audio file
