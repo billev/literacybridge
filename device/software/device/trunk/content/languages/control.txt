@@ -89,6 +89,12 @@ P
     B:0- [please-wait]
   F:74
     B:0- [overwrite-warning]
+  F:78
+    B:0- [subject now locked]
+  F:79
+    B:0- [subject now unlocked]
+  F:80
+    B:0- [sorry-locked subject]
   L:L [subject-list]
      A$:I[right-for-different]
      Ah:<%>
@@ -229,7 +235,7 @@ P
   F:66
     B:0- [context-subject]
       A>:[copy all subj msgs, circle]  
-      A<:[set this subject as first, circle]
+      A<:[lock/unlock subject]
       Ao:~
   F:60
     B:0- [copy all subj msgs, circle]
@@ -248,12 +254,14 @@ P
       Ao:D{[subject-list]}
   F:57
     B:0- [set this subject as first, circle]
-      A>:[context-subject]
+      A>:[lock/unlock subject]
       A<:[remove this subject, circle]
       Ao:O{[subject-list]}
-
-
-
+  F:81
+    B:0- [lock/unlock subject]
+      A>:[context-subject]
+      A<:[set this subject as first, circle]
+      Ao:K{[subject-list]}
 
   F:17
     B:0- [stop start w/center]
