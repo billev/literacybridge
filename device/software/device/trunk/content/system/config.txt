@@ -17,7 +17,7 @@ INBOX_PATH:a:/inbox/
 OUTBOX_PATH:a:/outbox/
 NEW_PKG_SUBDIR:messages/
 SYS_UPDATE_SUBDIR:sys-updates/
-LOG_FILE:a:/system/log.txt
+LOG_FILE:a:/log/log.txt
 MAX_PWR_CYCLES_IN_LOG:100
 LOG_CARRYOVER_BYTES:500
 SYSTEM_VARIABLE_FILE:a:/system/system-vars
