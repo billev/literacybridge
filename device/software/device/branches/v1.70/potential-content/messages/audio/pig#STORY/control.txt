@@ -1,0 +1,64 @@
+VERSION:0000
+TIME-PRECISION:128
+---
+P:pig
+A!:[start]
+Ao:([brick]
+
+F:pig-title
+ B:0- [start]
+  A$:[1]
+  A>:[1]
+F:pig1
+ B:0- [1]
+  A$:[2]
+  A<:[start]
+  A>:[2]
+F:pig2
+ B:0- [2]
+  A$:[3]
+  A<:[1]
+  A>:[3]
+F:pig3
+ B:0- [3]
+  A$:[4]
+  A<:[2]
+  A>:[4]
+F:pig4
+ B:0- [4]
+  A$:[5]
+  A<:[3]
+  A>:[5]
+  Ao:([brick]
+ B:3400-7300?
+  Ao:([brick]
+F:pig5
+ B:0- [5]
+  A$:[6]
+  A<:[4]
+  A>:[6]
+F:pig6
+ B:0- [6]
+  A$:[7]
+  A<:[5]
+  A>:[7]
+F:pig7
+ B:0- [7]
+  A$:[8]
+  A<:[6]
+  A>:[8]
+F:pig8
+ B:0- [8]
+  A$:[9]
+  A<:[7]
+  A>:[9]
+ B:2800-6750?
+  Ao:([brick]
+F:pig9
+ B:0- [9]
+  A<:[8]
+ 
+
+F:pig-brick
+ B:0- [brick]
+  A$:)
