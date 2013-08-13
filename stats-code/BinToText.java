@@ -27,8 +27,8 @@ import java.io.Writer;
 public final class BinToText {
 
   /** Change these settings before running this class. */
-	private static final String INPUT_FILE_NAME = "V:\\Phase-II-TBs\\TB Content statistics";
-	private static final String OUTPUT_FILE_NAME = "V:\\Content Statistics\\stats.csv";
+	private static final String INPUT_FILE_NAME = "input-2013-02";
+	private static final String OUTPUT_FILE_NAME = "stats.csv";
 
   /** Run the example. */
   public static void main(String... aArgs) {
@@ -40,63 +40,90 @@ public final class BinToText {
 	try {
 	    output = new BufferedWriter(new FileWriter(OUTPUT_FILE_NAME));
 	    File dir = new File(INPUT_FILE_NAME);
+
+	    
 	    for (File community : dir.listFiles()) {
 		    if (".".equals(community.getName()) || "..".equals(community.getName()) || community.isFile()) {
-			      continue;  // Ignore the self and parent aliases.
+			      continue;  // Ignore the self and parent aliases and if not a folder
 			    }
 		    for (File idTB : community.listFiles()) {
-			    if (".".equals(idTB.getName()) || "..".equals(idTB.getName()) || idTB.isFile()) {
-			      continue;  // Ignore the self and parent aliases.
+			    if (".".equals(idTB.getName()) || "..".equals(idTB.getName()) 
+			    												|| idTB.isFile()) {
+			      continue;  // Ignore the self and parent aliases and if not a folder
 			    }
-			    FilenameFilter justStatsFilter = new FilenameFilter() {
-			        public boolean accept(File dir, String name) {
-			            return name.equalsIgnoreCase("stats");
-			        }
-			    };
-			    for (File statsFolder : idTB.listFiles(justStatsFilter)) {
-				    FilenameFilter noSCVFilter = new FilenameFilter() {
+			    for (File timeStamp : idTB.listFiles()) {
+				    if (".".equals(timeStamp.getName()) || "..".equals(timeStamp.getName()) 
+				    												|| timeStamp.isFile()) {
+				      continue;  // Ignore the self and parent aliases and if it's not a folder
+				   // Add code to find earliest timeStamp
+				    }
+				// Assume timeStamp is the earliest    
+			    
+				    FilenameFilter justStatisticsFilter = new FilenameFilter() {
 				        public boolean accept(File dir, String name) {
-				            return !name.contains(".csv");
+				            return name.equalsIgnoreCase("statistics");
 				        }
 				    };
-				    for (File idMsg : statsFolder.listFiles(noSCVFilter)) {
-					    in = new RandomAccessFile(idMsg.toString(), "r");
-						iOpen = readInteger(in);
-						iClose = readInteger(in);
-						iCopy = readInteger(in);
-						iSurvey = readInteger(in);
-						iApplied = readInteger(in);
-						iUseless = readInteger(in);
-						in.close();
-						
-						if (idMsg.getName().startsWith(idTB.getName())) {
-							File recording = new File(idTB.getAbsolutePath() + "\\user-recordings\\" + idMsg.getName() + ".a18");
-							fileSize = recording.length();
-							recordingSeconds = fileSize / (16 << 7);
-						} else 
-							recordingSeconds = 0;
-					  /** Write fixed content to the given file. */
-						//read in the bytes
-					    output.write(community.getName());
-					    output.write(",");
-					    output.write(idTB.getName());
-					    output.write(",");
-					    output.write(idMsg.getName());
-					    output.write(",");					    
-					    output.write(Integer.toString(iOpen));
-					    output.write(",");
-					    output.write(Integer.toString(iClose));
-					    output.write(",");
-					    output.write(Integer.toString(iCopy));
-					    output.write(",");
-					    output.write(Integer.toString(iSurvey));
-					    output.write(",");
-					    output.write(Integer.toString(iApplied));
-					    output.write(",");
-					    output.write(Integer.toString(iUseless));
-					    output.write(",");
-					    output.write(String.valueOf(recordingSeconds));
-					    output.write("\n");
+				    for (File statisticsFolder : timeStamp.listFiles(justStatisticsFilter)) {
+					    FilenameFilter justStatsFilter = new FilenameFilter() {
+					        public boolean accept(File dir, String name) {
+					            return name.equalsIgnoreCase("stats");
+					        }
+					    };
+					    if (!statisticsFolder.isDirectory())
+					    	continue;
+					    for (File statsFolder : statisticsFolder.listFiles(justStatsFilter)) {
+						    FilenameFilter noSCVFilter = new FilenameFilter() {
+						        public boolean accept(File dir, String name) {
+						            return !name.contains(".csv") && !name.contains(".bin");
+						        }
+						    };
+						    for (File idMsg : statsFolder.listFiles(noSCVFilter)) {
+						    	long len = idMsg.length();
+						    	in = new RandomAccessFile(idMsg.toString(), "r");
+						    	int iHeader = readInteger(in);
+						    	if (iHeader != 0x8D15) 
+						    		continue; // corrupted file
+						    	in.skipBytes((int)len - 7 * 4 ); // skip all but the stats at the end and the header just read
+								iOpen = readInteger(in);
+								iClose = readInteger(in);
+								iCopy = readInteger(in);
+								iSurvey = readInteger(in);
+								iApplied = readInteger(in);
+								iUseless = readInteger(in);
+								in.close();
+								if ((iCopy + iSurvey + iApplied + iUseless) > 1000) // must be corrupted data
+									continue;
+								if (idMsg.getName().startsWith(idTB.getName())) {
+									File recording = new File(idTB.getAbsolutePath() + "\\user-recordings\\" + idMsg.getName() + ".a18");
+									fileSize = recording.length();
+									recordingSeconds = fileSize / (16 << 7);
+								} else 
+									recordingSeconds = 0;
+							  /** Write fixed content to the given file. */
+								//read in the bytes
+							    output.write(community.getName());
+							    output.write(",");
+							    output.write(idTB.getName());
+							    output.write(",");
+							    output.write(idMsg.getName());
+							    output.write(",");					    
+							    output.write(Integer.toString(iOpen));
+							    output.write(",");
+							    output.write(Integer.toString(iClose));
+							    output.write(",");
+							    output.write(Integer.toString(iCopy));
+							    output.write(",");
+							    output.write(Integer.toString(iSurvey));
+							    output.write(",");
+							    output.write(Integer.toString(iApplied));
+							    output.write(",");
+							    output.write(Integer.toString(iUseless));
+							    output.write(",");
+							    output.write(String.valueOf(recordingSeconds));
+							    output.write("\n");
+						    }					    	
+					    }
 				    }
 			    }
 		    }

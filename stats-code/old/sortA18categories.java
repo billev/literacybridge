@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import org.apache.commons.io.FileUtils;
 
 /**  
  Converting binary data into different forms.
@@ -67,7 +66,7 @@ public final class sortA18categories {
 							in.close();
 							File newLocation = new File (OUTPUT_PATH + communityName.substring(0,3) + "_bad_" + idMsg.getName());
 							if (!newLocation.exists()) {
-								FileUtils.copyFile(idMsg, newLocation, false);
+//								FileUtils.copyFile(idMsg, newLocation, false);
 								log("COPIED unreadable to: " + newLocation.getAbsolutePath());
 								// idMsg.renameTo(newLocation);
 							}
@@ -99,7 +98,7 @@ public final class sortA18categories {
 						in.close();
 						File newLocation = new File (OUTPUT_PATH + communityName.substring(0,3) + "_" + category + "_" + idMsg.getName());
 						if (!newLocation.exists()) {
-							FileUtils.copyFile(idMsg, newLocation, false);
+//							FileUtils.copyFile(idMsg, newLocation, false);
 							log("COPIED to " + newLocation.getAbsolutePath());
 						} 
 				    }
