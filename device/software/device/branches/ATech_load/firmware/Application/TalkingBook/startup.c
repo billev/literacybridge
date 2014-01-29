@@ -357,6 +357,14 @@ void startUp(unsigned int bootType) {
 		
 	initAlarmData(); // Calling this with every startup should get rid of all alarms other than the midnight alarm, which should now consistently work.
 
+
+//------------------------------------------------------------------------------------------------------
+
+	testPCB();  // inserted only for A'Tech's testing
+
+//------------------------------------------------------------------------------------------------------
+
+
 	if(bootType == BOOT_TYPE_COLD_RESET) {
 		int wasReset = 0;
 		int hasCorruption = 0;
@@ -382,10 +390,10 @@ void startUp(unsigned int bootType) {
 			hasCorruption = 1;
 			//replaceFromBackup("a:/system");
 		}
-		if (isCorrupted((char *)"a:/log-archive")) {
-			logString((char *)"Corruption: log-archive",BUFFER,LOG_NORMAL);
+		if (isCorrupted((char *)LOG_ARCHIVE_PATH)) {
+			logString((char *)"Corruption: " LOG_ARCHIVE_PATH,BUFFER,LOG_NORMAL);
 			hasCorruption = 1;
-			//replaceFromBackup("a:/log-archive");
+			//replaceFromBackup(LOG_ARCHIVE_PATH);
 		}
 		if (isCorrupted((char *)"a:/log")) {
 			replaceFromBackup("a:/log");
