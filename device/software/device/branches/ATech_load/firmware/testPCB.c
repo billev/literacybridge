@@ -45,7 +45,7 @@ static void playStartupSound() {
 }
 
 int testPCB(void) {
-	int ret, key, keys;
+	int ret, key, keys = 0;
 	unsigned long count = 0;
 	
 /*	logLongHex((unsigned long)*P_IOB_Dir);
@@ -95,18 +95,18 @@ int testPCB(void) {
 		// '*' reprograms device
 		// 'v' starts main tests (keypad, audio, and sleep tests)
 		ret = 999; // not 0 and not -1, which should only come from fct returns
-		if (key == KEY_LEFT)
-			ret = receiveCopy();
-		else if (key == KEY_RIGHT)
-			ret = sendCopy();
-		else if (key == KEY_STAR) 
+//		if (key == KEY_LEFT)
+//			ret = receiveCopy();
+//		else if (key == KEY_RIGHT)
+//			ret = sendCopy();
+		if (key == KEY_STAR) 
 			ret = reprogram(); // this will not return
 		else if (key == KEY_UP)	
 			ret = keyTests(keys);   // sending keys means allows them not to require testing
 		else if (key == KEY_PLAY)
 			ret = audioTests();  
 		else if (key == KEY_DOWN)
-			setOperationalMode((int)P_SLEEP);  // sleep; wake from center, home, or black button
+			ret = receiveCopy();  //			setOperationalMode((int)P_SLEEP);  // sleep; wake from center, home, or black button
 		else if (key == KEY_PLUS) {	
 			adjustVolume(1,TRUE,FALSE);
 			playBip();
@@ -233,7 +233,7 @@ int receiveCopy(void) {
 	SD_Initial();  // recordings are bad after USB device connection without this line (todo: figure out why)
 	// test microSD read and writes -- assumes microSD card is FAT formatted
 	setLED(LED_RED,TRUE); // gets turned off within SystemIntoUDisk
-	ret = readTestFile(); 
+	ret = 0; //readTestFile(); 
 	return ret;
 }
 
