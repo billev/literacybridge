@@ -57,7 +57,7 @@ import org.literacybridge.acm.utils.ZipUnzip;
 
 @SuppressWarnings("serial")
 public class TBLoader extends JFrame implements ActionListener {
-	private static final String VERSION = "v1.23r1224";   // check new location of flash stats TBInfo class
+	private static final String VERSION = "v1.23r1226";   // check new location of flash stats TBInfo class
 	private static final String COLLECTION_SUBDIR = "\\collected-data";
 	private static String TEMP_COLLECTION_DIR = "";
 	private static final String SW_SUBDIR = ".\\software\\";
@@ -106,7 +106,7 @@ public class TBLoader extends JFrame implements ActionListener {
 	static String project;
 	static File tempCollectionFile;
 	static String syncSubPath;
-
+	private static JCheckBox forceFirmware;
 	
 	//private JCheckBox fetchIDFromServer;
 	//private JCheckBox handIcons;
@@ -229,6 +229,7 @@ public class TBLoader extends JFrame implements ActionListener {
 		JLabel idLabel = new JLabel("Serial number:");
 		JLabel revisionLabel = new JLabel("Firmware:");
 		JLabel imageLabel = new JLabel("Content:");
+		JLabel forceFirmwareText = new JLabel("Refresh?");
 		status = new JTextArea(2,40);
 		status.setEditable(false);
 		status.setLineWrap(true);
@@ -265,7 +266,7 @@ public class TBLoader extends JFrame implements ActionListener {
 		currentLocationList = new JComboBox(currentLocation);		
 		//fetchIDFromServer = new JCheckBox("Get new serial number");
 		//fetchIDFromServer.setSelected(false);
-		//handIcons = new JCheckBox("Use hand icon msgs");
+		forceFirmware = new JCheckBox();
 		//handIcons.setSelected(false);
 		update = new JButton("Update TB");
 		update.addActionListener(this);
@@ -296,6 +297,7 @@ public class TBLoader extends JFrame implements ActionListener {
 	        				.addComponent(dateLabel)
 	                		.addComponent(revisionLabel)
 	        				.addComponent(idLabel)
+	        				.addComponent(forceFirmwareText)
 	        				)
  					.addGroup(layout.createParallelGroup(LEADING)
  							.addComponent(warning)
@@ -308,6 +310,7 @@ public class TBLoader extends JFrame implements ActionListener {
 							.addComponent(datePicker)
 	                		.addComponent(newRevisionText)
 	                		.addComponent(newID)
+	                		.addComponent(forceFirmware)
             				//.addComponent(fetchIDFromServer)
 //	    	                .addGroup(layout.createSequentialGroup()
 	                				.addComponent(update)
@@ -321,6 +324,7 @@ public class TBLoader extends JFrame implements ActionListener {
 	                		.addComponent(lastUpdatedText)
 	                		.addComponent(oldRevisionText)
 	                		.addComponent(oldID)
+	                		.addComponent(forceFirmwareText)
 	    	        		.addComponent(grabStatsOnly)
 	                		//.addComponent(handIcons)
 //	    	                .addGroup(layout.createSequentialGroup()
@@ -369,6 +373,10 @@ public class TBLoader extends JFrame implements ActionListener {
 		        // .addGroup(layout.createParallelGroup(BASELINE)
 		        	//.addComponent(fetchIDFromServer)
     				//.addComponent(handIcons))
+	    	    .addGroup(layout.createParallelGroup(BASELINE)
+                		.addComponent(forceFirmwareText)
+                		.addComponent(forceFirmware)
+                		)
     		    .addGroup(layout.createParallelGroup(BASELINE)
     		    	.addComponent(update)
     		    	.addComponent(grabStatsOnly)
@@ -934,7 +942,7 @@ public class TBLoader extends JFrame implements ActionListener {
 	};
 
 	private void logTBData(String action) {
-		final String VERSION_TBDATA = "v02";
+		final String VERSION_TBDATA = "v03";
 		BufferedWriter bw;
 		new Date();
 		Calendar cal = Calendar.getInstance();
@@ -955,7 +963,7 @@ public class TBLoader extends JFrame implements ActionListener {
 			bw = new BufferedWriter(new FileWriter(filename,true));
 			if (bw != null) {
 				if (isNewFile) {
-					bw.write("PROJECT,UPDATE_DATE_TIME,LOCATION,ACTION,DURATION_SEC,");
+					bw.write("PROJECT,UPDATE_DATE_TIME,OUT_SYNCH_DIR,LOCATION,ACTION,DURATION_SEC,");
 					bw.write("OUT-SN,OUT-DEPLOYMENT,OUT-IMAGE,OUT-FW-REV,OUT-COMMUNITY,OUT-ROTATION-DATE,");
 					bw.write("IN-SN,IN-DEPLOYMENT,IN-IMAGE,IN-FW-REV,IN-COMMUNITY,IN-LAST-UPDATED,IN-SYNCH-DIR,IN-DISK-LABEL,CHKDSK CORRUPTION?,");
 					bw.write("FLASH-SN,FLASH-REFLASHES,");
@@ -968,6 +976,7 @@ public class TBLoader extends JFrame implements ActionListener {
 				}
 				bw.write(TBLoader.project + ",");
 				bw.write(TBLoader.currentDrive.datetime + ",");
+				bw.write(TBLoader.currentDrive.datetime + "-" + TBLoader.deviceID + ",");
 				bw.write(currentLocationList.getSelectedItem().toString() + ",");
 				bw.write(action + ",");
 				bw.write(Integer.toString(TBLoader.durationSeconds) + ",");
@@ -1588,6 +1597,7 @@ public class TBLoader extends JFrame implements ActionListener {
 		boolean alert = false;
 		boolean success = false;
 		long startTime;
+		private boolean forceFirmware = false;
 		
 
 		private void setStartTime() {
@@ -1685,8 +1695,6 @@ public class TBLoader extends JFrame implements ActionListener {
 			this.devicePath = devicePath;
 			this.id = id;
 			this.isNewSerialNumber = isNewSerialNumber;
-			//this.datetime = datetime;
-			// this.useHandIcons = useHandIcons;
 			this.mode = mode;
 		}		
 
@@ -1735,6 +1743,16 @@ public class TBLoader extends JFrame implements ActionListener {
 					endMsg = new String("Could not get stats for some reason.");
 					endTitle = new String("Failure");					
 				}
+				// zip up stats
+				String sourceFullPath = TEMP_COLLECTION_DIR + TBLoader.syncSubPath;
+				String targetFullPath = copyTo + TBLoader.syncSubPath + ".zip";	
+				File sourceFile = new File(sourceFullPath);
+				sourceFile.getParentFile().mkdirs();
+				ZipUnzip.zip(sourceFile, new File(targetFullPath), true);
+			} catch (IOException e) {
+				Logger.LogString("Unable to zip device files:" + e.getMessage());
+				Logger.flush();
+				e.printStackTrace();
 			} finally {
 				callback.finishCopy(success, id, this.mode, endMsg, endTitle);
 			}
@@ -1814,7 +1832,16 @@ public class TBLoader extends JFrame implements ActionListener {
 				//	verified = executeFile(new File(SCRIPT_SUBDIR + "customCommunity.txt"));					
 				//}
 				Logger.LogString("STATUS:Adding Image Content");
-				verified = executeFile(new File(SCRIPT_SUBDIR + "customCommunity.txt"));					
+				verified = executeFile(new File(SCRIPT_SUBDIR + "customCommunity.txt"));
+				if (TBLoader.forceFirmware.isSelected()) {
+					// rename firmware at root to system.img to force TB to update itself
+					String rootPath = devicePath.substring(0, 2);
+					File root = new File(rootPath);
+					File firmware = new File(root,TBLoader.revision + ".img");
+					firmware.renameTo(new File(root,"system.img"));
+					TBLoader.status2.setText(TBLoader.status2.getText() + "\nRefreshed firmware...");
+					Logger.LogString("STATUS:Forced Firmware Refresh");
+				}
 				TBLoader.status2.setText(TBLoader.status2.getText() + "...Updated\n");
 				if (verified) {
 					String duration;
@@ -1825,7 +1852,10 @@ public class TBLoader extends JFrame implements ActionListener {
 					Logger.LogString("STATUS:Complete");
 					success = true;
 					duration = getDuration();
-					callback.logTBData("update");
+					if (TBLoader.forceFirmware.isSelected())
+						callback.logTBData("update-fw");
+					else
+						callback.logTBData("update");
 					endMsg = new String("Talking Book has been updated and verified\nin " + duration + ".");
 					endTitle = new String("Success");
 				} else {
