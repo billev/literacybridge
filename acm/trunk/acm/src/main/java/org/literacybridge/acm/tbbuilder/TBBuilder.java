@@ -254,13 +254,19 @@ public class TBBuilder {
 		for (int i=0;i<groupCount;i++) {
 			groups[i]=args[i+4];
 		}
-*/		if (args.length != 4 && args.length != 5 && args.length != 8) {
+*/		if (args.length != 3 && args.length != 4 && args.length != 5 && args.length != 8) {
 			printUsage();
 			System.exit(1);
 		} else {
 			tbb = new TBBuilder(args[0]);
 			tbb.createDeployment(args[1]);
-			if (args.length == 4) {
+			if (args.length == 3) {
+				if (!args[2].equalsIgnoreCase("PUBLISH")) {
+					printUsage();
+					System.exit(1);
+				} else 
+					tbb.publish();				
+			} else if (args.length == 4) {
 				tbb.addImage(args[2],args[3], "default");
 			} else {
 				tbb.addImage(args[2],args[3], args[4]);
@@ -268,12 +274,12 @@ public class TBBuilder {
 					tbb.addImage(args[5],args[6], args[7]);
 				}
 			}
-			tbb.publish();
 		}
 	}
 	
 	private static void printUsage() {
-		System.out.println("Usage: java -cp acm.jar:lib/* org.literacybridge.acm.tbbuilder.TBBuilder <acm_name> <deployment> <package_name> <language> <group> (<package_name2>) (<language2>) (<group2>)");
+		System.out.println("Usage: java -cp acm.jar:lib/* org.literacybridge.acm.tbbuilder.TBBuilder <acm_name> <deployment> <package_name> <language> (<group>) (<package_name2>) (<language2>) (<group2>)");
+		System.out.println("OR   : java -cp acm.jar:lib/* org.literacybridge.acm.tbbuilder.TBBuilder <acm_name> <deployment> PUBLISH");
 	}
 
 	private static void exportList(File list, File targetDirectory) throws Exception {
