@@ -254,15 +254,19 @@ public class TBBuilder {
 		for (int i=0;i<groupCount;i++) {
 			groups[i]=args[i+4];
 		}
-*/		if (args.length != 5 && args.length != 8) {
+*/		if (args.length != 4 && args.length != 5 && args.length != 8) {
 			printUsage();
 			System.exit(1);
 		} else {
 			tbb = new TBBuilder(args[0]);
 			tbb.createDeployment(args[1]);
-			tbb.addImage(args[2],args[3], args[4]);
-			if (args.length == 8) {
-				tbb.addImage(args[5],args[6], args[7]);
+			if (args.length == 4) {
+				tbb.addImage(args[2],args[3], "default");
+			} else {
+				tbb.addImage(args[2],args[3], args[4]);
+				if (args.length == 8) {
+					tbb.addImage(args[5],args[6], args[7]);
+				}
 			}
 			tbb.publish();
 		}
