@@ -13,9 +13,11 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -57,7 +59,7 @@ import org.literacybridge.acm.utils.ZipUnzip;
 
 @SuppressWarnings("serial")
 public class TBLoader extends JFrame implements ActionListener {
-	private static final String VERSION = "v1.23r1226";   // check new location of flash stats TBInfo class
+	private static final String VERSION = "v1.24r1229";   // check new location of flash stats TBInfo class
 	private static final String COLLECTION_SUBDIR = "\\collected-data";
 	private static String TEMP_COLLECTION_DIR = "";
 	private static final String SW_SUBDIR = ".\\software\\";
@@ -95,6 +97,7 @@ public class TBLoader extends JFrame implements ActionListener {
 //	private static JButton xfer;
 	private static JButton grabStatsOnly;
 //	private static JButton setCommunity;
+	private static String dropboxCollectionFolder;
 	private static String copyTo;
 	private static String pathOperationalData;
 	private static String revision;
@@ -459,10 +462,12 @@ public class TBLoader extends JFrame implements ActionListener {
 		String paths[]= new String[MAX_PATHS];
 
 		try {
-			Process proc = Runtime.getRuntime().exec("cmd /C echo %HOMEDRIVE%%HOMEPATH%");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			homepath = new String(reader.readLine());
-			reader.close();
+			BufferedReader reader;
+			//Process proc = Runtime.getRuntime().exec("cmd /C echo %HOMEDRIVE%%HOMEPATH%");
+			//reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			homepath = System.getenv("HOMEDRIVE") + System.getenv("HOMEPATH"); 
+			//new String(reader.readLine());
+			//reader.close();
 			String LB_DIR = new String(homepath + "\\LiteracyBridge");
 			File f = new File(LB_DIR);
 			f.mkdirs();
@@ -474,8 +479,47 @@ public class TBLoader extends JFrame implements ActionListener {
 				}
 			});
 			if (files.length == 1) {
-				TBLoader.deviceID = files[0].getName().substring(0, files[0].getName().length() - 4);
+				TBLoader.deviceID = files[0].getName().substring(0, files[0].getName().length() - 4).toUpperCase();
+				int deviceIDnumber = Integer.parseInt(TBLoader.deviceID.substring(1),16);
+				if (deviceIDnumber > 0x10) {
+					switch (deviceIDnumber) {
+					case 0x0b9b8e30:
+						TBLoader.deviceID = "0001";
+						break;
+					case 0x08498e7d:
+						TBLoader.deviceID = "0002";
+						break;
+					case 0x0d8839de:  // 9d8839de
+						TBLoader.deviceID = "0003";
+						break;
+					case 0x0c0a77d4:
+						TBLoader.deviceID = "0004";
+						break;
+					case 0x07ef4f18:
+						TBLoader.deviceID = "0005";
+						break;
+					case 0x0286d111:
+						TBLoader.deviceID = "0006";
+						break;
+					case 0x0db334bc:
+						TBLoader.deviceID = "0007";
+						break;
+					case 0x0a211000:
+						TBLoader.deviceID = "0008";
+						break;
+					case 0x0db6749d:
+						TBLoader.deviceID = "0000";
+						break;
+					default:
+						throw new Exception("unrecognized device id");
+					}
+					files[0].delete();
+					File newDeviceFile = new File(f,TBLoader.deviceID+".dev");
+					newDeviceFile.createNewFile();
+				}
 			} else {
+				throw new Exception("unrecognized device id");
+				/*
 				// create new device ID
 				String systemString = System.getenv("COMPUTERNAME") + System.getenv("USERNAME");
 				int hash = systemString.hashCode();
@@ -485,6 +529,7 @@ public class TBLoader extends JFrame implements ActionListener {
 				TBLoader.deviceID = systemString;
 				File newFile = new File(f,TBLoader.deviceID + ".dev");
 				newFile.createNewFile();
+				*/
 			}
 			TEMP_COLLECTION_DIR = LB_DIR + COLLECTION_SUBDIR + "\\" + TBLoader.project;
 			f = new File(TEMP_COLLECTION_DIR);
@@ -512,7 +557,9 @@ public class TBLoader extends JFrame implements ActionListener {
 			copyTo = TEMP_COLLECTION_DIR;
 		}
 		else {
-			copyTo = copyTo += COLLECTION_SUBDIR + "/"+ TBLoader.project;
+			copyTo += COLLECTION_SUBDIR;
+			dropboxCollectionFolder = copyTo;
+			copyTo += "/" + TBLoader.project;
 			new File(copyTo).mkdirs();  // creates COLLECTION_SUBDIR if good path is found
 		}
 		pathOperationalData = copyTo + "/OperationalData/" + TBLoader.deviceID;
@@ -686,7 +733,7 @@ public class TBLoader extends JFrame implements ActionListener {
 		}
 	}
 
-	private synchronized void setSNandRevFromCurrentDrive() {
+	private synchronized void setSNandRevFromCurrentDrive() throws Exception {
 		String sn=NO_SERIAL_NUMBER;
 		String rev="UNKNOWN";
 		String pkg="UNKNOWN";
@@ -699,7 +746,7 @@ public class TBLoader extends JFrame implements ActionListener {
 			if (systemPath.exists()) {
 				// get Serial Number file info
 				
-				if (tbStats != null && isSerialNumberFormatGood(tbStats.serialNumber))
+				if (tbStats != null && isSerialNumberFormatGood(tbStats.serialNumber) && isSerialNumberFormatGood2(tbStats.serialNumber))
 					sn = tbStats.serialNumber;
 				else {
 					files = systemPath.listFiles(new FilenameFilter() {
@@ -726,7 +773,6 @@ public class TBLoader extends JFrame implements ActionListener {
 							JOptionPane.showMessageDialog(null, "This appears to be a NEW TB.  If so, please close this program and open the TB Loader for new TBs.",
 					                "NEW TB!", JOptionPane.WARNING_MESSAGE);
 					}
-					sn=NO_SERIAL_NUMBER;
 				}
 				
 				
@@ -826,6 +872,40 @@ public class TBLoader extends JFrame implements ActionListener {
 			sn = NO_SERIAL_NUMBER;
 		}
 		oldID.setText(sn);
+		sn = sn.toUpperCase();
+		if (!isSerialNumberFormatGood2(sn)) {			
+			int intSRN = 0;
+			// get latest serial number count from file
+			File f = new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt");
+			if (f.exists()) {
+				DataInputStream in;
+				try {
+					in = new DataInputStream(new FileInputStream(f));
+					intSRN = in.readInt();
+					in.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (intSRN >= 0xFFFF) {
+					throw new Exception("SRN out of bounds for this TB Loader device.");
+				}
+				intSRN++;
+				f.delete();
+			} else {
+				// if file doesn't exist, use the SRN = 0, but TODO:raise exception and tell user to register the device or ensure file wasn't lost
+			}
+			DataOutputStream os = new DataOutputStream(new FileOutputStream(f));
+			os.writeInt(intSRN);
+			os.close();
+			String lowerSRN = String.format("%04x",intSRN);
+			sn = TBLoader.srnPrefix + TBLoader.deviceID + lowerSRN;
+		}
+		sn = sn.toUpperCase();
 		di.serialNumber = sn;
 		newID.setText(sn);
 		oldRevisionText.setText(rev);
@@ -844,7 +924,7 @@ public class TBLoader extends JFrame implements ActionListener {
 		for (File root : roots) {
 			if (root.getAbsoluteFile().toString().compareTo("D:") >= 0 && root.listFiles() != null) {
 				String label = FileSystemView.getFileSystemView().getSystemDisplayName(root);
-				if (label.trim().equals("CD Drive"))
+				if (label.trim().equals("CD Drive") || label.startsWith("DVD"))
 					continue;
 				driveList.addItem(new DriveInfo(root, label));
 				if (prevSelected != null && root.getAbsolutePath().equals(prevSelected.getAbsolutePath())) {
@@ -916,7 +996,12 @@ public class TBLoader extends JFrame implements ActionListener {
 							e.printStackTrace();
 						}
 	//					Logger.LogString("monitor filled community list");
-						setSNandRevFromCurrentDrive();
+						try {
+							setSNandRevFromCurrentDrive();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						getRevisionNumbers();
 	//					Logger.LogString("monitor got SN");
 						refreshUI();
@@ -980,13 +1065,13 @@ public class TBLoader extends JFrame implements ActionListener {
 				bw.write(currentLocationList.getSelectedItem().toString() + ",");
 				bw.write(action + ",");
 				bw.write(Integer.toString(TBLoader.durationSeconds) + ",");
-				bw.write(newID.getText() + ",");
+				bw.write(di.serialNumber + ",");
 				bw.write(newDeploymentList.getSelectedItem().toString() + ",");
 				bw.write(newImageText.getText() + ",");
 				bw.write(newRevisionText.getText() + ",");
 				bw.write(newCommunityList.getSelectedItem().toString() + ",");
 				bw.write(dateRotation + ",");
-				bw.write(di.serialNumber + ",");
+				bw.write(oldID.getText() + ",");
 				bw.write(oldDeploymentText.getText() + ",");
 				bw.write(oldImageText.getText() + ",");
 				bw.write(oldRevisionText.getText() + ",");
@@ -1099,6 +1184,8 @@ public class TBLoader extends JFrame implements ActionListener {
 	}
 */
 	private String getImageFromCommunity(String community) throws Exception {
+		if (community == null)
+			return null;
 		String imageName = "";
 		String groupName = "";
 		File[] images;
@@ -1108,10 +1195,10 @@ public class TBLoader extends JFrame implements ActionListener {
 				return dir.isDirectory();
 			}
 		});
-		if (images.length == 1 || community.equalsIgnoreCase("Non-specific")) {
+		if (images != null && (images.length == 1 || community.equalsIgnoreCase("Non-specific"))) {
 			// grab first image package
 			imageName = images[0].getName();
-	    } else {	
+	    } else if (images != null) {	
 			File fCommunityDir = new File(CONTENT_SUBDIR + newDeploymentList.getSelectedItem().toString() + "\\" + COMMUNITIES_SUBDIR + "\\" + community + "\\" + "system");
 			
 			if (fCommunityDir.exists()) {
@@ -1165,7 +1252,7 @@ public class TBLoader extends JFrame implements ActionListener {
 			}
 		}
 		if (imageName.equals("")) {
-			imageName = "ERROR!";
+			imageName = "ERROR!  MISSING CONTENT IMAGE!";
 		}
 		newImageText.setText(imageName);		
 		return imageName;
@@ -1180,6 +1267,22 @@ public class TBLoader extends JFrame implements ActionListener {
 		else  {
 			isGood = false;
 			Logger.LogString("***Incorrect Serial Number Format:"+srn+"***");
+		}
+		return isGood;
+	}
+
+	public boolean isSerialNumberFormatGood2 (String srn) {
+		boolean isGood = false;
+		try {
+			if (srn != null && srn.length()==10 && srn.substring(1, 2).equals("-") && (srn.substring(0, 1).equalsIgnoreCase("A") || srn.substring(0, 1).equalsIgnoreCase("B")) ) {
+				int highBytes = Integer.parseInt(srn.substring(2, 6),16);
+				if (highBytes < 0x10) {
+					isGood = true;
+				}
+			}
+		}
+		catch (NumberFormatException e) {
+			isGood = false;
 		}
 		return isGood;
 	}
@@ -1201,6 +1304,8 @@ public class TBLoader extends JFrame implements ActionListener {
 			}
 		else if (o instanceof JComboBox) {
 			if (o == driveList) {
+				oldID.setText("");
+				newID.setText("");
 				di = (DriveInfo)((JComboBox)e.getSource()).getSelectedItem();
 				TBLoader.currentDrive = di;
 				if (di != null) {
@@ -1211,11 +1316,16 @@ public class TBLoader extends JFrame implements ActionListener {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					setSNandRevFromCurrentDrive();
+					try {
+						setSNandRevFromCurrentDrive();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(this, e1.toString(),
+				                "Error", JOptionPane.ERROR_MESSAGE);
+						e1.printStackTrace();
+					}
 					getRevisionNumbers();
 				}	
-				oldID.setText("");
-				newID.setText("");
 			} else if (o == newCommunityList) {
 				JComboBox cl = (JComboBox)o;
 				try {
@@ -1229,6 +1339,12 @@ public class TBLoader extends JFrame implements ActionListener {
 			} else if (o == newDeploymentList) {
 				getRevisionNumbers();
 				refreshUI();
+				try {
+					getImageFromCommunity(newCommunityList.getSelectedItem().toString());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			return;
 		} else
@@ -1248,7 +1364,7 @@ public class TBLoader extends JFrame implements ActionListener {
 			if (oldDeploymentText.getText().trim().length()==0)
 				oldDeploymentText.setText("UNKNOWN");
 			Logger.LogString("ID:"+((DriveInfo)driveList.getSelectedItem()).serialNumber);
-			setSNandRevFromCurrentDrive();
+//			setSNandRevFromCurrentDrive();
 			status.setText("STATUS: Starting\n");
 //			if (b == xfer) {
 //				xferFiles();
@@ -1309,7 +1425,7 @@ public class TBLoader extends JFrame implements ActionListener {
 				if (goodDisk) {
 					//Logger.LogString("chkdsk was good.");
 					CopyThread t;
-					t = new CopyThread(this, devicePath, di.serialNumber, di.isNewSerialNumber,  "grabStatsOnly");
+					t = new CopyThread(this, devicePath, di.serialNumber, "grabStatsOnly");
 					t.start();
 				} 				
 			}
@@ -1320,7 +1436,7 @@ public class TBLoader extends JFrame implements ActionListener {
 				if (goodDisk) {
 					//Logger.LogString("chkdsk was good.");
 					CopyThread t;
-					t = new CopyThread(this, devicePath, di.serialNumber, di.isNewSerialNumber,  "update");
+					t = new CopyThread(this, devicePath, di.serialNumber, "update");
 					t.start();
 				} 
 /*				else {
@@ -1589,7 +1705,6 @@ public class TBLoader extends JFrame implements ActionListener {
 	public static class CopyThread extends Thread {
 		final String devicePath;
 		final String id;
-		final boolean isNewSerialNumber;
 		//final String datetime;
 		final TBLoader callback;
 		final String mode;
@@ -1644,9 +1759,9 @@ public class TBLoader extends JFrame implements ActionListener {
 						continue;
 					}
 					cmd = cmd.replaceAll("\\$\\{device_drive\\}", devicePath.substring(0, 2));
-					cmd = cmd.replaceAll("\\$\\{srn\\}", id);
-					cmd = cmd.replaceAll("\\$\\{new_srn\\}", newID.getText());
-					cmd = cmd.replaceAll("\\$\\{device_id\\}", TBLoader.deviceID);  // this is the computer/tablet/phone id
+					//cmd = cmd.replaceAll("\\$\\{srn\\}", id);
+					cmd = cmd.replaceAll("\\$\\{new_srn\\}", id.toUpperCase());
+					cmd = cmd.replaceAll("\\$\\{device_id\\}", TBLoader.deviceID.toUpperCase());  // this is the computer/tablet/phone id
 					cmd = cmd.replaceAll("\\$\\{datetime\\}", TBLoader.currentDrive.datetime);
 					cmd = cmd.replaceAll("\\$\\{syncpath\\}", Matcher.quoteReplacement(syncdirFullPath));
 					cmd = cmd.replaceAll("\\$\\{syncdir\\}", TBLoader.currentDrive.syncdir);
@@ -1657,12 +1772,12 @@ public class TBLoader extends JFrame implements ActionListener {
 					cmd = cmd.replaceAll("\\$\\{send_now_dir\\}", Matcher.quoteReplacement(copyTo));
 					cmd = cmd.replaceAll("\\$\\{new_revision\\}", TBLoader.newRevisionText.getText());
 					cmd = cmd.replaceAll("\\$\\{old_revision\\}", TBLoader.oldRevisionText.getText());
-					cmd = cmd.replaceAll("\\$\\{new_deployment\\}", TBLoader.newDeploymentList.getSelectedItem().toString());
-					cmd = cmd.replaceAll("\\$\\{old_deployment\\}", TBLoader.oldDeploymentText.getText());
-					cmd = cmd.replaceAll("\\$\\{new_community\\}", TBLoader.newCommunityList.getSelectedItem().toString());
-					cmd = cmd.replaceAll("\\$\\{old_community\\}", TBLoader.oldCommunityText.getText());
-					cmd = cmd.replaceAll("\\$\\{new_image\\}", TBLoader.newImageText.getText());
-					cmd = cmd.replaceAll("\\$\\{old_image\\}", TBLoader.oldImageText.getText());
+					cmd = cmd.replaceAll("\\$\\{new_deployment\\}", TBLoader.newDeploymentList.getSelectedItem().toString().toUpperCase());
+					cmd = cmd.replaceAll("\\$\\{old_deployment\\}", TBLoader.oldDeploymentText.getText().toUpperCase());
+					cmd = cmd.replaceAll("\\$\\{new_community\\}", TBLoader.newCommunityList.getSelectedItem().toString().toUpperCase());
+					cmd = cmd.replaceAll("\\$\\{old_community\\}", TBLoader.oldCommunityText.getText().toUpperCase());
+					cmd = cmd.replaceAll("\\$\\{new_image\\}", TBLoader.newImageText.getText().toUpperCase());
+					cmd = cmd.replaceAll("\\$\\{old_image\\}", TBLoader.oldImageText.getText().toUpperCase());
 					cmd = cmd.replaceAll("\\$\\{isNewSRN\\}", (id.equals(NO_SERIAL_NUMBER)? "1" : "0"));
 					cmd = cmd.replaceAll("\\$\\{volumeSRN\\}", volumeSerialNumber);
 					//cmd = cmd.replaceAll("\\$\\{holding_dir\\}", Matcher.quoteReplacement(TEMP_COLLECTION_DIR));
@@ -1690,11 +1805,10 @@ public class TBLoader extends JFrame implements ActionListener {
 			return success;
 		}
 		
-		public CopyThread(TBLoader callback, String devicePath, String id, boolean isNewSerialNumber, String mode) {
+		public CopyThread(TBLoader callback, String devicePath, String id, String mode) {
 			this.callback = callback;
 			this.devicePath = devicePath;
 			this.id = id;
-			this.isNewSerialNumber = isNewSerialNumber;
 			this.mode = mode;
 		}		
 
@@ -2022,7 +2136,8 @@ public class TBLoader extends JFrame implements ActionListener {
 			errorMsg = "File system corrupted";
 		} else if (line.startsWith("The system cannot find the path specified.")) {
 			errorMsg = "TB not found.  Unplug/replug USB and try again.";
-		} else if (line.startsWith("Volume Serial Number is ", 0)) {
+		} 
+/*		else if (line.startsWith("Volume Serial Number is ", 0)) {
 			volumeSerialNumber = TBLoader.srnPrefix + line.substring(24,28) + line.substring(29,33);
 			if (newID.getText().equals(NO_SERIAL_NUMBER)) {
 				newID.setText(volumeSerialNumber);
@@ -2035,6 +2150,7 @@ public class TBLoader extends JFrame implements ActionListener {
 				Logger.LogString("TB Serial Number will be set to " + volumeSerialNumber);
 			}
 		}
+*/
 		return errorMsg;
 	}
 	//Log:ID=TB000336
@@ -2081,7 +2197,6 @@ public class TBLoader extends JFrame implements ActionListener {
 		String label;
 		String serialNumber;
 		//String volumeSerialNumber;
-		boolean isNewSerialNumber;
 		boolean corrupted;
 		String datetime="";
 		String syncdir="";
@@ -2092,7 +2207,6 @@ public class TBLoader extends JFrame implements ActionListener {
 			this.corrupted = false;
 			this.serialNumber = "";
 			//this.volumeSerialNumber =""; 
-			this.isNewSerialNumber = false;
 			this.datetime = getDateTime();
 			this.syncdir = this.datetime + "-" + TBLoader.deviceID;
 		}
