@@ -49,6 +49,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.JXDatePicker;
 // commenting out import below so that TBLoader can stand-alone as .class 
 // until new ACM is running on Fidelis's laptop
@@ -59,7 +60,7 @@ import org.literacybridge.acm.utils.ZipUnzip;
 
 @SuppressWarnings("serial")
 public class TBLoader extends JFrame implements ActionListener {
-	private static final String VERSION = "v1.24r1229";   // check new location of flash stats TBInfo class
+	private static final String VERSION = "v1.24r1230";   // check new location of flash stats TBInfo class
 	private static final String COLLECTION_SUBDIR = "\\collected-data";
 	private static String TEMP_COLLECTION_DIR = "";
 	private static final String SW_SUBDIR = ".\\software\\";
@@ -71,6 +72,7 @@ public class TBLoader extends JFrame implements ActionListener {
 	private static final String NO_SERIAL_NUMBER = "UNKNOWN";
 	private static final String NO_DRIVE = "(nothing connected)";
 	private static final String TRIGGER_FILE_CHECK = "checkdir";
+	private static final int STARTING_SERIALNUMBER = 0x200;
 	private static String imageRevision = "(no rev)"; 
 	private static String dateRotation;
 	private static JComboBox newDeploymentList;
@@ -874,9 +876,9 @@ public class TBLoader extends JFrame implements ActionListener {
 		oldID.setText(sn);
 		sn = sn.toUpperCase();
 		if (!isSerialNumberFormatGood2(sn)) {			
-			int intSRN = 0;
+			int intSRN = TBLoader.STARTING_SERIALNUMBER;
 			// get latest serial number count from file
-			File f = new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt");
+			File f = new File(homepath + "/LiteracyBridge/"+TBLoader.deviceID+".cnt"); // File f = new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt");
 			if (f.exists()) {
 				DataInputStream in;
 				try {
@@ -902,6 +904,7 @@ public class TBLoader extends JFrame implements ActionListener {
 			DataOutputStream os = new DataOutputStream(new FileOutputStream(f));
 			os.writeInt(intSRN);
 			os.close();
+			FileUtils.copyFile(f, new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt"));
 			String lowerSRN = String.format("%04x",intSRN);
 			sn = TBLoader.srnPrefix + TBLoader.deviceID + lowerSRN;
 		}
@@ -1277,7 +1280,10 @@ public class TBLoader extends JFrame implements ActionListener {
 			if (srn != null && srn.length()==10 && srn.substring(1, 2).equals("-") && (srn.substring(0, 1).equalsIgnoreCase("A") || srn.substring(0, 1).equalsIgnoreCase("B")) ) {
 				int highBytes = Integer.parseInt(srn.substring(2, 6),16);
 				if (highBytes < 0x10) {
-					isGood = true;
+					int lowBytes = Integer.parseInt(srn.substring(6),16);
+					if (lowBytes >= TBLoader.STARTING_SERIALNUMBER) {
+						isGood = true;
+					}
 				}
 			}
 		}
