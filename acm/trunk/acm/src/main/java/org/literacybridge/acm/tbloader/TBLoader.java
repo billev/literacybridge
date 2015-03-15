@@ -60,7 +60,7 @@ import org.literacybridge.acm.utils.ZipUnzip;
 
 @SuppressWarnings("serial")
 public class TBLoader extends JFrame implements ActionListener {
-	private static final String VERSION = "v1.24r1230";   // check new location of flash stats TBInfo class
+	private static final String VERSION = "r1231";   // check new location of flash stats TBInfo class
 	private static final String COLLECTION_SUBDIR = "\\collected-data";
 	private static String TEMP_COLLECTION_DIR = "";
 	private static final String SW_SUBDIR = ".\\software\\";
@@ -395,7 +395,7 @@ public class TBLoader extends JFrame implements ActionListener {
     		    		.addComponent(status))
             );
         
-        setSize(600,500);
+        setSize(650,520);
         add(panel, BorderLayout.CENTER);
 //      add(status, BorderLayout.SOUTH);
 //      add(xfer, BorderLayout.EAST);
