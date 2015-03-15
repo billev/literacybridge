@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -60,7 +61,7 @@ import org.literacybridge.acm.utils.ZipUnzip;
 
 @SuppressWarnings("serial")
 public class TBLoader extends JFrame implements ActionListener {
-	private static final String VERSION = "r1231";   // check new location of flash stats TBInfo class
+	private static final String VERSION = "r1232";   // check new location of flash stats TBInfo class
 	private static final String COLLECTION_SUBDIR = "\\collected-data";
 	private static String TEMP_COLLECTION_DIR = "";
 	private static final String SW_SUBDIR = ".\\software\\";
@@ -878,7 +879,7 @@ public class TBLoader extends JFrame implements ActionListener {
 		if (!isSerialNumberFormatGood2(sn)) {			
 			int intSRN = TBLoader.STARTING_SERIALNUMBER;
 			// get latest serial number count from file
-			File f = new File(homepath + "/LiteracyBridge/"+TBLoader.deviceID+".cnt"); // File f = new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt");
+			File f = new File(homepath + "/LiteracyBridge/"+TBLoader.deviceID+".dev"); // File f = new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt");
 			if (f.exists()) {
 				DataInputStream in;
 				try {
@@ -888,23 +889,26 @@ public class TBLoader extends JFrame implements ActionListener {
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				catch (IOException e) {
-					// TODO Auto-generated catch block
+				} catch (EOFException e) {
+					// No counter yet 
+				} catch (IOException e) {
+					// This shoudn't happen since we checked f.exists()
 					e.printStackTrace();
 				}
 				if (intSRN >= 0xFFFF) {
 					throw new Exception("SRN out of bounds for this TB Loader device.");
 				}
-				intSRN++;
 				f.delete();
-			} else {
-				// if file doesn't exist, use the SRN = 0, but TODO:raise exception and tell user to register the device or ensure file wasn't lost
-			}
+			} 
+			if (intSRN == TBLoader.STARTING_SERIALNUMBER) {
+				// if file doesn't exist, use the SRN = STARTING_SERIALNUMBER
+				// TODO:raise exception and tell user to register the device or ensure file wasn't lost	
+			} 
+			intSRN++;
 			DataOutputStream os = new DataOutputStream(new FileOutputStream(f));
 			os.writeInt(intSRN);
 			os.close();
-			FileUtils.copyFile(f, new File(dropboxCollectionFolder,TBLoader.deviceID+".cnt"));
+			FileUtils.copyFile(f, new File(dropboxCollectionFolder,TBLoader.deviceID+".dev"));
 			String lowerSRN = String.format("%04x",intSRN);
 			sn = TBLoader.srnPrefix + TBLoader.deviceID + lowerSRN;
 		}

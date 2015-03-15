@@ -243,7 +243,10 @@ public class TBBuilder {
 	
 	public static void main(String[] args) throws Exception {
 		TBBuilder tbb;
-			if (args[0].equalsIgnoreCase("CREATE")) {
+		if (args.length == 0){
+			printUsage();
+			System.exit(1);
+		} else if (args[0].equalsIgnoreCase("CREATE")) {
 			tbb = new TBBuilder(args[1]);
 			tbb.createDeployment(args[2]);
 			if (args.length == 5) {
